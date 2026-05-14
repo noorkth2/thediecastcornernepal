@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { Category } from '@/lib/types'
 
 export async function getCategories() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('categories')
     .select('*')
@@ -13,7 +13,7 @@ export async function getCategories() {
 }
 
 export async function getCategoryBySlug(slug: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('categories')
     .select('*')
@@ -26,7 +26,7 @@ export async function getCategoryBySlug(slug: string) {
 
 // Admin — all categories
 export async function getAllCategoriesAdmin() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('categories')
     .select('*')

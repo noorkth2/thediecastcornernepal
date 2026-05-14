@@ -7,7 +7,7 @@ import { ORDER_STATUS_CONFIG } from '@/lib/constants'
 import { Package, ShoppingBag, User } from 'lucide-react'
 
 export default async function AccountDashboardPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 

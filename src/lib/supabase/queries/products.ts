@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { Product, GetProductsOptions } from '@/lib/types'
 
 export async function getProducts(opts: GetProductsOptions = {}) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const {
     category,
     brand,
@@ -68,7 +68,7 @@ export async function getProducts(opts: GetProductsOptions = {}) {
 }
 
 export async function getProductBySlug(slug: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('products')
     .select(
@@ -90,7 +90,7 @@ export async function getRelatedProducts(
   categoryId: number,
   limit = 4
 ) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from('products')
     .select('*, images:product_images(*)')
@@ -103,7 +103,7 @@ export async function getRelatedProducts(
 }
 
 export async function getFeaturedProducts(limit = 8) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from('products')
     .select('*, images:product_images(*)')
@@ -116,7 +116,7 @@ export async function getFeaturedProducts(limit = 8) {
 }
 
 export async function getNewArrivals(limit = 8) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from('products')
     .select('*, images:product_images(*)')
@@ -129,7 +129,7 @@ export async function getNewArrivals(limit = 8) {
 }
 
 export async function getTreasureHuntProducts(limit = 8) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from('products')
     .select('*, images:product_images(*)')
@@ -143,7 +143,7 @@ export async function getTreasureHuntProducts(limit = 8) {
 
 // Admin — all products including inactive
 export async function getAllProductsAdmin() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('products')
     .select('*, category:categories(id, name, slug), images:product_images(*)')

@@ -4,7 +4,7 @@ import { ProductForm } from '@/components/admin/ProductForm'
 import type { Category } from '@/lib/types'
 
 export default async function EditProductPage({ params }: { params: { id: string } }) {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const [{ data: product }, { data: categories }] = await Promise.all([
     supabase.from('products').select('*').eq('id', Number(params.id)).single(),

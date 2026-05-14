@@ -12,7 +12,7 @@ interface AdminOrdersPageProps {
 }
 
 export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageProps) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const status = searchParams.status && searchParams.status !== 'all' ? searchParams.status : null
   const page = Number(searchParams.page ?? 1)
   const limit = 20

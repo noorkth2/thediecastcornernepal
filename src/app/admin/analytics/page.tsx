@@ -5,7 +5,7 @@ import { TrendingUp, ShoppingBag, Package, Users, Star, Zap } from 'lucide-react
 export const revalidate = 60
 
 export default async function AdminAnalyticsPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const [
     allOrders,

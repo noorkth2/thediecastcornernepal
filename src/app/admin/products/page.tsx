@@ -6,7 +6,7 @@ import { Plus, Pencil, Eye, EyeOff } from 'lucide-react'
 export const revalidate = 0
 
 export default async function AdminProductsPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: products } = await supabase
     .from('products')
     .select('id, title, brand, price, stock_qty, is_active, is_treasure_hunt, slug, created_at')

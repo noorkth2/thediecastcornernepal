@@ -22,7 +22,7 @@ const BRAND_DESCRIPTIONS: Record<string, string> = {
 }
 
 export default async function BrandsPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   // Get product count per brand
   const { data: brandCounts } = await supabase

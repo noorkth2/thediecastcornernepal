@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { Banner } from '@/lib/types'
 
 export async function getBannersByType(type: Banner['type']) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data } = await supabase
     .from('banners')
     .select('*')
@@ -14,7 +14,7 @@ export async function getBannersByType(type: Banner['type']) {
 }
 
 export async function getAllBannersAdmin() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('banners')
     .select('*')

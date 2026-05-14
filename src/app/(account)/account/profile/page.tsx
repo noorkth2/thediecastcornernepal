@@ -3,7 +3,7 @@ import { createClient } from '@/lib/supabase/server'
 import { ProfileForm } from '@/components/account/ProfileForm'
 
 export default async function ProfilePage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 

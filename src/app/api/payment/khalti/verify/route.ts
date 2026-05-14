@@ -31,7 +31,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Update order status in Supabase
-  const supabase = createClient()
+  const supabase = await createClient()
   await supabase
     .from('orders')
     .update({ payment_status: 'paid', status: 'confirmed' })

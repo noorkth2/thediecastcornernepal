@@ -2,7 +2,7 @@ import { createClient } from '@/lib/supabase/server'
 import type { Order } from '@/lib/types'
 
 export async function getOrdersByUser(userId: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('orders')
     .select('*, order_items(*)')
@@ -13,7 +13,7 @@ export async function getOrdersByUser(userId: string) {
 }
 
 export async function getOrderById(orderId: number) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('orders')
     .select('*, order_items(*)')
@@ -24,7 +24,7 @@ export async function getOrderById(orderId: number) {
 }
 
 export async function getOrderByCode(orderCode: string) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('orders')
     .select('*, order_items(*)')
@@ -35,7 +35,7 @@ export async function getOrderByCode(orderCode: string) {
 }
 
 export async function getAllOrdersAdmin(limit = 50) {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data, error } = await supabase
     .from('orders')
     .select('*, order_items(*), profile:profiles(full_name, phone)')
@@ -46,7 +46,7 @@ export async function getAllOrdersAdmin(limit = 50) {
 }
 
 export async function getAdminStats() {
-  const supabase = createClient()
+  const supabase = await createClient()
 
   const [ordersResult, pendingResult, deliveredResult, revenueResult, productsResult, customersResult, recentResult] =
     await Promise.all([

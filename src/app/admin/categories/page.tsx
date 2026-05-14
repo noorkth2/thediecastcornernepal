@@ -5,7 +5,7 @@ import { Plus, Pencil, Eye, EyeOff, Tag } from 'lucide-react'
 export const revalidate = 0
 
 export default async function AdminCategoriesPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: categories } = await supabase
     .from('categories')
     .select('id, name, slug, description, is_active, sort_order, created_at')

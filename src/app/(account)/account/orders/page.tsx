@@ -7,7 +7,7 @@ import { ORDER_STATUS_CONFIG } from '@/lib/constants'
 import { Package } from 'lucide-react'
 
 export default async function OrdersPage() {
-  const supabase = createClient()
+  const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')
 
