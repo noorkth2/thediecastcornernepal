@@ -8,6 +8,7 @@ import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
 import { BRANDS, SCALES } from '@/lib/constants'
 import type { Category } from '@/lib/types'
+import { Upload } from 'lucide-react'
 
 interface ProductFormData {
   title: string
@@ -39,8 +40,9 @@ interface ProductFormProps {
 export function ProductForm({ categories, defaultValues, productId, mode }: ProductFormProps) {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
+  const [isUploading, setIsUploading] = useState(false)
 
-  const { register, handleSubmit, formState: { errors, isSubmitting } } = useForm<ProductFormData>({
+  const { register, handleSubmit, setValue, watch, formState: { errors, isSubmitting } } = useForm<ProductFormData>({
     defaultValues: {
       is_active: true,
       is_treasure_hunt: false,
@@ -70,6 +72,35 @@ export function ProductForm({ categories, defaultValues, productId, mode }: Prod
 
     router.push('/admin/products')
     router.refresh()
+  }
+
+  const imageUrl = watch('image_url')
+
+  const handleImageUpload = async (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0]
+    if (!file) return
+
+    setIsUploading(true)
+    setError(null)
+    const supabase = createClient()
+
+    try {
+      const fileExt = file.name.split('.').pop()
+      const fileName = `${Math.random().toString(36).substring(2)}-${Date.now()}.${fileExt}`
+
+      const { error: uploadError } = await supabase.storage
+        .from('products')
+        .upload(fileName, file, { cacheControl: '3600', upsert: false })
+
+      if (uploadError) throw uploadError
+
+      const { data } = supabase.storage.from('products').getPublicUrl(fileName)
+      setValue('image_url', data.publicUrl, { shouldValidate: true })
+    } catch (err: any) {
+      setError(err.message || 'Error uploading image')
+    } finally {
+      setIsUploading(false)
+    }
   }
 
   return (
@@ -135,7 +166,34 @@ export function ProductForm({ categories, defaultValues, productId, mode }: Prod
         </div>
       </div>
 
-      <Input {...register('image_url')} id="image_url" label="Primary Image URL" placeholder="https://..." />
+      <div>
+        <label className="block text-sm font-medium text-text-primary mb-1.5">Primary Image</label>
+        <div className="flex items-start gap-4">
+          <div className="flex-1">
+            <Input {...register('image_url')} id="image_url" placeholder="https://... or upload below" />
+            <div className="mt-2 relative">
+              <input
+                type="file"
+                accept="image/*"
+                onChange={handleImageUpload}
+                disabled={isUploading}
+                className="absolute inset-0 w-full h-full opacity-0 cursor-pointer disabled:cursor-not-allowed"
+                id="file-upload"
+              />
+              <Button type="button" variant="secondary" className="w-full flex items-center justify-center gap-2" disabled={isUploading}>
+                <Upload className="w-4 h-4" />
+                {isUploading ? 'Uploading...' : 'Upload Image to Storage'}
+              </Button>
+            </div>
+          </div>
+          {imageUrl && (
+            <div className="w-24 h-24 rounded-lg bg-surface-elevated border border-surface-border overflow-hidden flex-shrink-0">
+              {/* eslint-disable-next-line @next/next/no-img-element */}
+              <img src={imageUrl} alt="Preview" className="w-full h-full object-cover" />
+            </div>
+          )}
+        </div>
+      </div>
 
       {error && <div className="p-3 bg-red-500/10 border border-red-500/30 rounded-lg text-red-400 text-sm">{error}</div>}
 
