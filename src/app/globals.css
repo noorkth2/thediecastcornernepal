@@ -1,0 +1,192 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=Bebas+Neue&display=swap');
+
+@import "tailwindcss";
+@config "../../tailwind.config.ts";
+
+:root {
+  --card-top-bar: linear-gradient(90deg, #C0392B, #E67E22, #F5C518);
+  --brand-red: #C0392B;
+  --brand-gold: #F5C518;
+  --brand-orange: #E67E22;
+  --surface-base: #111111;
+  --surface-card: #1E1E1E;
+  --surface-elevated: #2A2A2A;
+  --surface-border: #333333;
+  --text-primary: #F5F5F5;
+  --text-muted: #888888;
+}
+
+@layer base {
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  html {
+    scroll-behavior: smooth;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  body {
+    @apply bg-surface-base text-text-primary;
+    font-family: 'Inter', sans-serif;
+    min-height: 100vh;
+  }
+
+  ::selection {
+    background: rgba(192, 57, 43, 0.4);
+    color: #F5F5F5;
+  }
+
+  ::-webkit-scrollbar {
+    width: 6px;
+  }
+  ::-webkit-scrollbar-track {
+    background: #1E1E1E;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: #333333;
+    border-radius: 3px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #C0392B;
+  }
+}
+
+@layer components {
+  /* Product card top color bar */
+  .product-card-top-bar {
+    position: relative;
+    overflow: hidden;
+  }
+  .product-card-top-bar::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background: var(--card-top-bar);
+    z-index: 10;
+  }
+
+  /* Treasure Hunt badge */
+  .badge-th {
+    background: linear-gradient(
+      90deg,
+      #F5C518 25%,
+      rgba(255, 255, 255, 0.6) 50%,
+      #F5C518 75%
+    );
+    background-size: 200% auto;
+    animation: shimmer 2.5s linear infinite;
+    @apply text-black text-xs font-bold px-2 py-0.5 rounded;
+  }
+
+  /* Limited badge */
+  .badge-limited {
+    background: linear-gradient(
+      90deg,
+      #C0392B 25%,
+      rgba(255, 255, 255, 0.3) 50%,
+      #C0392B 75%
+    );
+    background-size: 200% auto;
+    animation: shimmer 2.5s linear infinite;
+    @apply text-white text-xs font-bold px-2 py-0.5 rounded;
+  }
+
+  /* Gradient text */
+  .text-gradient {
+    background: linear-gradient(90deg, #C0392B, #E67E22, #F5C518);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Speed line effect */
+  .speed-line-container {
+    position: relative;
+    overflow: hidden;
+  }
+  .speed-line-container::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(
+      90deg,
+      transparent 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      transparent 100%
+    );
+    animation: speedLine 0.6s ease-out forwards;
+    pointer-events: none;
+  }
+
+  /* Glass card */
+  .glass-card {
+    background: rgba(30, 30, 30, 0.8);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(255, 255, 255, 0.06);
+  }
+
+  /* Section heading */
+  .section-heading {
+    @apply font-display text-4xl md:text-5xl text-text-primary tracking-wide;
+  }
+
+  /* Animate on scroll — initial state */
+  .animate-on-scroll {
+    opacity: 0;
+    transform: translateY(30px);
+    transition: opacity 0.6s ease-out, transform 0.6s ease-out;
+  }
+  .animate-on-scroll.in-view {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  /* Input base */
+  .input-base {
+    @apply w-full bg-surface-elevated border border-surface-border rounded-lg px-4 py-2.5 
+           text-text-primary text-sm placeholder:text-text-faint
+           focus:outline-none focus:border-brand-red focus:ring-1 focus:ring-brand-red/30
+           transition-colors duration-200;
+  }
+
+  /* Button variants */
+  .btn-primary {
+    @apply bg-brand-red hover:bg-brand-red-light text-white font-semibold 
+           px-6 py-2.5 rounded-lg transition-all duration-200 
+           active:scale-95 disabled:opacity-50 disabled:cursor-not-allowed;
+  }
+  .btn-secondary {
+    @apply bg-surface-elevated hover:bg-surface-border text-text-primary font-semibold 
+           px-6 py-2.5 rounded-lg border border-surface-border transition-all duration-200 
+           active:scale-95;
+  }
+  .btn-ghost {
+    @apply text-text-muted hover:text-text-primary transition-colors duration-200;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+
+  /* Hide scrollbar utility */
+  .scrollbar-hide {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  .scrollbar-hide::-webkit-scrollbar {
+    display: none;
+  }
+}
