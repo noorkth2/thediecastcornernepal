@@ -93,16 +93,20 @@ export const useCartStore = create<CartStore>()(
         if (!items.length) return
 
         try {
-          const { createClient } = await import('@/lib/supabase/client')
-          const supabase = createClient()
-          const upserts = items.map((i) => ({
-            user_id: userId,
+          const payload = items.map((i) => ({
             product_id: i.product.id,
             quantity: i.quantity,
           }))
-          await supabase
-            .from('cart_items')
-            .upsert(upserts, { onConflict: 'user_id,product_id' })
+
+          const res = await fetch('/api/cart/sync', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify(payload),
+          })
+
+          if (!res.ok) {
+            console.error('Cart sync failed:', await res.text())
+          }
         } catch (err) {
           console.error('Cart sync failed:', err)
         }

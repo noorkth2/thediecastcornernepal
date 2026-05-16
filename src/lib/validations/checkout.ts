@@ -1,4 +1,7 @@
 import { z } from 'zod'
+import { PAYMENT_METHODS } from '@/lib/constants'
+
+const paymentMethodIds = PAYMENT_METHODS.map((p) => p.id) as [string, ...string[]]
 
 export const checkoutSchema = z.object({
   shippingAddress: z.object({
@@ -8,7 +11,7 @@ export const checkoutSchema = z.object({
     city: z.string().min(1, 'City is required'),
     landmark: z.string().optional(),
   }),
-  paymentMethod: z.enum(['khalti', 'esewa', 'cod']),
+  paymentMethod: z.enum(paymentMethodIds),
   items: z.array(
     z.object({
       product_id: z.number(),

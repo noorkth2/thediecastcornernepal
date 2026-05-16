@@ -1,72 +1,35 @@
-import { createClient } from '@/lib/supabase/server'
+import { getAnalyticsData } from '@/lib/supabase/queries/analytics'
 import { formatPrice } from '@/lib/utils'
 import { TrendingUp, ShoppingBag, Package, Users, Star, Zap } from 'lucide-react'
 
 export const revalidate = 60
 
 export default async function AdminAnalyticsPage() {
-  const supabase = await createClient()
+  const {
+    orders,
+    topProductsData,
+    paymentMethodsData,
+    stockLowData,
+    recentRevenueData,
+  } = await getAnalyticsData()
 
-  const [
-    allOrders,
-    topProducts,
-    paymentMethods,
-    stockLow,
-    recentRevenue,
-  ] = await Promise.all([
-    // Orders with items for revenue calc
-    supabase
-      .from('orders')
-      .select('id, total_amount, status, payment_method, payment_status, created_at')
-      .order('created_at', { ascending: false }),
-
-    // Top selling products via order_items
-    supabase
-      .from('order_items')
-      .select('product_title, product_brand, quantity, unit_price')
-      .order('quantity', { ascending: false })
-      .limit(100),
-
-    // Payment method breakdown
-    supabase
-      .from('orders')
-      .select('payment_method'),
-
-    // Low stock products
-    supabase
-      .from('products')
-      .select('id, title, brand, stock_qty')
-      .eq('is_active', true)
-      .lte('stock_qty', 5)
-      .order('stock_qty', { ascending: true })
-      .limit(10),
-
-    // Revenue last 7 days
-    supabase
-      .from('orders')
-      .select('total_amount, created_at, payment_status')
-      .gte('created_at', new Date(Date.now() - 7 * 24 * 60 * 60 * 1000).toISOString())
-      .eq('payment_status', 'paid'),
-  ])
-
-  const orders = allOrders.data ?? []
   const paidOrders = orders.filter((o) => o.payment_status === 'paid')
   const totalRevenue = paidOrders.reduce((s, o) => s + (o.total_amount ?? 0), 0)
   const avgOrderValue = paidOrders.length > 0 ? totalRevenue / paidOrders.length : 0
 
   // Revenue last 7 days
-  const weekRevenue = (recentRevenue.data ?? []).reduce((s, o) => s + (o.total_amount ?? 0), 0)
+  const weekRevenue = recentRevenueData.reduce((s, o) => s + (o.total_amount ?? 0), 0)
 
   // Payment method distribution
   const pmCounts: Record<string, number> = {}
-  for (const o of paymentMethods.data ?? []) {
+  for (const o of paymentMethodsData) {
     pmCounts[o.payment_method] = (pmCounts[o.payment_method] ?? 0) + 1
   }
   const pmTotal = Object.values(pmCounts).reduce((s, v) => s + v, 0)
 
   // Top products by quantity sold
   const productMap: Record<string, { title: string; brand: string | null; qty: number; revenue: number }> = {}
-  for (const item of topProducts.data ?? []) {
+  for (const item of topProductsData) {
     const key = item.product_title
     if (!productMap[key]) {
       productMap[key] = { title: item.product_title, brand: item.product_brand, qty: 0, revenue: 0 }
@@ -227,17 +190,17 @@ export default async function AdminAnalyticsPage() {
       </div>
 
       {/* Low Stock Warning */}
-      {(stockLow.data?.length ?? 0) > 0 && (
+      {stockLowData.length > 0 && (
         <div className="bg-surface-card rounded-xl border border-orange-400/30 overflow-hidden">
           <div className="px-6 py-4 border-b border-orange-400/20 flex items-center gap-2">
             <Package className="w-4 h-4 text-orange-400" />
             <h2 className="font-semibold text-text-primary">Low Stock Alert</h2>
             <span className="ml-auto text-xs text-orange-400 font-semibold bg-orange-400/10 px-2 py-0.5 rounded-full">
-              {stockLow.data?.length} items
+              {stockLowData.length} items
             </span>
           </div>
           <div className="divide-y divide-surface-border">
-            {stockLow.data?.map((p) => (
+            {stockLowData.map((p) => (
               <div key={p.id} className="flex items-center justify-between px-6 py-3">
                 <div>
                   <p className="text-text-primary text-sm font-medium">{p.title}</p>

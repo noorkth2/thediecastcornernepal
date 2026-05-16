@@ -11,16 +11,15 @@ export default async function AdminCategoriesPage() {
     .select('id, name, slug, description, is_active, sort_order, created_at')
     .order('sort_order', { ascending: true })
 
-  // Get product counts per category
+  // Get product counts per category using the optimized database view
   const { data: productCounts } = await supabase
-    .from('products')
-    .select('category_id')
-    .eq('is_active', true)
+    .from('category_product_counts')
+    .select('*')
 
   const countMap: Record<number, number> = {}
-  for (const p of productCounts ?? []) {
-    if (p.category_id) {
-      countMap[p.category_id] = (countMap[p.category_id] ?? 0) + 1
+  for (const row of productCounts ?? []) {
+    if (row.category_id) {
+      countMap[row.category_id] = Number(row.product_count)
     }
   }
 
