@@ -39,6 +39,7 @@ export interface Product {
   is_active: boolean
   tags: string[]
   sort_order: number
+  image_url: string | null
   created_at: string
   updated_at: string
   // Joined
