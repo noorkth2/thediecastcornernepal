@@ -32,8 +32,22 @@ export async function proxy(request: NextRequest) {
 
   const path = request.nextUrl.pathname
 
+  // ── Protect auth routes — redirect logged-in users ─────────────────────────
+  if (user && (path.startsWith('/login') || path.startsWith('/register'))) {
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', user.id)
+      .single()
+
+    if (profile?.role === 'admin') {
+      return NextResponse.redirect(new URL('/admin', request.url))
+    }
+    return NextResponse.redirect(new URL('/', request.url))
+  }
+
   // ── Protect /account routes — must be logged in ──────────────────────────
-  if (path.startsWith('/account') && !user) {
+  if ((path.startsWith('/account') || path.startsWith('/checkout')) && !user) {
     return NextResponse.redirect(
       new URL(`/login?redirect=${encodeURIComponent(path)}`, request.url)
     )
