@@ -36,13 +36,16 @@ export default async function WishlistPage() {
     .eq('user_id', user.id)
     .order('created_at', { ascending: false })
 
-  const items = wishlistItems?.map((item) => ({
-    wishlist_id: item.id,
-    product: {
-      ...item.products,
-      images: item.products.product_images,
-    } as unknown as Product,
-  })) ?? []
+  const items = wishlistItems?.map((item) => {
+    const p = item.products as any
+    return {
+      wishlist_id: item.id,
+      product: {
+        ...p,
+        images: p?.product_images,
+      } as unknown as Product,
+    }
+  }) ?? []
 
   return (
     <div className="space-y-6">

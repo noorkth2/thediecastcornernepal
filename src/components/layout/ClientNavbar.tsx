@@ -8,6 +8,7 @@ import { useCartStore } from '@/store/cartStore'
 import { useUIStore } from '@/store/uiStore'
 import { cn } from '@/lib/utils'
 import { UserDropdown } from '@/components/auth/UserDropdown'
+import { NAV_LINKS } from '@/lib/constants'
 
 interface ClientNavbarProps {
   user: { email?: string; id: string } | null
