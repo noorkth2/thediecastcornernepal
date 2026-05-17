@@ -22,12 +22,17 @@ create table if not exists public.profiles (
 -- Auto-create profile on user sign up
 create or replace function public.handle_new_user()
 returns trigger language plpgsql security definer as $$
+declare
+  is_admin boolean;
 begin
-  insert into public.profiles (id, full_name, phone)
+  is_admin := new.email in ('kayastha.noor1100@gmail.com', 'thediecastcornernepal@gmail.com');
+  
+  insert into public.profiles (id, full_name, phone, role)
   values (
     new.id,
     new.raw_user_meta_data->>'full_name',
-    new.raw_user_meta_data->>'phone'
+    new.raw_user_meta_data->>'phone',
+    case when is_admin then 'admin' else 'customer' end
   );
   return new;
 end;
