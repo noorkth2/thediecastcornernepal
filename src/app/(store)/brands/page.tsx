@@ -5,28 +5,32 @@ import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
   title: 'Brands — The Diecast Corner Nepal',
-  description: 'Browse diecast models by brand — MiniGT, Tomica, Matchbox, Greenlight, Majorette and more at The Diecast Corner Nepal.',
+  description: 'Browse diecast models by brand — MiniGT, PopRace, Tarmac Works, INNO64, Tomica, Greenlight and more at The Diecast Corner Nepal.',
 }
 
 export const revalidate = 300
 
 const BRAND_DESCRIPTIONS: Record<string, string> = {
-  'MiniGT': '1:64 precision supercar replicas with jaw-dropping detail.',
-  'Matchbox': 'Iconic since 1953. Real-world vehicles in miniature.',
-  'Tomica': 'Japan\'s premium diecast brand. Clean, accurate, collectible.',
-  'Majorette': 'French precision meets everyday cars in 1:64 scale.',
-  'Bburago': 'Affordable high-quality 1:24 and 1:18 European models.',
-  'INNO64': 'Ultra-detailed Japanese street cars for serious collectors.',
-  'Tarmac Works': 'Racing and track pedigree in 1:64 scale.',
-  'Greenlight': 'US licensed diecast — Hollywood, muscle cars & pop culture icons.',
-  'Auto World': 'Premium US brand delivering highly detailed American classics.',
-  'Johnny Lightning': 'Collector-grade US diecast with iconic muscle and retro picks.',
-  'M2 Machines': 'Limited-run vintage American cars with authentic detail.',
-  'Era Car': 'Hong Kong brand famous for JDM and Asian market exclusives.',
-  'LCD Models': 'Premium 1:18 hand-crafted supercar and luxury replicas.',
-  'Kyosho': 'Japanese precision engineering. From F1 to hyper-detailed miniatures.',
-  'Norev': 'European brand renowned for accuracy in classic and modern cars.',
-  'Siku': 'Trusted German brand. Commercial vehicles and everyday cars in fine detail.',
+  'MiniGT':        '1:64 precision replicas of supercars, JDMs and exotics with jaw-dropping detail.',
+  'PopRace':       'Hong Kong brand crafting ultra-detailed 1:64 Japanese street and race cars.',
+  'Tarmac Works':  'Racing and motorsport heritage captured in stunning 1:64 and 1:43 scale.',
+  'INNO64':        'Ultra-detailed JDM and Asian market exclusives for serious collectors.',
+  'TimeMicro':     'Highly accurate Chinese and Asian vehicle replicas in 1:64 scale.',
+  'Tomica':        'Japan\'s iconic diecast brand — clean, accurate and endlessly collectible.',
+  'DCM':           'Diecast Masters — premium large-scale construction and work vehicle models.',
+  'Street Warrior': 'Bold, detailed 1:64 street car replicas straight from the garage.',
+  'Mini Station':  'Niche brand producing limited-run Asian and JDM collector pieces.',
+  'Maasdi':        'Unique diecast models with a focus on South and Southeast Asian markets.',
+  'Greenlight':    'US-licensed diecast — Hollywood, muscle cars & pop culture icons.',
+  'Fine Works':    'High-fidelity artisan diecast models built for display collectors.',
+  'Fine Works 64': 'Fine Works precision engineering in the popular 1:64 scale format.',
+  'Xcartoys':      'Chinese brand delivering sharp detail and exciting liveries in 1:64.',
+  'BMC':           'Boutique manufacturer specialising in rare and limited collector models.',
+  'MJ Model':      'Meticulously crafted replicas with a focus on Asian vehicle culture.',
+  'Mortal':        'Edgy, street-inspired diecast with bold paint jobs and custom details.',
+  'HKM':           'Hong Kong Miniatures — affordable yet finely detailed 1:64 collectibles.',
+  'AR Box':        'Artist-run brand releasing limited-edition themed diecast collections.',
+  'Trends Hobby':  'Asia-based brand covering popular car culture and lifestyle vehicles.',
 }
 
 export default async function BrandsPage() {
