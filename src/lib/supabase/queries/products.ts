@@ -23,13 +23,14 @@ export async function getProducts(opts: GetProductsOptions = {}) {
     .select(
       `
       *,
-      category:categories(id, name, slug),
+      category:categories!inner(id, name, slug),
       images:product_images(*)
     `,
       { count: 'exact' }
     )
     .eq('is_active', true)
 
+  if (category) query = query.eq('category.slug', category)
   if (brand) query = query.ilike('brand', brand)
   if (minPrice !== undefined) query = query.gte('price', minPrice)
   if (maxPrice !== undefined) query = query.lte('price', maxPrice)
@@ -58,11 +59,7 @@ export async function getProducts(opts: GetProductsOptions = {}) {
 
   const { data, error, count } = await query
 
-  // Filter by category slug after join (Supabase doesn't support filtering on joined tables easily)
-  let products = (data as Product[]) ?? []
-  if (category) {
-    products = products.filter((p) => p.category?.slug === category)
-  }
+  const products = (data as Product[]) ?? []
 
   return { products, count: count ?? 0, error: error?.message ?? null }
 }
