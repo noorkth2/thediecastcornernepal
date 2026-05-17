@@ -1,31 +1,3 @@
-// ─── Brands ───────────────────────────────────────────────────────────────────
-
-export const BRANDS = [
-  'AR Box',
-  'BMC',
-  'DCM',
-  'Fine Works',
-  'Fine Works 64',
-  'Greenlight',
-  'HKM',
-  'INNO64',
-  'Maasdi',
-  'MiniGT',
-  'Mini Station',
-  'MJ Model',
-  'Mortal',
-  'PopRace',
-  'Street Warrior',
-  'Tarmac Works',
-  'TimeMicro',
-  'Tomica',
-  'Trends Hobby',
-  'Xcartoys',
-  'Other',
-] as const
-
-export type Brand = (typeof BRANDS)[number]
-
 // ─── Scales ───────────────────────────────────────────────────────────────────
 
 export const SCALES = [

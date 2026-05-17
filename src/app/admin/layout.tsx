@@ -3,7 +3,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import {
   LayoutDashboard, Package, ShoppingBag, Tag,
-  Settings, ExternalLink, BarChart3,
+  Settings, ExternalLink, BarChart3, Layers,
 } from 'lucide-react'
 
 const adminLinks = [
@@ -11,6 +11,7 @@ const adminLinks = [
   { href: '/admin/products', label: 'Products', icon: Package },
   { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { href: '/admin/categories', label: 'Categories', icon: Tag },
+  { href: '/admin/brands', label: 'Brands', icon: Layers },
   { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ]

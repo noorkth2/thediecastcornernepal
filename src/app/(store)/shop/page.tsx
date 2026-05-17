@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Suspense } from 'react'
 import { getProducts } from '@/lib/supabase/queries/products'
 import { getCategories } from '@/lib/supabase/queries/categories'
+import { getActiveBrands } from '@/lib/supabase/queries/brands'
 import { ProductGrid } from '@/components/store/ProductGrid'
 import { ProductCardSkeleton } from '@/components/ui/skeleton'
 import { ShopFilters } from '@/components/store/ShopFilters'
@@ -31,7 +32,7 @@ export default async function ShopPage(props: ShopPageProps) {
   const searchParams = await props.searchParams
   const page = Number(searchParams.page ?? 1)
 
-  const [{ products, count }, { categories }] = await Promise.all([
+  const [{ products, count }, { categories }, brands] = await Promise.all([
     getProducts({
       category: searchParams.category,
       brand: searchParams.brand,
@@ -43,6 +44,7 @@ export default async function ShopPage(props: ShopPageProps) {
       limit: PRODUCTS_PER_PAGE,
     }),
     getCategories(),
+    getActiveBrands(),
   ])
 
   const totalPages = Math.ceil(count / PRODUCTS_PER_PAGE)
@@ -68,6 +70,7 @@ export default async function ShopPage(props: ShopPageProps) {
         <aside className="lg:w-64 flex-shrink-0">
           <ShopFilters
             categories={categories}
+            brands={brands}
             currentFilters={{
               category: searchParams.category,
               brand: searchParams.brand,

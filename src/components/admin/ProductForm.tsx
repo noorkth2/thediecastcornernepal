@@ -6,8 +6,9 @@ import { useForm } from 'react-hook-form'
 import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
 import { Button } from '@/components/ui/button'
-import { BRANDS, SCALES } from '@/lib/constants'
+import { SCALES } from '@/lib/constants'
 import type { Category } from '@/lib/types'
+import type { Brand } from '@/lib/types/brand'
 import { Upload } from 'lucide-react'
 
 interface ProductFormData {
@@ -32,12 +33,13 @@ interface ProductFormData {
 
 interface ProductFormProps {
   categories: Category[]
+  brands: Brand[]
   defaultValues?: Partial<ProductFormData>
   productId?: number
   mode: 'create' | 'edit'
 }
 
-export function ProductForm({ categories, defaultValues, productId, mode }: ProductFormProps) {
+export function ProductForm({ categories, brands, defaultValues, productId, mode }: ProductFormProps) {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
@@ -138,7 +140,7 @@ export function ProductForm({ categories, defaultValues, productId, mode }: Prod
           <label className="block text-sm font-medium text-text-primary mb-1.5">Brand</label>
           <select {...register('brand')} id="brand" className="input-base">
             <option value="">Select Brand</option>
-            {BRANDS.map((b) => <option key={b} value={b}>{b}</option>)}
+            {brands.map((b) => <option key={b.id} value={b.name}>{b.name}</option>)}
           </select>
         </div>
         <div>

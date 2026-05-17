@@ -3,11 +3,12 @@
 import { useRouter, useSearchParams } from 'next/navigation'
 import { useCallback } from 'react'
 import { SlidersHorizontal, X } from 'lucide-react'
-import { BRANDS, SCALES } from '@/lib/constants'
 import type { Category } from '@/lib/types'
+import type { Brand } from '@/lib/types/brand'
 
 interface ShopFiltersProps {
   categories: Category[]
+  brands: Brand[]
   currentFilters: {
     category?: string
     brand?: string
@@ -18,7 +19,7 @@ interface ShopFiltersProps {
   }
 }
 
-export function ShopFilters({ categories, currentFilters }: ShopFiltersProps) {
+export function ShopFilters({ categories, brands, currentFilters }: ShopFiltersProps) {
   const router = useRouter()
   const searchParams = useSearchParams()
 
@@ -121,9 +122,9 @@ export function ShopFilters({ categories, currentFilters }: ShopFiltersProps) {
           id="brand-select"
         >
           <option value="">All Brands</option>
-          {BRANDS.map((b) => (
-            <option key={b} value={b}>
-              {b}
+          {brands.map((b) => (
+            <option key={b.id} value={b.name}>
+              {b.name}
             </option>
           ))}
         </select>
