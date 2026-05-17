@@ -18,7 +18,7 @@ interface ProductCardProps {
 export function ProductCard({ product, className }: ProductCardProps) {
   const { addItem, openCart } = useCartStore()
   const { addToast } = useUIStore()
-  const primaryImage = getPrimaryImage(product.images)
+  const primaryImage = getPrimaryImage(product.images, product.image_url)
   const discount = discountPercent(product.price, product.compare_price ?? 0)
   const isOutOfStock = product.stock_qty === 0
 

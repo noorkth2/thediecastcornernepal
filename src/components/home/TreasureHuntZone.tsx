@@ -42,7 +42,7 @@ export function TreasureHuntZone({ products }: TreasureHuntZoneProps) {
         {/* TH product row */}
         <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
           {products.map((product) => {
-            const img = getPrimaryImage(product.images)
+            const img = getPrimaryImage(product.images, product.image_url)
             const isOutOfStock = product.stock_qty === 0
 
             return (

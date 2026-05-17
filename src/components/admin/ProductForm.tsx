@@ -63,11 +63,29 @@ export function ProductForm({ categories, defaultValues, productId, mode }: Prod
     const payload = { ...data, slug, price: Number(data.price), stock_qty: Number(data.stock_qty), compare_price: data.compare_price ? Number(data.compare_price) : null, category_id: data.category_id ? Number(data.category_id) : null }
 
     if (mode === 'create') {
-      const { error } = await supabase.from('products').insert(payload)
+      const { data: created, error } = await supabase.from('products').insert(payload).select('id').single()
       if (error) { setError(error.message); return }
+
+      // sync product_images so storefront gallery works
+      if (data.image_url && created?.id) {
+        await supabase.from('product_images').upsert(
+          { product_id: created.id, image_url: data.image_url, alt_text: data.title, is_primary: true, sort_order: 1 },
+          { onConflict: 'product_id,image_url' }
+        )
+      }
     } else {
       const { error } = await supabase.from('products').update(payload).eq('id', productId!)
       if (error) { setError(error.message); return }
+
+      // sync product_images so storefront gallery works
+      if (data.image_url && productId) {
+        // mark all existing as non-primary, then upsert the current one as primary
+        await supabase.from('product_images').update({ is_primary: false }).eq('product_id', productId)
+        await supabase.from('product_images').upsert(
+          { product_id: productId, image_url: data.image_url, alt_text: data.title, is_primary: true, sort_order: 1 },
+          { onConflict: 'product_id,image_url' }
+        )
+      }
     }
 
     router.push('/admin/products')

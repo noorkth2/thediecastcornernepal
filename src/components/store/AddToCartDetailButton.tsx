@@ -15,7 +15,7 @@ export function AddToCartDetailButton({ product }: { product: Product }) {
       title: product.title,
       slug: product.slug,
       price: product.price,
-      image: getPrimaryImage(product.images),
+      image: getPrimaryImage(product.images, product.image_url),
       brand: product.brand,
       stock_qty: product.stock_qty,
     })

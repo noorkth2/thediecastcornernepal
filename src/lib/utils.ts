@@ -26,12 +26,13 @@ export function generateOrderCode(): string {
 
 /**
  * Get the primary image URL from a product's images array.
- * Falls back to the first image, then a placeholder.
+ * Falls back to fallbackUrl (usually product.image_url), then a placeholder.
  */
 export function getPrimaryImage(
-  images?: { image_url: string; is_primary: boolean }[]
+  images?: { image_url: string; is_primary: boolean }[],
+  fallbackUrl?: string | null
 ): string {
-  if (!images || images.length === 0) return '/placeholder-car.jpg'
+  if (!images || images.length === 0) return fallbackUrl || '/placeholder-car.jpg'
   const primary = images.find((i) => i.is_primary)
   return primary?.image_url ?? images[0].image_url
 }
