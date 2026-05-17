@@ -80,8 +80,8 @@ export function ProductForm({ categories, defaultValues, productId, mode }: Prod
 
       // sync product_images so storefront gallery works
       if (data.image_url && productId) {
-        // delete all existing primary images then insert the new one
-        await supabase.from('product_images').delete().eq('product_id', productId).eq('is_primary', true)
+        // delete all existing images then insert the new one to prevent ghost/broken duplicates
+        await supabase.from('product_images').delete().eq('product_id', productId)
         await supabase.from('product_images').insert(
           { product_id: productId, image_url: data.image_url, alt_text: data.title, is_primary: true, sort_order: 1 }
         )

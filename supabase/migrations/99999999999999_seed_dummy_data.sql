@@ -40,7 +40,7 @@ INSERT INTO public.products (
  2500.00, 3000.00,
  (SELECT id FROM categories WHERE slug='minigt'),
  'MiniGT', '1:64', 'Kaido House', 12, true, true, true, false, false, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Nissan_Skyline_GT-R_R34_V_Spec_II.jpg/600px-Nissan_Skyline_GT-R_R34_V_Spec_II.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('Lamborghini Urus PPearl Capsule',
  'minigt-urus-pearl',
@@ -48,7 +48,7 @@ INSERT INTO public.products (
  2800.00, NULL,
  (SELECT id FROM categories WHERE slug='minigt'),
  'MiniGT', '1:64', 'MiniGT Series', 8, true, true, false, false, false, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/f/f1/Lamborghini_Urus_SE_DSC_8524.jpg/600px-Lamborghini_Urus_SE_DSC_8524.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('Porsche 911 GT3 RS Weissach Package',
  'minigt-911-gt3-rs-weissach',
@@ -56,7 +56,7 @@ INSERT INTO public.products (
  3200.00, NULL,
  (SELECT id FROM categories WHERE slug='minigt'),
  'MiniGT', '1:64', 'MiniGT Series', 6, true, true, true, false, false, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/c/c1/Porsche_992_GT3_1X7A0323.jpg/600px-Porsche_992_GT3_1X7A0323.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('Ferrari SF90 Stradale Red',
  'minigt-sf90-red',
@@ -64,7 +64,7 @@ INSERT INTO public.products (
  2900.00, 3200.00,
  (SELECT id FROM categories WHERE slug='minigt'),
  'MiniGT', '1:64', 'MiniGT Series', 5, true, false, true, false, false, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/1/13/Red_2019_Ferrari_SF90_Stradale_%2848264238897%29_%28cropped%29.jpg/600px-Red_2019_Ferrari_SF90_Stradale_%2848264238897%29_%28cropped%29.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 -- Tomica
 ('Toyota Supra MK4 White',
@@ -73,7 +73,7 @@ INSERT INTO public.products (
  1800.00, 2000.00,
  (SELECT id FROM categories WHERE slug='tomica'),
  'Tomica', '1:64', 'Tomica Premium', 10, true, false, false, false, false, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/28/Toyota_GR_Supra_%2851984008283crop%29.jpg/600px-Toyota_GR_Supra_%2851984008283crop%29.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('Nissan GT-R R35 Midnight Purple',
  'tomica-gtr-r35-purple',
@@ -81,7 +81,7 @@ INSERT INTO public.products (
  2200.00, NULL,
  (SELECT id FROM categories WHERE slug='tomica'),
  'Tomica', '1:64', 'Tomica Premium', 7, true, true, true, false, false, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/e/ef/2009-2010_Nissan_GT-R_%28R35%29_coupe_01.jpg/600px-2009-2010_Nissan_GT-R_%28R35%29_coupe_01.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('Honda NSX Type R White',
  'tomica-nsx-type-r',
@@ -89,7 +89,7 @@ INSERT INTO public.products (
  2000.00, NULL,
  (SELECT id FROM categories WHERE slug='tomica'),
  'Tomica', '1:64', 'Tomica Premium', 9, true, false, true, false, false, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/AcuraNSX-05-cropped.jpg/600px-AcuraNSX-05-cropped.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 -- Matchbox
 ('Toyota Land Cruiser 76 White',
@@ -98,7 +98,7 @@ INSERT INTO public.products (
  3500.00, NULL,
  (SELECT id FROM categories WHERE slug='matchbox'),
  'Matchbox', '1:64', 'Moving Parts', 3, true, true, false, true, true, false,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/6d/2021_Toyota_Land_Cruiser_300_3.4_ZX_%28Colombia%29_front_view_04.png/600px-2021_Toyota_Land_Cruiser_300_3.4_ZX_%28Colombia%29_front_view_04.png'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('Datsun 510 Wagon Blue',
  'matchbox-datsun-510-blue',
@@ -114,7 +114,7 @@ INSERT INTO public.products (
  650.00, NULL,
  (SELECT id FROM categories WHERE slug='matchbox'),
  'Matchbox', '1:64', 'Matchbox Series', 30, true, false, true, false, false, false,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/4b/2020_Jeep_Gladiator_Rubicon.jpg/600px-2020_Jeep_Gladiator_Rubicon.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 -- Greenlight
 ('1967 Pontiac GTO Fathom Green',
@@ -123,7 +123,7 @@ INSERT INTO public.products (
  1800.00, NULL,
  (SELECT id FROM categories WHERE slug='greenlight'),
  'Greenlight', '1:64', 'Muscle Car Garage', 18, true, true, true, false, false, false,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/3/30/2005_Pontiac_GTO%2C_front_left%2C_10-28-2022.jpg/600px-2005_Pontiac_GTO%2C_front_left%2C_10-28-2022.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('1969 Dodge Charger R/T Fast & Furious',
  'greenlight-charger-ff',
@@ -131,7 +131,7 @@ INSERT INTO public.products (
  2200.00, 2500.00,
  (SELECT id FROM categories WHERE slug='greenlight'),
  'Greenlight', '1:64', 'Fast & Furious', 14, true, true, false, false, false, false,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/6/62/1969_Dodge_Charger_%2821572136732%29.jpg/600px-1969_Dodge_Charger_%2821572136732%29.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('Ford Mustang Mach-E GT Blue',
  'greenlight-mustang-mache',
@@ -139,7 +139,7 @@ INSERT INTO public.products (
  1600.00, NULL,
  (SELECT id FROM categories WHERE slug='greenlight'),
  'Greenlight', '1:64', 'Electric Vehicle Series', 20, true, false, true, false, false, false,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/49/2021_Ford_Mustang_Mach-E_Standard_Range_Front.jpg/600px-2021_Ford_Mustang_Mach-E_Standard_Range_Front.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 -- Majorette
 ('Lamborghini Sian Gold',
@@ -148,7 +148,7 @@ INSERT INTO public.products (
  950.00, NULL,
  (SELECT id FROM categories WHERE slug='majorette'),
  'Majorette', '1:64', 'Premium Cars', 22, true, false, true, false, false, false,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/77/Lamborghini_Sian_FKP37_at_IAA_2019_IMG_0350.jpg/600px-Lamborghini_Sian_FKP37_at_IAA_2019_IMG_0350.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('Toyota GR86 Red',
  'majorette-gr86-red',
@@ -156,7 +156,7 @@ INSERT INTO public.products (
  850.00, NULL,
  (SELECT id FROM categories WHERE slug='majorette'),
  'Majorette', '1:64', 'Premium Cars', 28, true, false, false, false, false, false,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/5/50/2022_Toyota_GR86_Premium_in_Halo%2C_Front_Right%2C_04-10-2022.jpg/600px-2022_Toyota_GR86_Premium_in_Halo%2C_Front_Right%2C_04-10-2022.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 -- INNO64
 ('Honda Civic EK9 Type R Championship White',
@@ -165,7 +165,7 @@ INSERT INTO public.products (
  3800.00, NULL,
  (SELECT id FROM categories WHERE slug='inno64'),
  'INNO64', '1:64', 'INNO64 Series', 6, true, true, false, false, true, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/7/71/2024_Honda_Civic_Type_R%2C_front_right%2C_06-15-2024.jpg/600px-2024_Honda_Civic_Type_R%2C_front_right%2C_06-15-2024.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('Mitsubishi Lancer Evolution VI Tommi Makinen',
  'inno64-evo6-tommi',
@@ -173,7 +173,7 @@ INSERT INTO public.products (
  4200.00, NULL,
  (SELECT id FROM categories WHERE slug='inno64'),
  'INNO64', '1:64', 'Rally Icons', 4, true, true, true, false, true, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/2017-04-02_Mitsubishi_Lancer_Evolution_X_MR_SST_14_%282%29.jpg/600px-2017-04-02_Mitsubishi_Lancer_Evolution_X_MR_SST_14_%282%29.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 -- Tarmac Works
 ('Porsche 911 RSR Le Mans',
@@ -182,7 +182,7 @@ INSERT INTO public.products (
  4500.00, NULL,
  (SELECT id FROM categories WHERE slug='tarmac-works'),
  'Tarmac Works', '1:64', 'Global64', 5, true, true, false, false, true, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a2/Porsche_911_No_1000000%2C_70_Years_Porsche_Sports_Car%2C_Berlin_%281X7A3888%29.jpg/600px-Porsche_911_No_1000000%2C_70_Years_Porsche_Sports_Car%2C_Berlin_%281X7A3888%29.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('Honda NSX GT3 Motul',
  'tarmac-nsx-gt3-motul',
@@ -190,7 +190,7 @@ INSERT INTO public.products (
  4800.00, NULL,
  (SELECT id FROM categories WHERE slug='tarmac-works'),
  'Tarmac Works', '1:64', 'Global64', 4, true, false, true, false, true, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/2/21/AcuraNSX-05-cropped.jpg/600px-AcuraNSX-05-cropped.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 -- Auto World
 ('1970 Chevy Chevelle SS 396 Red',
@@ -199,7 +199,7 @@ INSERT INTO public.products (
  2400.00, NULL,
  (SELECT id FROM categories WHERE slug='auto-world'),
  'Auto World', '1:64', 'Premium Series', 11, true, false, true, false, false, false,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/d/df/1970_Chevrolet_Chevelle_SS_396_Sport_Coupe%2C_front_left%2C_06-08-2024.jpg/600px-1970_Chevrolet_Chevelle_SS_396_Sport_Coupe%2C_front_left%2C_06-08-2024.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 -- M2 Machines
 ('1968 Ford Mustang GT 390 Highland Green',
@@ -208,7 +208,7 @@ INSERT INTO public.products (
  3200.00, NULL,
  (SELECT id FROM categories WHERE slug='m2-machines'),
  'M2 Machines', '1:64', 'Auto-Thentics', 8, true, true, false, false, false, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/9/9c/Ford_Mustang_VII_GT_Rutesheimer_Autoschau_2025_DSC_9234.jpg/600px-Ford_Mustang_VII_GT_Rutesheimer_Autoschau_2025_DSC_9234.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 -- Era Car
 ('Honda City Turbo II Rosso',
@@ -217,7 +217,7 @@ INSERT INTO public.products (
  2800.00, NULL,
  (SELECT id FROM categories WHERE slug='era-car'),
  'Era Car', '1:64', 'JDM Series', 9, true, true, true, false, false, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/a/a9/2022_Honda_City_ZX_i-VTEC_%28India%29_front_view_%28cropped%29.jpg/600px-2022_Honda_City_ZX_i-VTEC_%28India%29_front_view_%28cropped%29.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 -- Premium
 ('Ferrari F40 Red 1:18',
@@ -226,7 +226,7 @@ INSERT INTO public.products (
  18000.00, 20000.00,
  (SELECT id FROM categories WHERE slug='premium'),
  'Bburago', '1:18', 'Race & Play', 3, true, true, false, false, false, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/86/1989_Ferrari_F40_SCD_24.jpg/600px-1989_Ferrari_F40_SCD_24.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('Lamborghini Countach 25th Anniversary 1:18',
  'premium-countach-25th-118',
@@ -234,7 +234,7 @@ INSERT INTO public.products (
  16500.00, NULL,
  (SELECT id FROM categories WHERE slug='premium'),
  'Bburago', '1:18', 'Race & Play', 2, true, false, false, false, true, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/4/48/Lamborghini_Countach_-_Flickr_-_exfordy_%282%29_%28cropped-2%29.jpg/600px-Lamborghini_Countach_-_Flickr_-_exfordy_%282%29_%28cropped-2%29.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 -- Limited Edition
 ('Nissan Skyline GT-R R32 Group A Racing',
@@ -243,7 +243,7 @@ INSERT INTO public.products (
  6500.00, NULL,
  (SELECT id FROM categories WHERE slug='limited-edition'),
  'INNO64', '1:64', 'Racing Series', 2, true, true, false, true, true, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/0/06/Nissan_Skyline_GT-R_R34_V_Spec_II.jpg/600px-Nissan_Skyline_GT-R_R34_V_Spec_II.jpg'),
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg'),
 
 ('Mazda RX-7 FD3S RE Amemiya',
  'limited-rx7-fd-reamemiya',
@@ -251,7 +251,7 @@ INSERT INTO public.products (
  5800.00, NULL,
  (SELECT id FROM categories WHERE slug='limited-edition'),
  'Tarmac Works', '1:64', 'Global64', 3, true, true, true, false, true, true,
- 'https://upload.wikimedia.org/wikipedia/commons/thumb/8/8c/1994_Mazda_RX-7_R2_in_Vintage_Red%2C_front_left_%28Lime_Rock%29.jpg/600px-1994_Mazda_RX-7_R2_in_Vintage_Red%2C_front_left_%28Lime_Rock%29.jpg')
+ 'https://upload.wikimedia.org/wikipedia/commons/e/e1/510BluebirdSSS.jpg')
 
 ON CONFLICT (slug) DO NOTHING;
 
