@@ -68,9 +68,10 @@ export function ProductForm({ categories, defaultValues, productId, mode }: Prod
 
       // sync product_images so storefront gallery works
       if (data.image_url && created?.id) {
-        await supabase.from('product_images').upsert(
-          { product_id: created.id, image_url: data.image_url, alt_text: data.title, is_primary: true, sort_order: 1 },
-          { onConflict: 'product_id,image_url' }
+        await supabase.from('product_images')
+          .delete().eq('product_id', created.id).eq('is_primary', true)
+        await supabase.from('product_images').insert(
+          { product_id: created.id, image_url: data.image_url, alt_text: data.title, is_primary: true, sort_order: 1 }
         )
       }
     } else {
@@ -79,11 +80,10 @@ export function ProductForm({ categories, defaultValues, productId, mode }: Prod
 
       // sync product_images so storefront gallery works
       if (data.image_url && productId) {
-        // mark all existing as non-primary, then upsert the current one as primary
-        await supabase.from('product_images').update({ is_primary: false }).eq('product_id', productId)
-        await supabase.from('product_images').upsert(
-          { product_id: productId, image_url: data.image_url, alt_text: data.title, is_primary: true, sort_order: 1 },
-          { onConflict: 'product_id,image_url' }
+        // delete all existing primary images then insert the new one
+        await supabase.from('product_images').delete().eq('product_id', productId).eq('is_primary', true)
+        await supabase.from('product_images').insert(
+          { product_id: productId, image_url: data.image_url, alt_text: data.title, is_primary: true, sort_order: 1 }
         )
       }
     }

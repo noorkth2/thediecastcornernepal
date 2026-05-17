@@ -9,13 +9,22 @@ import type { ProductImage } from '@/lib/types'
 interface ProductGalleryProps {
   images: ProductImage[]
   title: string
+  imageUrlFallback?: string | null
 }
 
-export function ProductGallery({ images, title }: ProductGalleryProps) {
+export function ProductGallery({ images, title, imageUrlFallback }: ProductGalleryProps) {
+  // If product_images table is empty but image_url exists on the product, use it
+  const effectiveImages: ProductImage[] =
+    images.length > 0
+      ? images
+      : imageUrlFallback
+      ? [{ id: -1, product_id: -1, image_url: imageUrlFallback, alt_text: title, orientation: 'square', sort_order: 1, is_primary: true }]
+      : []
+
   const [activeIdx, setActiveIdx] = useState(0)
   const [lightboxOpen, setLightboxOpen] = useState(false)
 
-  if (!images.length) {
+  if (!effectiveImages.length) {
     return (
       <div className="w-full h-[420px] bg-surface-elevated rounded-xl flex items-center justify-center">
         <span className="text-text-faint text-sm">No images available</span>
@@ -23,10 +32,10 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
     )
   }
 
-  const activeImage = images[activeIdx] ?? images[0]
+  const activeImage = effectiveImages[activeIdx] ?? effectiveImages[0]
 
-  const prev = () => setActiveIdx((i) => (i - 1 + images.length) % images.length)
-  const next = () => setActiveIdx((i) => (i + 1) % images.length)
+  const prev = () => setActiveIdx((i) => (i - 1 + effectiveImages.length) % effectiveImages.length)
+  const next = () => setActiveIdx((i) => (i + 1) % effectiveImages.length)
 
   return (
     <>
@@ -55,7 +64,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
           </div>
 
           {/* Arrow nav (only if multiple images) */}
-          {images.length > 1 && (
+          {effectiveImages.length > 1 && (
             <>
               <button
                 onClick={(e) => { e.stopPropagation(); prev() }}
@@ -76,9 +85,9 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
         </div>
 
         {/* Thumbnails */}
-        {images.length > 1 && (
+        {effectiveImages.length > 1 && (
           <div className="flex gap-2 overflow-x-auto scrollbar-hide pb-1">
-            {images.map((img, i) => (
+            {effectiveImages.map((img, i) => (
               <button
                 key={img.id}
                 onClick={() => setActiveIdx(i)}
@@ -121,7 +130,7 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
             ✕
           </button>
 
-          {images.length > 1 && (
+          {effectiveImages.length > 1 && (
             <>
               <button
                 onClick={(e) => { e.stopPropagation(); prev() }}
@@ -155,9 +164,9 @@ export function ProductGallery({ images, title }: ProductGalleryProps) {
           </div>
 
           {/* Dot indicators */}
-          {images.length > 1 && (
+          {effectiveImages.length > 1 && (
             <div className="absolute bottom-6 flex gap-2">
-              {images.map((_, i) => (
+              {effectiveImages.map((_, i) => (
                 <button
                   key={i}
                   onClick={(e) => { e.stopPropagation(); setActiveIdx(i) }}

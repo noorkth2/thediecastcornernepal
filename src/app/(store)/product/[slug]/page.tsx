@@ -83,7 +83,7 @@ export default async function ProductPage(props: ProductPageProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
         {/* Gallery */}
-        <ProductGallery images={product.images ?? []} title={product.title} />
+        <ProductGallery images={product.images ?? []} title={product.title} imageUrlFallback={product.image_url} />
 
         {/* Product Info */}
         <div>
