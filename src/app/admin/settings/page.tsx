@@ -1,7 +1,8 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { Save, Store, Truck, Bell, Globe, CheckCircle } from 'lucide-react'
+import { createClient } from '@/lib/supabase/client'
 
 const SETTINGS_SECTIONS = [
   {
@@ -48,27 +49,53 @@ const SETTINGS_SECTIONS = [
 export default function AdminSettingsPage() {
   const [activeSection, setActiveSection] = useState('store')
   const [saved, setSaved] = useState(false)
-  const [values, setValues] = useState<Record<string, string>>({
-    store_name: 'The Diecast Corner Nepal',
-    store_email: '',
-    store_phone: '',
-    store_address: 'Kathmandu, Nepal',
-    free_shipping_threshold: '2000',
-    standard_shipping_charge: '150',
-    delivery_estimate: '2–5 business days',
-    instagram_url: 'https://instagram.com/thediecastcornernepal',
-    facebook_url: 'https://facebook.com/thediecastcornernepal',
-    tiktok_url: 'https://tiktok.com/@thediecastcornernepal',
-    order_notification_email: '',
-  })
+  const [loading, setLoading] = useState(true)
+  const [saving, setSaving] = useState(false)
+  const [values, setValues] = useState<Record<string, string>>({})
+
+  const supabase = createClient()
+
+  useEffect(() => {
+    async function loadSettings() {
+      const { data, error } = await supabase.from('site_settings').select('*')
+      if (data && !error) {
+        const loadedValues: Record<string, string> = {}
+        data.forEach((row) => {
+          loadedValues[row.key] = row.value
+        })
+        setValues(loadedValues)
+      }
+      setLoading(false)
+    }
+    loadSettings()
+  }, [])
 
   const currentSection = SETTINGS_SECTIONS.find((s) => s.id === activeSection)!
 
   async function handleSave() {
-    // In a full implementation this would POST to /api/admin/settings
-    // For now, show a success state
-    setSaved(true)
-    setTimeout(() => setSaved(false), 2500)
+    setSaving(true)
+    const updates = Object.entries(values).map(([key, value]) => ({
+      key,
+      value,
+      updated_at: new Date().toISOString(),
+    }))
+
+    const { error } = await supabase
+      .from('site_settings')
+      .upsert(updates, { onConflict: 'key' })
+
+    setSaving(false)
+    if (!error) {
+      setSaved(true)
+      setTimeout(() => setSaved(false), 2500)
+    } else {
+      console.error('Failed to save settings', error)
+      alert('Failed to save settings: ' + error.message)
+    }
+  }
+
+  if (loading) {
+    return <div className="text-text-muted text-sm py-8 animate-pulse">Loading settings...</div>
   }
 
   return (
@@ -130,10 +157,11 @@ export default function AdminSettingsPage() {
             <button
               id="save-settings-btn"
               onClick={handleSave}
-              className="flex items-center gap-2 bg-brand-red hover:bg-brand-red-light text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors shadow-lg shadow-brand-red/20"
+              disabled={saving}
+              className="flex items-center gap-2 bg-brand-red hover:bg-brand-red-light text-white text-sm font-semibold px-5 py-2.5 rounded-xl transition-colors shadow-lg shadow-brand-red/20 disabled:opacity-50"
             >
-              {saved ? <CheckCircle className="w-4 h-4" /> : <Save className="w-4 h-4" />}
-              {saved ? 'Saved!' : 'Save Changes'}
+              {saving ? 'Saving...' : saved ? <CheckCircle className="w-4 h-4" /> : <Save className="w-4 h-4" />}
+              {saving ? 'Saving...' : saved ? 'Saved!' : 'Save Changes'}
             </button>
             {saved && (
               <span className="text-green-400 text-sm font-medium animate-pulse">

@@ -9,10 +9,11 @@ import { Button } from '@/components/ui/button'
 export const revalidate = 30
 
 interface OrderSuccessPageProps {
-  params: { id: string }
+  params: Promise<{ id: string }>
 }
 
-export default async function OrderSuccessPage({ params }: OrderSuccessPageProps) {
+export default async function OrderSuccessPage(props: OrderSuccessPageProps) {
+  const params = await props.params
   const { order } = await getOrderById(Number(params.id))
   if (!order) notFound()
 

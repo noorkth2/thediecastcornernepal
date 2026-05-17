@@ -46,8 +46,8 @@ export function Footer() {
               </div>
             </Link>
             <p className="text-text-muted text-sm leading-relaxed max-w-xs">
-              Nepal&apos;s premier destination for Hot Wheels, MiniGT, Matchbox,
-              Tomica, and premium diecast collectibles. Bringing the world of
+              Nepal&apos;s premier destination for MiniGT, Tomica, Matchbox,
+              Greenlight, and premium diecast collectibles. Bringing the world of
               scale models to collectors across Nepal.
             </p>
             <div className="flex items-center gap-3 mt-5">

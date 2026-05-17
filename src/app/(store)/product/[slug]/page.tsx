@@ -1,19 +1,19 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getProductBySlug, getRelatedProducts } from '@/lib/supabase/queries/products'
-import { createClient } from '@/lib/supabase/server'
 import { ProductGallery } from '@/components/store/ProductGallery'
 import { ProductCard } from '@/components/store/ProductCard'
+import { AddToCartDetailButton } from '@/components/store/AddToCartDetailButton'
 import { Badge } from '@/components/ui/badge'
 import { formatPrice, discountPercent } from '@/lib/utils'
 import { Package, Tag, Layers } from 'lucide-react'
-import type { Product } from '@/lib/types'
 
 interface ProductPageProps {
-  params: { slug: string }
+  params: Promise<{ slug: string }>
 }
 
-export async function generateMetadata({ params }: ProductPageProps): Promise<Metadata> {
+export async function generateMetadata(props: ProductPageProps): Promise<Metadata> {
+  const params = await props.params
   const { product } = await getProductBySlug(params.slug)
   if (!product) return { title: 'Product Not Found' }
 
@@ -47,7 +47,8 @@ export async function generateStaticParams() {
 
 export const revalidate = 60
 
-export default async function ProductPage({ params }: ProductPageProps) {
+export default async function ProductPage(props: ProductPageProps) {
+  const params = await props.params
   const { product } = await getProductBySlug(params.slug)
   if (!product) notFound()
 
@@ -171,7 +172,7 @@ export default async function ProductPage({ params }: ProductPageProps) {
           )}
 
           {/* Add to cart — Client Component */}
-          <AddToCartSection product={product} />
+          <AddToCartDetailButton product={product} />
 
           {/* Shipping note */}
           <div className="mt-5 p-3.5 bg-surface-elevated rounded-xl border border-surface-border text-xs text-text-muted flex items-start gap-2">
@@ -201,48 +202,4 @@ export default async function ProductPage({ params }: ProductPageProps) {
   )
 }
 
-// Inline client component for add-to-cart
-function AddToCartSection({ product }: { product: Product }) {
-  'use client'
-  const { useCartStore } = require('@/store/cartStore')
-  const { useUIStore } = require('@/store/uiStore')
-  const { addItem, openCart } = useCartStore()
-  const { addToast } = useUIStore()
-  const { getPrimaryImage } = require('@/lib/utils')
 
-  const handleAddToCart = () => {
-    addItem({
-      id: product.id,
-      title: product.title,
-      slug: product.slug,
-      price: product.price,
-      image: getPrimaryImage(product.images),
-      brand: product.brand,
-      stock_qty: product.stock_qty,
-    })
-    addToast({ message: 'Added to cart!', type: 'success' })
-    openCart()
-  }
-
-  if (product.stock_qty === 0) {
-    return (
-      <button
-        disabled
-        className="w-full py-3.5 rounded-xl bg-surface-elevated text-text-faint font-semibold cursor-not-allowed"
-        id="add-to-cart-detail"
-      >
-        Out of Stock
-      </button>
-    )
-  }
-
-  return (
-    <button
-      onClick={handleAddToCart}
-      className="w-full py-3.5 rounded-xl bg-brand-red hover:bg-brand-red-light text-white font-semibold transition-colors shadow-lg shadow-brand-red/20 active:scale-[0.98]"
-      id="add-to-cart-detail"
-    >
-      🛒 Add to Cart — {formatPrice(product.price)}
-    </button>
-  )
-}

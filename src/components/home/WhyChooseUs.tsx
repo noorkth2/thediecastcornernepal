@@ -18,7 +18,7 @@ const features = [
   {
     icon: Star,
     title: 'Curated Selection',
-    description: 'Hand-picked Hot Wheels, MiniGT, and rare collectibles.',
+    description: 'Hand-picked MiniGT, Tomica, Greenlight, and rare collectibles.',
     color: 'text-brand-gold',
     bg: 'bg-brand-gold/10 border-brand-gold/20',
   },

@@ -77,8 +77,8 @@ export function HeroSection() {
           </h1>
 
           <p className="text-text-muted text-lg leading-relaxed mb-10 max-w-xl">
-            Hot Wheels Treasure Hunts, MiniGT Supercar replicas, Tomica 
-            exclusives — curated diecast collectibles delivered across Nepal.
+            MiniGT Supercar replicas, Tomica exclusives, rare limited editions —
+            curated diecast collectibles delivered across Nepal.
           </p>
 
           {/* CTA buttons */}

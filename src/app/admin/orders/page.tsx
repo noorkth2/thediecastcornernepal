@@ -8,10 +8,11 @@ export const revalidate = 0
 const STATUS_OPTIONS = ['all', 'pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled']
 
 interface AdminOrdersPageProps {
-  searchParams: { status?: string; page?: string }
+  searchParams: Promise<{ status?: string; page?: string }>
 }
 
-export default async function AdminOrdersPage({ searchParams }: AdminOrdersPageProps) {
+export default async function AdminOrdersPage(props: AdminOrdersPageProps) {
+  const searchParams = await props.searchParams
   const supabase = await createClient()
   const status = searchParams.status && searchParams.status !== 'all' ? searchParams.status : null
   const page = Number(searchParams.page ?? 1)

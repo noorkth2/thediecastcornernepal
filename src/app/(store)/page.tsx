@@ -8,9 +8,9 @@ import { SocialStrip } from '@/components/home/SocialStrip'
 import { getFeaturedProducts, getNewArrivals, getTreasureHuntProducts } from '@/lib/supabase/queries/products'
 
 export const metadata: Metadata = {
-  title: 'The Diecast Corner Nepal — Hot Wheels, MiniGT & Collectibles',
+  title: 'The Diecast Corner Nepal — MiniGT, Tomica & Collectibles',
   description:
-    "Nepal's premier diecast collectibles store. Shop Hot Wheels, MiniGT, Matchbox, Tomica and exclusive Treasure Hunts.",
+    "Nepal's premier diecast collectibles store. Shop MiniGT, Tomica, Matchbox, Greenlight and exclusive limited edition finds.",
 }
 
 export const revalidate = 60

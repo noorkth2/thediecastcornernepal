@@ -14,7 +14,8 @@ const TIMELINE_STEPS: Array<{ status: string; label: string; desc: string }> = [
   { status: 'delivered', label: 'Delivered', desc: 'Order delivered successfully' },
 ]
 
-export default async function OrderDetailPage({ params }: { params: { id: string } }) {
+export default async function OrderDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params
   const supabase = await createClient()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) redirect('/login')

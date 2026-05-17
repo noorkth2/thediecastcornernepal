@@ -5,13 +5,12 @@ import { createClient } from '@/lib/supabase/server'
 
 export const metadata: Metadata = {
   title: 'Brands — The Diecast Corner Nepal',
-  description: 'Browse diecast models by brand — Hot Wheels, MiniGT, Matchbox, Tomica, Majorette and more at The Diecast Corner Nepal.',
+  description: 'Browse diecast models by brand — MiniGT, Tomica, Matchbox, Greenlight, Majorette and more at The Diecast Corner Nepal.',
 }
 
 export const revalidate = 300
 
 const BRAND_DESCRIPTIONS: Record<string, string> = {
-  'Hot Wheels': 'The world\'s #1 toy car brand. Mainline, TH, Super TH, and premium releases.',
   'MiniGT': '1:64 precision supercar replicas with jaw-dropping detail.',
   'Matchbox': 'Iconic since 1953. Real-world vehicles in miniature.',
   'Tomica': 'Japan\'s premium diecast brand. Clean, accurate, collectible.',
@@ -19,6 +18,15 @@ const BRAND_DESCRIPTIONS: Record<string, string> = {
   'Bburago': 'Affordable high-quality 1:24 and 1:18 European models.',
   'INNO64': 'Ultra-detailed Japanese street cars for serious collectors.',
   'Tarmac Works': 'Racing and track pedigree in 1:64 scale.',
+  'Greenlight': 'US licensed diecast — Hollywood, muscle cars & pop culture icons.',
+  'Auto World': 'Premium US brand delivering highly detailed American classics.',
+  'Johnny Lightning': 'Collector-grade US diecast with iconic muscle and retro picks.',
+  'M2 Machines': 'Limited-run vintage American cars with authentic detail.',
+  'Era Car': 'Hong Kong brand famous for JDM and Asian market exclusives.',
+  'LCD Models': 'Premium 1:18 hand-crafted supercar and luxury replicas.',
+  'Kyosho': 'Japanese precision engineering. From F1 to hyper-detailed miniatures.',
+  'Norev': 'European brand renowned for accuracy in classic and modern cars.',
+  'Siku': 'Trusted German brand. Commercial vehicles and everyday cars in fine detail.',
 }
 
 export default async function BrandsPage() {

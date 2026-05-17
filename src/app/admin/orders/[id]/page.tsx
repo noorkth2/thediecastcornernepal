@@ -9,7 +9,8 @@ import { MapPin, CreditCard, Package } from 'lucide-react'
 
 export const revalidate = 0
 
-export default async function AdminOrderDetailPage({ params }: { params: { id: string } }) {
+export default async function AdminOrderDetailPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params
   const { order } = await getOrderById(Number(params.id))
   if (!order) notFound()
 

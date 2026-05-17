@@ -5,7 +5,7 @@ import { Star } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'Treasure Hunts — The Diecast Corner Nepal',
-  description: 'Shop rare Hot Wheels Treasure Hunt and Super Treasure Hunt models — exclusively curated for Nepal collectors.',
+  description: 'Shop rare and limited diecast finds — chase models, special editions, and exclusive collectibles curated for Nepal collectors.',
 }
 
 export const revalidate = 60
@@ -30,7 +30,7 @@ export default async function TreasureHuntPage() {
             TREASURE HUNT ZONE
           </h1>
           <p className="text-text-muted text-sm max-w-lg leading-relaxed">
-            The rarest Hot Wheels Treasure Hunts and Super Treasure Hunts in Nepal.
+            The rarest chase models, limited editions, and special releases in Nepal.
             These sell out fast — add to cart before they&apos;re gone forever.
           </p>
         </div>

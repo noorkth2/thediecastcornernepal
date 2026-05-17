@@ -221,10 +221,10 @@ create policy "Users can manage own cart"
 
 -- ─── SEED: Default categories ─────────────────────────────────────────────────
 insert into public.categories (name, slug, sort_order) values
-  ('Hot Wheels', 'hot-wheels', 1),
-  ('MiniGT', 'minigt', 2),
+  ('MiniGT', 'minigt', 1),
+  ('Tomica', 'tomica', 2),
   ('Matchbox', 'matchbox', 3),
-  ('Tomica', 'tomica', 4),
+  ('Greenlight', 'greenlight', 4),
   ('Premium 1:18 & 1:24', 'premium', 5),
   ('Treasure Hunts', 'treasure-hunts', 6),
   ('Limited Edition', 'limited-edition', 7)

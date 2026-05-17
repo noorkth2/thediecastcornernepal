@@ -6,29 +6,31 @@ const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
 export const metadata: Metadata = {
   title: {
-    default: 'The Diecast Corner Nepal — Hot Wheels, MiniGT & Collectibles',
+    default: 'The Diecast Corner Nepal — MiniGT, Tomica & Collectibles',
     template: '%s | The Diecast Corner Nepal',
   },
   description:
-    'Nepal\'s premier destination for Hot Wheels, MiniGT, Matchbox, Tomica, and premium diecast collectibles. Shop exclusive models, treasure hunts, and limited editions.',
+    'Nepal\'s premier destination for MiniGT, Tomica, Matchbox, Greenlight, and premium diecast collectibles. Shop exclusive models, rare limited editions, and collectible scale models.',
   keywords: [
-    'diecast Nepal',
-    'Hot Wheels Nepal',
     'MiniGT Nepal',
-    'Matchbox Nepal',
     'Tomica Nepal',
-    'diecast collectibles',
+    'diecast Nepal',
+    'Matchbox Nepal',
+    'Greenlight Nepal',
     'toy cars Nepal',
-    'treasure hunt Hot Wheels',
+    'scale models Nepal',
+    'rare diecast collectibles',
+    'limited edition diecast',
+    'miniature cars Nepal',
   ],
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: process.env.NEXT_PUBLIC_URL,
     siteName: 'The Diecast Corner Nepal',
-    title: 'The Diecast Corner Nepal — Hot Wheels, MiniGT & Collectibles',
+    title: 'The Diecast Corner Nepal — MiniGT, Tomica & Collectibles',
     description:
-      'Nepal\'s premier destination for diecast collectibles. Hot Wheels, MiniGT, Matchbox, Tomica and more.',
+      'Nepal\'s premier destination for diecast collectibles. MiniGT, Tomica, Matchbox, Greenlight and more.',
   },
   twitter: {
     card: 'summary_large_image',

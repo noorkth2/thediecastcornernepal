@@ -27,7 +27,7 @@ export function TreasureHuntZone({ products }: TreasureHuntZoneProps) {
               TREASURE HUNT ZONE
             </h2>
             <p className="text-text-muted text-sm mt-1">
-              The rarest Hot Wheels Treasure Hunts — grab them before they&apos;re gone
+              The rarest chase models and limited editions — grab them before they&apos;re gone
             </p>
           </div>
           <Link

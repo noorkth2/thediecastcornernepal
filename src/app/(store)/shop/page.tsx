@@ -10,13 +10,13 @@ import { PRODUCTS_PER_PAGE } from '@/lib/constants'
 export const metadata: Metadata = {
   title: 'Shop — Browse All Diecast Models',
   description:
-    'Browse our full collection of Hot Wheels, MiniGT, Matchbox, Tomica and premium diecast models. Filter by brand, price, and more.',
+    'Browse our full collection of MiniGT, Tomica, Matchbox, Greenlight and premium diecast models. Filter by brand, price, and more.',
 }
 
 export const revalidate = 60
 
 interface ShopPageProps {
-  searchParams: {
+  searchParams: Promise<{
     category?: string
     brand?: string
     min?: string
@@ -24,10 +24,11 @@ interface ShopPageProps {
     sort?: string
     page?: string
     q?: string
-  }
+  }>
 }
 
-export default async function ShopPage({ searchParams }: ShopPageProps) {
+export default async function ShopPage(props: ShopPageProps) {
+  const searchParams = await props.searchParams
   const page = Number(searchParams.page ?? 1)
 
   const [{ products, count }, { categories }] = await Promise.all([

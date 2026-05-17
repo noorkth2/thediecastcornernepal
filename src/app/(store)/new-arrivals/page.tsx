@@ -5,7 +5,7 @@ import { Zap } from 'lucide-react'
 
 export const metadata: Metadata = {
   title: 'New Arrivals — The Diecast Corner Nepal',
-  description: 'Shop the latest diecast arrivals — Hot Wheels, MiniGT and more, freshly stocked at The Diecast Corner Nepal.',
+  description: 'Shop the latest diecast arrivals — MiniGT, Tomica, Greenlight and more, freshly stocked at The Diecast Corner Nepal.',
 }
 
 export const revalidate = 60

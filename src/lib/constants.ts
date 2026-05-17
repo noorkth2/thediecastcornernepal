@@ -1,22 +1,22 @@
 // ─── Brands ───────────────────────────────────────────────────────────────────
 
 export const BRANDS = [
-  'Hot Wheels',
   'MiniGT',
   'Matchbox',
   'Tomica',
   'Majorette',
   'Bburago',
-  'Hotwheels RLC',
   'Greenlight',
   'Auto World',
   'Johnny Lightning',
   'M2 Machines',
   'INNO64',
   'Tarmac Works',
+  'Era Car',
   'LCD Models',
   'Kyosho',
   'Norev',
+  'Siku',
   'Other',
 ] as const
 

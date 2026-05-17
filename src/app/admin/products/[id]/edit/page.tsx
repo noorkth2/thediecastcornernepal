@@ -3,7 +3,8 @@ import { createClient } from '@/lib/supabase/server'
 import { ProductForm } from '@/components/admin/ProductForm'
 import type { Category } from '@/lib/types'
 
-export default async function EditProductPage({ params }: { params: { id: string } }) {
+export default async function EditProductPage(props: { params: Promise<{ id: string }> }) {
+  const params = await props.params
   const supabase = await createClient()
 
   const [{ data: product }, { data: categories }] = await Promise.all([
