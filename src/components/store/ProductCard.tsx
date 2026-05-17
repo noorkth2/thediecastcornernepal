@@ -2,7 +2,7 @@
 
 import Image from 'next/image'
 import Link from 'next/link'
-import { ShoppingCart, Eye, Star } from 'lucide-react'
+import { ShoppingCart, Eye, Star, Heart } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { useUIStore } from '@/store/uiStore'
 import { formatPrice, getPrimaryImage, discountPercent } from '@/lib/utils'
@@ -62,6 +62,19 @@ export function ProductCard({ product, className }: ProductCardProps) {
           className="object-contain p-3 group-hover:scale-105 transition-transform duration-500"
           sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
         />
+
+        {/* Wishlist Button */}
+        <button
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            addToast({ message: 'Wishlist feature coming soon!', type: 'info' })
+          }}
+          className="absolute top-2 right-2 p-1.5 rounded-full bg-black/20 text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all hover:bg-brand-red hover:text-white z-20"
+          aria-label="Add to wishlist"
+        >
+          <Heart className="w-4 h-4" />
+        </button>
 
         {/* Hover overlay */}
         <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">

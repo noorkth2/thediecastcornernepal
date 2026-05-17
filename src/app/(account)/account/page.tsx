@@ -39,7 +39,7 @@ export default async function AccountDashboardPage() {
         {[
           { label: 'Total Orders', value: orders.length, icon: Package, color: 'text-brand-red' },
           { label: 'Total Spent', value: formatPrice(totalSpent), icon: ShoppingBag, color: 'text-brand-gold' },
-          { label: 'Account Status', value: 'Active', icon: User, color: 'text-green-400' },
+          { label: 'Member Since', value: new Date(profile?.created_at || user.created_at).getFullYear(), icon: User, color: 'text-green-400' },
         ].map(({ label, value, icon: Icon, color }) => (
           <div key={label} className="bg-surface-card rounded-xl border border-surface-border p-5">
             <div className="flex items-center gap-3 mb-2">
