@@ -1,5 +1,5 @@
 # Dependency Graph — The Diecast Corner Nepal
-> Last updated: 2026-05-18 | Reflects wishlist feature additions
+> Last updated: 2026-05-18 | Reflects rich media, banners, and bulk product import additions
 
 ## 1. NPM Package Dependencies
 
@@ -24,6 +24,8 @@ graph TD
     RADIX_TOAST["@radix-ui/react-toast"]
     LUCIDE["lucide-react@1.14.0"]
     EMBLA["embla-carousel-react@8.6.0"]
+    EMBLA_AUTO["embla-carousel-autoplay@8.6.0 ✨NEW"]
+    REACT_SOCIAL["react-social-media-embed@2.5.18 ✨NEW"]
     CVA["class-variance-authority@0.7.1"]
     CLSX["clsx@2.1.1"]
     TWMERGE["tailwind-merge@3.6.0"]
@@ -94,7 +96,7 @@ graph TD
     SHOP["(store)/shop/page.tsx"]
     PRODUCT["(store)/product/[slug]/page.tsx"]
     CART["(store)/cart/page.tsx"]
-    CHECKOUT["(store)/checkout/page.tsx"]
+    CHECKOUT["(store)/checkout/page.tsx 🔧UPDATED"]
     ORDER_SUCCESS["(store)/order/success/[id]/page.tsx"]
     BRANDS["(store)/brands/page.tsx"]
     NEW_ARRIVALS["(store)/new-arrivals/page.tsx"]
@@ -110,35 +112,38 @@ graph TD
 
   subgraph Pages_Account ["👤 Account Routes (account)"]
     ACCOUNT["(account)/account/page.tsx"]
-    WISHLIST["(account)/account/wishlist/page.tsx ✨NEW"]
+    WISHLIST["(account)/account/wishlist/page.tsx"]
     ACC_LAYOUT["(account)/layout.tsx"]
   end
 
   subgraph Pages_Admin ["⚙️ Admin Routes"]
     ADMIN_HOME["admin/page.tsx"]
-    ADMIN_PRODUCTS["admin/products/page.tsx"]
-    ADMIN_PROD_NEW["admin/products/new/page.tsx ✨NEW"]
-    ADMIN_PROD_EDIT["admin/products/[id]/edit/page.tsx ✨NEW"]
+    ADMIN_PRODUCTS["admin/products/page.tsx 🔧UPDATED"]
+    ADMIN_PROD_NEW["admin/products/new/page.tsx"]
+    ADMIN_PROD_EDIT["admin/products/[id]/edit/page.tsx"]
     ADMIN_ORDERS["admin/orders/page.tsx"]
-    ADMIN_ORDER_DETAIL["admin/orders/[id]/page.tsx ✨NEW"]
+    ADMIN_ORDER_DETAIL["admin/orders/[id]/page.tsx"]
     ADMIN_CATEGORIES["admin/categories/page.tsx"]
-    ADMIN_CAT_NEW["admin/categories/new/page.tsx ✨NEW"]
-    ADMIN_CAT_EDIT["admin/categories/[id]/edit/page.tsx ✨NEW"]
+    ADMIN_CAT_NEW["admin/categories/new/page.tsx"]
+    ADMIN_CAT_EDIT["admin/categories/[id]/edit/page.tsx"]
     ADMIN_ANALYTICS["admin/analytics/page.tsx"]
     ADMIN_SETTINGS["admin/settings/page.tsx"]
+    ADMIN_BANNERS["admin/banners/page.tsx ✨NEW"]
+    ADMIN_MEDIA["admin/media/page.tsx ✨NEW"]
     ADMIN_LAYOUT["admin/layout.tsx"]
   end
 
-  subgraph API ["📡 API Routes"]
+  subgraph API ["📡 API Routes & Actions"]
     API_ORDERS["api/orders/route.ts"]
     API_KHALTI_INIT["api/payment/khalti/initiate/route.ts"]
     API_KHALTI_VERIFY["api/payment/khalti/verify/route.ts"]
-    API_KHALTI_WEBHOOK["api/payment/khalti/webhook/route.ts ✨NEW"]
-    API_CART_SYNC["api/cart/sync/route.ts ✨NEW"]
-    API_AUTH_CALLBACK["api/auth/callback/route.ts ✨NEW"]
-    API_AUTH_SIGNOUT["api/auth/signout/route.ts ✨NEW"]
-    API_WISHLIST["api/wishlist/route.ts ✨NEW"]
-    API_WISHLIST_SYNC["api/wishlist/sync/route.ts ✨NEW"]
+    API_KHALTI_WEBHOOK["api/payment/khalti/webhook/route.ts"]
+    API_CART_SYNC["api/cart/sync/route.ts"]
+    API_AUTH_CALLBACK["api/auth/callback/route.ts"]
+    API_AUTH_SIGNOUT["api/auth/signout/route.ts"]
+    API_WISHLIST["api/wishlist/route.ts"]
+    API_WISHLIST_SYNC["api/wishlist/sync/route.ts"]
+    ACTION_BULK_IMPORT["admin/products/actions.ts ✨NEW"]
   end
 
   subgraph Components_Layout ["🧱 Layout Components"]
@@ -149,9 +154,12 @@ graph TD
 
   subgraph Components_Home ["🏡 Home Components"]
     HERO["components/home/HeroSection.tsx"]
+    BANNER_CAROUSEL["components/home/BannerCarousel.tsx ✨NEW"]
+    BANNER_SLIDE["components/home/BannerSlide.tsx ✨NEW"]
     FEATURED["components/home/FeaturedDrops.tsx"]
     NEW_ARR_COMP["components/home/NewArrivals.tsx"]
     SOCIAL["components/home/SocialStrip.tsx"]
+    COLL_MEDIA_GALLERY["components/home/CollectorMediaGallery.tsx ✨NEW"]
     TREASURE_COMP["components/home/TreasureHuntZone.tsx"]
     WHY_US["components/home/WhyChooseUs.tsx"]
   end
@@ -159,16 +167,21 @@ graph TD
   subgraph Components_Store ["🏪 Store Components"]
     CART_DRAWER["components/store/CartDrawer.tsx"]
     PRODUCT_CARD["components/store/ProductCard.tsx"]
-    PRODUCT_GALLERY["components/store/ProductGallery.tsx 🔧UPDATED"]
+    PRODUCT_GALLERY["components/store/ProductGallery.tsx"]
+    PRODUCT_MEDIA["components/store/ProductMediaGallery.tsx ✨NEW"]
     PRODUCT_GRID["components/store/ProductGrid.tsx"]
     SHOP_FILTERS["components/store/ShopFilters.tsx"]
-    ADD_TO_CART_BTN["components/store/AddToCartDetailButton.tsx ✨NEW"]
+    ADD_TO_CART_BTN["components/store/AddToCartDetailButton.tsx"]
   end
 
   subgraph Components_Admin ["🛠️ Admin Components"]
     ORDER_STATUS["components/admin/OrderStatusUpdater.tsx"]
-    PRODUCT_FORM["components/admin/ProductForm.tsx 🔧UPDATED"]
-    CATEGORY_FORM["components/admin/CategoryForm.tsx ✨NEW"]
+    PRODUCT_FORM["components/admin/ProductForm.tsx"]
+    PRODUCT_BULK_IMPORT["components/admin/ProductBulkImport.tsx ✨NEW"]
+    PRODUCT_MEDIA_MANAGER["components/admin/ProductMediaManager.tsx ✨NEW"]
+    SOCIAL_GALLERY_MANAGER["components/admin/SocialGalleryManager.tsx ✨NEW"]
+    BANNER_FORM["components/admin/BannerForm.tsx ✨NEW"]
+    CATEGORY_FORM["components/admin/CategoryForm.tsx"]
   end
 
   subgraph Components_UI ["🎨 UI Primitives"]
@@ -176,12 +189,14 @@ graph TD
     BUTTON["components/ui/button.tsx"]
     INPUT["components/ui/input.tsx"]
     SKELETON["components/ui/skeleton.tsx"]
+    VIDEO_EMBED["components/ui/VideoEmbed.tsx ✨NEW"]
+    MEDIA_CARD["components/ui/MediaCard.tsx ✨NEW"]
   end
 
   subgraph Stores ["📦 Zustand Stores"]
     CART_STORE["store/cartStore.ts"]
     UI_STORE["store/uiStore.ts"]
-    WISHLIST_STORE["store/wishlistStore.ts ✨NEW"]
+    WISHLIST_STORE["store/wishlistStore.ts"]
   end
 
   subgraph Lib ["📚 Lib / Shared"]
@@ -190,21 +205,20 @@ graph TD
     Q_PRODUCTS["lib/supabase/queries/products.ts"]
     Q_CATEGORIES["lib/supabase/queries/categories.ts"]
     Q_ORDERS["lib/supabase/queries/orders.ts"]
-    Q_BANNERS["lib/supabase/queries/banners.ts"]
-    Q_ANALYTICS["lib/supabase/queries/analytics.ts ✨NEW"]
-    TYPES_PRODUCT["lib/types/product.ts 🔧UPDATED"]
-    TYPES_ORDER["lib/types/order.ts ✨NEW"]
-    TYPES_API["lib/types/api.ts ✨NEW"]
-    UTILS["lib/utils.ts 🔧UPDATED"]
-    CONSTANTS["lib/constants.ts"]
-    VAL_AUTH["lib/validations/auth.ts"]
-    VAL_CHECKOUT["lib/validations/checkout.ts"]
-    VAL_PRODUCT["lib/validations/product.ts"]
-    PROXY["src/proxy.ts"]
+    Q_BANNERS["lib/supabase/queries/banners.ts ✨NEW"]
+    Q_MEDIA["lib/supabase/queries/media.ts ✨NEW"]
+    Q_ANALYTICS["lib/supabase/queries/analytics.ts"]
+    TYPES_PRODUCT["lib/types/product.ts"]
+    TYPES_MEDIA["lib/types/media.ts ✨NEW"]
+    UTILS["lib/utils.ts"]
+    CONSTANTS["lib/constants.ts 🔧UPDATED"]
   end
 
   subgraph Static ["📁 Static Assets"]
-    PLACEHOLDER["public/placeholder-car.jpg ✨NEW"]
+    PLACEHOLDER["public/placeholder-car.jpg"]
+    CSV_TEMPLATE["public/products_template.csv ✨NEW"]
+    LOGO_KHALTI["public/logos/khalti.png ✨NEW"]
+    LOGO_ESEWA["public/logos/esewa.png ✨NEW"]
   end
 
   %% App Shell
@@ -213,161 +227,53 @@ graph TD
   LAYOUT --> ANNOUNCEMENT
   LAYOUT --> CART_DRAWER
 
-  %% Store pages → Layout
-  STORE_LAYOUT --> NAVBAR
-  STORE_LAYOUT --> FOOTER
-
-  %% Home page → Home components
-  HOME --> HERO
+  %% Home page integration
+  HOME --> BANNER_CAROUSEL
   HOME --> FEATURED
+  HOME --> COLL_MEDIA_GALLERY
   HOME --> NEW_ARR_COMP
-  HOME --> SOCIAL
-  HOME --> TREASURE_COMP
-  HOME --> WHY_US
 
-  %% Store page → Store components
+  %% Store UI
   SHOP --> PRODUCT_GRID
-  SHOP --> SHOP_FILTERS
   PRODUCT_GRID --> PRODUCT_CARD
-  PRODUCT --> PRODUCT_GALLERY
+  PRODUCT --> PRODUCT_MEDIA
   PRODUCT --> ADD_TO_CART_BTN
+  CHECKOUT --> LOGO_KHALTI
+  CHECKOUT --> LOGO_ESEWA
 
-  %% Image fallback chain (new)
-  PRODUCT_GALLERY --> PLACEHOLDER
-  PRODUCT_CARD --> UTILS
-  TREASURE_COMP --> UTILS
-  ADD_TO_CART_BTN --> UTILS
+  %% Admin Bulk Import
+  ADMIN_PRODUCTS --> PRODUCT_BULK_IMPORT
+  PRODUCT_BULK_IMPORT --> ACTION_BULK_IMPORT
+  PRODUCT_BULK_IMPORT --> CSV_TEMPLATE
+  
+  %% Media & Banner Admin
+  ADMIN_BANNERS --> BANNER_FORM
+  ADMIN_MEDIA --> SOCIAL_GALLERY_MANAGER
+  ADMIN_PROD_EDIT --> PRODUCT_MEDIA_MANAGER
+  PRODUCT_MEDIA_MANAGER --> Q_MEDIA
 
-  %% UI primitives used by store components
+  %% UI primitives used
   PRODUCT_CARD --> BADGE
-  PRODUCT_CARD --> BUTTON
-  CART_DRAWER --> BUTTON
-  CART_DRAWER --> INPUT
-  SHOP_FILTERS --> BUTTON
-  PRODUCT_GALLERY --> BUTTON
-  PRODUCT_FORM --> INPUT
-  PRODUCT_FORM --> BUTTON
-  PRODUCT_FORM --> BADGE
-  CATEGORY_FORM --> INPUT
-  CATEGORY_FORM --> BUTTON
-
-  %% Admin components → UI
-  ORDER_STATUS --> BUTTON
-  ORDER_STATUS --> BADGE
-
-  %% Admin pages → Admin components
-  ADMIN_PRODUCTS --> PRODUCT_FORM
-  ADMIN_PROD_NEW --> PRODUCT_FORM
-  ADMIN_PROD_EDIT --> PRODUCT_FORM
-  ADMIN_ORDERS --> ORDER_STATUS
-  ADMIN_ORDER_DETAIL --> ORDER_STATUS
-  ADMIN_CATEGORIES --> CATEGORY_FORM
-  ADMIN_CAT_NEW --> CATEGORY_FORM
-  ADMIN_CAT_EDIT --> CATEGORY_FORM
+  PRODUCT_MEDIA --> VIDEO_EMBED
+  COLL_MEDIA_GALLERY --> MEDIA_CARD
+  BANNER_CAROUSEL --> EMBLA_AUTO
 
   %% Zustand stores
-  CART_DRAWER --> CART_STORE
   NAVBAR --> CART_STORE
-  NAVBAR --> UI_STORE
-  NAVBAR --> WISHLIST_STORE
   PRODUCT_CARD --> CART_STORE
-  PRODUCT_CARD --> UI_STORE
   PRODUCT_CARD --> WISHLIST_STORE
-  ADD_TO_CART_BTN --> CART_STORE
-  WISHLIST --> PRODUCT_CARD
 
   %% Queries → Supabase clients
   Q_PRODUCTS --> SB_SERVER
-  Q_CATEGORIES --> SB_SERVER
-  Q_ORDERS --> SB_SERVER
   Q_BANNERS --> SB_SERVER
-  Q_ANALYTICS --> SB_SERVER
+  Q_MEDIA --> SB_SERVER
   SB_CLIENT --> SUPABASE_JS[("@supabase/supabase-js")]
   SB_SERVER --> SUPABASE_SSR[("@supabase/ssr")]
-
-  %% ProductForm syncs product_images (NEW)
-  PRODUCT_FORM --> SB_CLIENT
-  PRODUCT_FORM --> SUPABASE_STORAGE[("Supabase Storage<br/>products bucket")]
-
-  %% Pages → Queries
-  HOME --> Q_PRODUCTS
-  HOME --> Q_BANNERS
-  SHOP --> Q_PRODUCTS
-  SHOP --> Q_CATEGORIES
-  PRODUCT --> Q_PRODUCTS
-  ADMIN_HOME --> Q_ORDERS
-  ADMIN_HOME --> Q_ANALYTICS
-  ADMIN_PRODUCTS --> Q_PRODUCTS
-  ADMIN_ORDERS --> Q_ORDERS
-  ADMIN_CATEGORIES --> Q_CATEGORIES
-  ADMIN_ANALYTICS --> Q_ANALYTICS
-
-  %% API routes → Supabase
-  API_ORDERS --> SB_SERVER
-  API_KHALTI_INIT --> SB_SERVER
-  API_KHALTI_VERIFY --> SB_SERVER
-  API_KHALTI_WEBHOOK --> SB_SERVER
-  API_CART_SYNC --> SB_SERVER
-
-  %% Shared lib usage
-  UTILS --> CLSX_DEP[("clsx + tailwind-merge")]
-  PRODUCT_FORM --> VAL_PRODUCT
-  LOGIN --> VAL_AUTH
-  REGISTER --> VAL_AUTH
-  CART_DRAWER --> VAL_CHECKOUT
-  ORDER_SUCCESS --> VAL_CHECKOUT
-
-  %% Types shared across
-  Q_PRODUCTS --> TYPES_PRODUCT
-  Q_ORDERS --> TYPES_ORDER
-  Q_CATEGORIES --> TYPES_PRODUCT
-  CART_STORE --> TYPES_PRODUCT
 ```
 
 ---
 
-## 3. Image Resolution Pipeline (New)
-
-This pipeline was introduced to fix broken product images. It shows the priority order for resolving a product's display image:
-
-```mermaid
-flowchart TD
-  QUERY["DB Query<br/>products + product_images JOIN"]
-  CHECK1{"product.images<br/>array non-empty?"}
-  USE_PRIMARY["Use is_primary=true image<br/>from product_images table"]
-  CHECK2{"product.image_url<br/>set?"}
-  USE_FALLBACK["Use product.image_url<br/>directly as fallback"]
-  USE_PLACEHOLDER["Use /placeholder-car.jpg<br/>(local static asset)"]
-
-  QUERY --> CHECK1
-  CHECK1 -- Yes --> USE_PRIMARY
-  CHECK1 -- No --> CHECK2
-  CHECK2 -- Yes --> USE_FALLBACK
-  CHECK2 -- No --> USE_PLACEHOLDER
-
-  USE_PRIMARY --> DISPLAY["🖼️ Display Image"]
-  USE_FALLBACK --> DISPLAY
-  USE_PLACEHOLDER --> DISPLAY
-```
-
-**Key components involved:**
-- `lib/utils.ts` → `getPrimaryImage(images, fallbackUrl?)` — resolves for cards & thumbnails
-- `components/store/ProductGallery.tsx` → `imageUrlFallback` prop — resolves for detail page gallery
-- `components/admin/ProductForm.tsx` → on save, syncs `products.image_url` into `product_images` table
-
-**Admin upload flow:**
-```mermaid
-flowchart LR
-  UPLOAD["Admin uploads image"] --> STORAGE["Supabase Storage<br/>(products bucket)"]
-  STORAGE --> URL["Public URL returned"]
-  URL --> PRODUCTS_TABLE["UPDATE products<br/>SET image_url = URL"]
-  PRODUCTS_TABLE --> IMAGES_TABLE["DELETE old product_images rows<br/>INSERT new primary row"]
-  IMAGES_TABLE --> STOREFRONT["✅ Storefront gallery<br/>shows correct image"]
-```
-
----
-
-## 4. Data Flow Diagram
+## 3. Data Flow Diagram
 
 ```mermaid
 flowchart LR
@@ -380,9 +286,9 @@ flowchart LR
     RHF["React Hook Form<br/>+ Zod Validation"]
   end
 
-  subgraph Server ["Server Side (RSC / API Routes)"]
+  subgraph Server ["Server Side (RSC / API Routes / Actions)"]
     RSC["React Server Component"]
-    API_RT["API Route Handler"]
+    API_RT["API Route Handler / Server Action"]
     SB_SRV["Supabase Server Client<br/>(@supabase/ssr)"]
     SB_CLI["Supabase Browser Client<br/>(@supabase/supabase-js)"]
   end
@@ -390,6 +296,7 @@ flowchart LR
   subgraph External ["External Services"]
     SUPABASE[("Supabase<br/>Postgres + Auth + Storage")]
     KHALTI["Khalti<br/>Payment Gateway"]
+    TIKTOK["TikTok / Insta<br/>(Embeds)"]
   end
 
   USER --> PAGE
@@ -406,24 +313,26 @@ flowchart LR
   RHF --> API_RT
   RHF --> SB_CLI
   ZUSTAND --> SB_CLI
+  PAGE --> TIKTOK
 ```
 
 ---
 
-## 5. Database Schema & RLS Policy Map
+## 4. Database Schema & RLS Policy Map
 
 ```mermaid
 graph TD
   subgraph Tables ["📊 Supabase Tables"]
     T_PROFILES["profiles"]
-    T_PRODUCTS["products<br/>(+image_url field)"]
+    T_PRODUCTS["products"]
     T_PRODUCT_IMAGES["product_images"]
+    T_PRODUCT_VIDEOS["product_videos ✨NEW"]
     T_CATEGORIES["categories"]
-    T_BANNERS["banners"]
+    T_BANNERS["banners ✨NEW"]
+    T_SOCIAL_GALLERY["social_gallery ✨NEW"]
     T_ORDERS["orders"]
-    T_ORDER_ITEMS["order_items"]
     T_CART_ITEMS["cart_items"]
-    T_SITE_SETTINGS["site_settings ✨NEW"]
+    T_WISHLIST["wishlist_items ✨NEW"]
   end
 
   subgraph RLS ["🔒 RLS Access Rules"]
@@ -436,92 +345,38 @@ graph TD
   T_PRODUCTS --> ADMIN_ALL
   T_PRODUCT_IMAGES --> PUBLIC_READ
   T_PRODUCT_IMAGES --> ADMIN_ALL
+  T_PRODUCT_VIDEOS --> PUBLIC_READ
+  T_PRODUCT_VIDEOS --> ADMIN_ALL
   T_CATEGORIES --> PUBLIC_READ
   T_CATEGORIES --> ADMIN_ALL
   T_BANNERS --> PUBLIC_READ
   T_BANNERS --> ADMIN_ALL
+  T_SOCIAL_GALLERY --> PUBLIC_READ
+  T_SOCIAL_GALLERY --> ADMIN_ALL
   T_PROFILES --> USER_OWN
   T_ORDERS --> USER_OWN
   T_ORDERS --> ADMIN_ALL
   T_CART_ITEMS --> USER_OWN
-```
-
-> **Note:** `product_images` admin write policy was **added in this session** — previously missing, which caused silent failures when saving images from the admin panel.
-
----
-
-## 6. Route Hierarchy
-
-```mermaid
-graph TD
-  ROOT["/"]
-
-  ROOT --> STORE_GROUP["(store) group"]
-  ROOT --> AUTH_GROUP["(auth) group"]
-  ROOT --> ACC_GROUP["(account) group"]
-  ROOT --> ADMIN_GROUP["admin/"]
-  ROOT --> API_GROUP["api/"]
-
-  STORE_GROUP --> R_HOME["/ — Homepage"]
-  STORE_GROUP --> R_SHOP["shop/"]
-  STORE_GROUP --> R_PRODUCT["product/[slug]/"]
-  STORE_GROUP --> R_CART["cart/"]
-  STORE_GROUP --> R_CHECKOUT["checkout/ ✨NEW"]
-  STORE_GROUP --> R_BRANDS["brands/"]
-  STORE_GROUP --> R_NEW["new-arrivals/"]
-  STORE_GROUP --> R_TREASURE["treasure-hunt/"]
-  STORE_GROUP --> R_ORDER_OK["order/success/[id]/"]
-
-  AUTH_GROUP --> R_LOGIN["login/"]
-  AUTH_GROUP --> R_REGISTER["register/"]
-
-  ACC_GROUP --> R_ACCOUNT["account/"]
-
-  ADMIN_GROUP --> R_ADMIN["admin/ — Dashboard"]
-  ADMIN_GROUP --> R_ADMIN_PROD["admin/products/"]
-  ADMIN_GROUP --> R_ADMIN_PROD_NEW["admin/products/new/ ✨NEW"]
-  ADMIN_GROUP --> R_ADMIN_PROD_EDIT["admin/products/[id]/edit/ ✨NEW"]
-  ADMIN_GROUP --> R_ADMIN_ORDERS["admin/orders/"]
-  ADMIN_GROUP --> R_ADMIN_ORDER_ID["admin/orders/[id]/ ✨NEW"]
-  ADMIN_GROUP --> R_ADMIN_CAT["admin/categories/"]
-  ADMIN_GROUP --> R_ADMIN_CAT_NEW["admin/categories/new/ ✨NEW"]
-  ADMIN_GROUP --> R_ADMIN_CAT_EDIT["admin/categories/[id]/edit/ ✨NEW"]
-  ADMIN_GROUP --> R_ADMIN_ANA["admin/analytics/"]
-  ADMIN_GROUP --> R_ADMIN_SET["admin/settings/"]
-
-  API_GROUP --> R_API_ORDERS["api/orders/"]
-  API_GROUP --> R_API_KHALTI_I["api/payment/khalti/initiate/"]
-  API_GROUP --> R_API_KHALTI_V["api/payment/khalti/verify/"]
-  API_GROUP --> R_API_KHALTI_W["api/payment/khalti/webhook/ ✨NEW"]
-  API_GROUP --> R_API_CART["api/cart/sync/ ✨NEW"]
-  API_GROUP --> R_API_AUTH_CB["api/auth/callback/ ✨NEW"]
-  API_GROUP --> R_API_AUTH_SO["api/auth/signout/ ✨NEW"]
+  T_WISHLIST --> USER_OWN
 ```
 
 ---
 
-## 7. Summary Table
+## 5. Summary Table
 
 | Layer | Modules |
 |---|---|
-| **Pages (Store)** | `/`, `/shop`, `/product/[slug]`, `/cart`, `/checkout` ✨, `/order/success/[id]`, `/brands`, `/new-arrivals`, `/treasure-hunt` |
-| **Pages (Auth)** | `/login`, `/register` |
-| **Pages (Account)** | `/account`, `/account/wishlist` ✨ |
-| **Pages (Admin)** | `/admin`, `/admin/products`, `/admin/products/new` ✨, `/admin/products/[id]/edit` ✨, `/admin/orders`, `/admin/orders/[id]` ✨, `/admin/categories`, `/admin/categories/new` ✨, `/admin/categories/[id]/edit` ✨, `/admin/analytics`, `/admin/settings` |
-| **API Routes** | `/api/orders`, `/api/payment/khalti/initiate`, `/api/payment/khalti/verify`, `/api/payment/khalti/webhook` ✨, `/api/cart/sync` ✨, `/api/auth/callback` ✨, `/api/auth/signout` ✨, `/api/wishlist` ✨, `/api/wishlist/sync` ✨ |
-| **Layout Components** | `Navbar`, `Footer`, `AnnouncementBar` |
-| **Home Components** | `HeroSection`, `FeaturedDrops`, `NewArrivals`, `SocialStrip`, `TreasureHuntZone`, `WhyChooseUs` |
-| **Store Components** | `CartDrawer`, `ProductCard`, `ProductGallery` 🔧, `ProductGrid`, `ShopFilters`, `AddToCartDetailButton` ✨ |
-| **Admin Components** | `OrderStatusUpdater`, `ProductForm` 🔧, `CategoryForm` ✨ |
-| **UI Primitives** | `Badge`, `Button`, `Input`, `Skeleton` |
-| **State (Zustand)** | `cartStore`, `uiStore`, `wishlistStore` ✨ |
-| **Data Layer** | `lib/supabase/queries/` — products, categories, orders, banners, analytics ✨ |
-| **Supabase Clients** | `client.ts` (browser), `server.ts` (SSR) |
-| **Validations (Zod)** | `auth.ts`, `checkout.ts`, `product.ts` |
-| **Types** | `lib/types/product.ts` 🔧 (+ `image_url`), `lib/types/order.ts` ✨, `lib/types/api.ts` ✨ |
-| **Shared Utils** | `lib/utils.ts` 🔧 (`getPrimaryImage` + fallback), `lib/constants.ts` |
-| **Static Assets** | `public/placeholder-car.jpg` ✨ |
-| **External Services** | Supabase (Postgres + Auth + Storage), Khalti (Payment) |
-| **Config** | `next.config.ts` 🔧 (`unoptimized: true`), `supabase/schema.sql` 🔧 (admin RLS for product_images) |
+| **Pages (Store)** | `/`, `/shop`, `/product/[slug]`, `/cart`, `/checkout` 🔧, `/brands`, `/new-arrivals`, `/treasure-hunt` |
+| **Pages (Admin)** | `/admin`, `/admin/products`, `/admin/products/new`, `/admin/products/[id]/edit`, `/admin/orders`, `/admin/banners` ✨, `/admin/media` ✨, `/admin/categories` |
+| **API & Actions** | `api/orders`, `api/payment/khalti/*`, `api/wishlist/*`, `admin/products/actions.ts` ✨ |
+| **Home Components** | `HeroSection`, `BannerCarousel` ✨, `FeaturedDrops`, `CollectorMediaGallery` ✨, `TreasureHuntZone` |
+| **Store Components** | `CartDrawer`, `ProductCard`, `ProductMediaGallery` ✨, `ProductGrid`, `ShopFilters`, `AddToCartDetailButton` |
+| **Admin Components** | `ProductBulkImport` ✨, `ProductMediaManager` ✨, `SocialGalleryManager` ✨, `BannerForm` ✨, `OrderStatusUpdater`, `ProductForm`, `CategoryForm` |
+| **UI Primitives** | `Badge`, `Button`, `Input`, `Skeleton`, `VideoEmbed` ✨, `MediaCard` ✨ |
+| **State (Zustand)** | `cartStore`, `uiStore`, `wishlistStore` |
+| **Data Layer** | `lib/supabase/queries/` — products, categories, orders, banners ✨, media ✨ |
+| **Types** | `lib/types/product.ts`, `lib/types/media.ts` ✨, `lib/types/order.ts`, `lib/types/api.ts` |
+| **Shared Utils** | `lib/utils.ts`, `lib/constants.ts` 🔧 |
+| **Static Assets** | `public/placeholder-car.jpg`, `public/products_template.csv` ✨, `public/logos/khalti.png` ✨, `public/logos/esewa.png` ✨ |
 
 **Legend:** ✨ New since last graph &nbsp;|&nbsp; 🔧 Modified since last graph
