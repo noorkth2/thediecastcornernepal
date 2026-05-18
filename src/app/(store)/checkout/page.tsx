@@ -12,6 +12,7 @@ import { useCartStore } from '@/store/cartStore'
 import { useUIStore } from '@/store/uiStore'
 import { formatPrice } from '@/lib/utils'
 import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING, NEPAL_CITIES, PAYMENT_METHODS } from '@/lib/constants'
+import { createClient } from '@/lib/supabase/client'
 
 export default function CheckoutPage() {
   const router = useRouter()
@@ -19,6 +20,11 @@ export default function CheckoutPage() {
   const { addToast } = useUIStore()
   const [isSubmitting, setIsSubmitting] = useState(false)
   const [isMounted, setIsMounted] = useState(false)
+  const [paymentSettings, setPaymentSettings] = useState<Record<string, boolean>>({
+    cod: true,
+    khalti: false,
+    esewa: false,
+  })
 
   const total = totalPrice()
   const count = totalItems()
@@ -64,6 +70,41 @@ export default function CheckoutPage() {
       )
     }
   }, [items, form])
+
+  // Fetch active payment settings from site_settings
+  useEffect(() => {
+    const supabase = createClient()
+    async function loadPaymentSettings() {
+      const { data } = await supabase
+        .from('site_settings')
+        .select('key, value')
+        .in('key', ['payment_cod_enabled', 'payment_khalti_enabled', 'payment_esewa_enabled'])
+      
+      if (data && data.length > 0) {
+        const settings: Record<string, boolean> = {
+          cod: true,
+          khalti: false,
+          esewa: false,
+        }
+        data.forEach((row) => {
+          if (row.key === 'payment_cod_enabled') settings.cod = row.value === 'true'
+          if (row.key === 'payment_khalti_enabled') settings.khalti = row.value === 'true'
+          if (row.key === 'payment_esewa_enabled') settings.esewa = row.value === 'true'
+        })
+        setPaymentSettings(settings)
+
+        // If the current payment method is disabled, auto-switch to the first enabled one
+        const currentMethod = form.getValues('paymentMethod')
+        if (!settings[currentMethod as keyof typeof settings]) {
+          const firstEnabled = Object.keys(settings).find((k) => settings[k])
+          if (firstEnabled) {
+            form.setValue('paymentMethod', firstEnabled as any)
+          }
+        }
+      }
+    }
+    loadPaymentSettings()
+  }, [form])
 
   const onSubmit = async (data: CheckoutInput) => {
     try {
@@ -112,6 +153,15 @@ export default function CheckoutPage() {
       setIsSubmitting(false)
     }
   }
+
+  const dynamicPaymentMethods = PAYMENT_METHODS.map((method) => {
+    const isEnabled = paymentSettings[method.id as keyof typeof paymentSettings] ?? false
+    return {
+      ...method,
+      disabled: !isEnabled,
+      label: isEnabled ? method.label.replace(' (Coming Soon)', '') : method.label,
+    }
+  })
 
   if (!isMounted || items.length === 0) return null
 
@@ -201,11 +251,11 @@ export default function CheckoutPage() {
               <CreditCard className="w-5 h-5 text-brand-red" /> Payment Method
             </h2>
             <div className="space-y-3">
-              {PAYMENT_METHODS.map((method) => (
+              {dynamicPaymentMethods.map((method) => (
                 <label
                   key={method.id}
                   className={`flex items-start gap-4 p-4 rounded-xl border transition-colors ${
-                    'disabled' in method && method.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                    method.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
                   } ${
                     form.watch('paymentMethod') === method.id
                       ? 'border-brand-red bg-brand-red/5'
@@ -217,7 +267,7 @@ export default function CheckoutPage() {
                       type="radio"
                       value={method.id}
                       {...form.register('paymentMethod')}
-                      disabled={'disabled' in method && method.disabled}
+                      disabled={method.disabled}
                       className="w-4 h-4 text-brand-red bg-surface-card border-surface-border focus:ring-brand-red focus:ring-offset-surface-card disabled:opacity-50"
                     />
                   </div>

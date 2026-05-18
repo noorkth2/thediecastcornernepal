@@ -1,10 +1,25 @@
 'use client'
 
 import { useState, useEffect } from 'react'
-import { Save, Store, Truck, Bell, Globe, CheckCircle } from 'lucide-react'
+import { Save, Store, Truck, Bell, Globe, CheckCircle, CreditCard } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 
-const SETTINGS_SECTIONS = [
+type SettingField = {
+  key: string
+  label: string
+  type: string
+  placeholder?: string
+  default?: string
+}
+
+type SettingSection = {
+  id: string
+  label: string
+  icon: React.ComponentType<any>
+  fields: SettingField[]
+}
+
+const SETTINGS_SECTIONS: SettingSection[] = [
   {
     id: 'store',
     label: 'Store Info',
@@ -24,6 +39,16 @@ const SETTINGS_SECTIONS = [
       { key: 'free_shipping_threshold', label: 'Free Shipping Threshold (NPR)', type: 'number', placeholder: '2000' },
       { key: 'standard_shipping_charge', label: 'Standard Shipping Charge (NPR)', type: 'number', placeholder: '150' },
       { key: 'delivery_estimate', label: 'Delivery Estimate', type: 'text', placeholder: 'e.g. 2–5 business days' },
+    ],
+  },
+  {
+    id: 'payment',
+    label: 'Payment Gateways',
+    icon: CreditCard,
+    fields: [
+      { key: 'payment_cod_enabled', label: 'Enable Cash on Delivery (COD)', type: 'boolean', default: 'true' },
+      { key: 'payment_khalti_enabled', label: 'Enable Khalti Payment Gateway', type: 'boolean', default: 'false' },
+      { key: 'payment_esewa_enabled', label: 'Enable eSewa Payment Gateway', type: 'boolean', default: 'false' },
     ],
   },
   {
@@ -58,13 +83,23 @@ export default function AdminSettingsPage() {
   useEffect(() => {
     async function loadSettings() {
       const { data, error } = await supabase.from('site_settings').select('*')
+      const loadedValues: Record<string, string> = {}
       if (data && !error) {
-        const loadedValues: Record<string, string> = {}
         data.forEach((row) => {
           loadedValues[row.key] = row.value
         })
-        setValues(loadedValues)
       }
+      
+      // Ensure defaults are populated if missing in DB
+      SETTINGS_SECTIONS.forEach((section) => {
+        section.fields.forEach((field) => {
+          if (loadedValues[field.key] === undefined) {
+            loadedValues[field.key] = field.default ?? ''
+          }
+        })
+      })
+
+      setValues(loadedValues)
       setLoading(false)
     }
     loadSettings()
@@ -141,14 +176,34 @@ export default function AdminSettingsPage() {
                 >
                   {field.label}
                 </label>
-                <input
-                  id={`setting-${field.key}`}
-                  type={field.type}
-                  value={values[field.key] ?? ''}
-                  onChange={(e) => setValues((v) => ({ ...v, [field.key]: e.target.value }))}
-                  placeholder={field.placeholder}
-                  className="w-full bg-surface-elevated border border-surface-border rounded-xl px-4 py-2.5 text-sm text-text-primary placeholder:text-text-faint focus:outline-none focus:border-brand-red/60 focus:ring-1 focus:ring-brand-red/30 transition-colors"
-                />
+                {field.type === 'boolean' ? (
+                  <div className="flex items-center h-10">
+                    <button
+                      type="button"
+                      role="switch"
+                      aria-checked={values[field.key] === 'true'}
+                      onClick={() => setValues((v) => ({ ...v, [field.key]: v[field.key] === 'true' ? 'false' : 'true' }))}
+                      className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors focus:outline-none focus:ring-2 focus:ring-brand-red/20 ${
+                        values[field.key] === 'true' ? 'bg-brand-red' : 'bg-surface-elevated border border-surface-border'
+                      }`}
+                    >
+                      <span
+                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                          values[field.key] === 'true' ? 'translate-x-6' : 'translate-x-1'
+                        }`}
+                      />
+                    </button>
+                  </div>
+                ) : (
+                  <input
+                    id={`setting-${field.key}`}
+                    type={field.type}
+                    value={values[field.key] ?? ''}
+                    onChange={(e) => setValues((v) => ({ ...v, [field.key]: e.target.value }))}
+                    placeholder={field.placeholder}
+                    className="w-full bg-surface-elevated border border-surface-border rounded-xl px-4 py-2.5 text-sm text-text-primary placeholder:text-text-faint focus:outline-none focus:border-brand-red/60 focus:ring-1 focus:ring-brand-red/30 transition-colors"
+                  />
+                )}
               </div>
             ))}
           </div>

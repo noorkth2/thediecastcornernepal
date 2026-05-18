@@ -3,20 +3,45 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import {
   LayoutDashboard, Package, ShoppingBag, Tag,
-  Settings, ExternalLink, BarChart3, Layers, Flag, Video
+  Settings, ExternalLink, BarChart3, Layers, Flag, Video,
+  FileBarChart2, Calculator, BookOpen,
 } from 'lucide-react'
 import { AdminSignOutButton } from '@/components/admin/AdminSignOutButton'
 
-const adminLinks = [
-  { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
-  { href: '/admin/products', label: 'Products', icon: Package },
-  { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
-  { href: '/admin/categories', label: 'Categories', icon: Tag },
-  { href: '/admin/brands', label: 'Brands', icon: Layers },
-  { href: '/admin/banners', label: 'Banners', icon: Flag },
-  { href: '/admin/media', label: 'Media Gallery', icon: Video },
-  { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
-  { href: '/admin/settings', label: 'Settings', icon: Settings },
+const NAV_GROUPS = [
+  {
+    label: 'Operations',
+    links: [
+      { href: '/admin',            label: 'Dashboard',    icon: LayoutDashboard },
+      { href: '/admin/products',   label: 'Products',     icon: Package },
+      { href: '/admin/categories', label: 'Categories',   icon: Tag, isSubmenu: true },
+      { href: '/admin/brands',     label: 'Brands',       icon: Layers, isSubmenu: true },
+      { href: '/admin/orders',     label: 'Orders',       icon: ShoppingBag },
+      { href: '/admin/banners',    label: 'Banners',      icon: Flag },
+      { href: '/admin/media',      label: 'Media Gallery', icon: Video },
+    ],
+  },
+  {
+    label: 'Intelligence',
+    links: [
+      { href: '/admin/reports',   label: 'Reports',       icon: FileBarChart2 },
+    ],
+  },
+  {
+    label: 'Finance',
+    links: [
+      { href: '/admin/accounting',          label: 'Accounting', icon: Calculator },
+      { href: '/admin/accounting/expenses', label: 'Expenses',   icon: BookOpen, isSubmenu: true },
+      { href: '/admin/accounting/payouts',  label: 'Payouts',    icon: BookOpen, isSubmenu: true },
+      { href: '/admin/accounting/journal',  label: 'Journal',    icon: BookOpen, isSubmenu: true },
+    ],
+  },
+  {
+    label: 'System',
+    links: [
+      { href: '/admin/settings', label: 'Settings', icon: Settings },
+    ],
+  },
 ]
 
 export default async function AdminLayout({ children }: { children: React.ReactNode }) {
@@ -37,8 +62,8 @@ export default async function AdminLayout({ children }: { children: React.ReactN
       {/* Sidebar */}
       <aside className="w-64 bg-surface-card border-r border-surface-border flex flex-col fixed top-0 bottom-0 left-0 z-40">
         {/* Brand */}
-        <div className="p-5 border-b border-surface-border">
-          <div className="flex items-center gap-2 mb-1">
+        <div className="p-5 border-b border-surface-border shrink-0">
+          <div className="flex items-center gap-2">
             <div className="w-8 h-8 rounded-lg bg-brand-red flex items-center justify-center font-display text-white text-sm">DC</div>
             <div>
               <span className="font-display text-sm text-white tracking-wider">DIECAST CORNER</span>
@@ -47,23 +72,31 @@ export default async function AdminLayout({ children }: { children: React.ReactN
           </div>
         </div>
 
-        {/* Nav */}
-        <nav className="flex-1 p-3 overflow-y-auto">
-          <p className="text-[10px] text-text-faint uppercase tracking-widest px-3 mb-2">Navigation</p>
-          {adminLinks.map(({ href, label, icon: Icon }) => (
-            <Link
-              key={href}
-              href={href}
-              className="flex items-center gap-2.5 px-3 py-2.5 rounded-lg text-sm text-text-muted hover:text-white hover:bg-surface-elevated transition-colors mb-0.5"
-            >
-              <Icon className="w-4 h-4 flex-shrink-0" />
-              {label}
-            </Link>
+        {/* Nav groups */}
+        <nav className="flex-1 p-3 overflow-y-auto space-y-4">
+          {NAV_GROUPS.map(({ label, links }) => (
+            <div key={label}>
+              <p className="text-[9px] text-text-faint uppercase tracking-widest px-3 mb-1 font-bold">{label}</p>
+              {links.map((link) => (
+                <Link
+                  key={link.href}
+                  href={link.href}
+                  className={`flex items-center gap-2.5 rounded-lg text-sm transition-colors mb-0.5 ${
+                    'isSubmenu' in link && link.isSubmenu
+                      ? 'text-text-muted hover:text-white ml-8 py-1.5 border-l border-surface-border pl-3 text-xs'
+                      : 'text-text-muted hover:text-white hover:bg-surface-elevated px-3 py-2'
+                  }`}
+                >
+                  {(!('isSubmenu' in link) || !link.isSubmenu) && <link.icon className="w-4 h-4" />}
+                  {link.label}
+                </Link>
+              ))}
+            </div>
           ))}
         </nav>
 
         {/* Footer */}
-        <div className="p-3 border-t border-surface-border space-y-1">
+        <div className="p-3 border-t border-surface-border space-y-1 shrink-0">
           <Link
             href="/"
             target="_blank"
@@ -86,3 +119,4 @@ export default async function AdminLayout({ children }: { children: React.ReactN
     </div>
   )
 }
+
