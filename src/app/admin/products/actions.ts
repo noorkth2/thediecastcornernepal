@@ -23,6 +23,16 @@ export async function bulkImportProducts(products: any[]) {
   }
 
   try {
+    const parseBool = (val: any, defaultVal = false) => {
+      if (val === undefined || val === null || val === '') return defaultVal
+      if (typeof val === 'boolean') return val
+      if (typeof val === 'string') {
+        const lower = val.trim().toLowerCase()
+        return lower === 'true' || lower === '1' || lower === 'yes' || lower === 'y' || lower === 't'
+      }
+      return !!val
+    }
+
     // Process and validate products
     const payloads = products.map((row) => {
       const slug = row.slug || row.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
@@ -38,12 +48,12 @@ export async function bulkImportProducts(products: any[]) {
         scale: row.scale || null,
         series: row.series || null,
         stock_qty: row.stock_qty ? Number(row.stock_qty) : 0,
-        is_limited: row.is_limited === 'true' || row.is_limited === true,
-        is_treasure_hunt: row.is_treasure_hunt === 'true' || row.is_treasure_hunt === true,
-        is_premium: row.is_premium === 'true' || row.is_premium === true,
-        is_featured: row.is_featured === 'true' || row.is_featured === true,
-        is_new_arrival: row.is_new_arrival === 'true' || row.is_new_arrival === true,
-        is_active: row.is_active === 'true' || row.is_active === true || row.is_active === undefined, // default true
+        is_limited: parseBool(row.is_limited),
+        is_treasure_hunt: parseBool(row.is_treasure_hunt),
+        is_premium: parseBool(row.is_premium),
+        is_featured: parseBool(row.is_featured),
+        is_new_arrival: parseBool(row.is_new_arrival),
+        is_active: parseBool(row.is_active, true),
         image_url: row.image_url || null,
         sort_order: row.sort_order ? Number(row.sort_order) : 0,
       }
