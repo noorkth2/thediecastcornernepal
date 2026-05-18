@@ -1,5 +1,5 @@
 # Dependency Graph — The Diecast Corner Nepal
-> Last updated: 2026-05-17 | Reflects post-rebranding & image-pipeline fixes
+> Last updated: 2026-05-18 | Reflects wishlist feature additions
 
 ## 1. NPM Package Dependencies
 
@@ -110,6 +110,7 @@ graph TD
 
   subgraph Pages_Account ["👤 Account Routes (account)"]
     ACCOUNT["(account)/account/page.tsx"]
+    WISHLIST["(account)/account/wishlist/page.tsx ✨NEW"]
     ACC_LAYOUT["(account)/layout.tsx"]
   end
 
@@ -136,6 +137,8 @@ graph TD
     API_CART_SYNC["api/cart/sync/route.ts ✨NEW"]
     API_AUTH_CALLBACK["api/auth/callback/route.ts ✨NEW"]
     API_AUTH_SIGNOUT["api/auth/signout/route.ts ✨NEW"]
+    API_WISHLIST["api/wishlist/route.ts ✨NEW"]
+    API_WISHLIST_SYNC["api/wishlist/sync/route.ts ✨NEW"]
   end
 
   subgraph Components_Layout ["🧱 Layout Components"]
@@ -178,6 +181,7 @@ graph TD
   subgraph Stores ["📦 Zustand Stores"]
     CART_STORE["store/cartStore.ts"]
     UI_STORE["store/uiStore.ts"]
+    WISHLIST_STORE["store/wishlistStore.ts ✨NEW"]
   end
 
   subgraph Lib ["📚 Lib / Shared"]
@@ -265,9 +269,12 @@ graph TD
   CART_DRAWER --> CART_STORE
   NAVBAR --> CART_STORE
   NAVBAR --> UI_STORE
+  NAVBAR --> WISHLIST_STORE
   PRODUCT_CARD --> CART_STORE
   PRODUCT_CARD --> UI_STORE
+  PRODUCT_CARD --> WISHLIST_STORE
   ADD_TO_CART_BTN --> CART_STORE
+  WISHLIST --> PRODUCT_CARD
 
   %% Queries → Supabase clients
   Q_PRODUCTS --> SB_SERVER
@@ -499,15 +506,15 @@ graph TD
 |---|---|
 | **Pages (Store)** | `/`, `/shop`, `/product/[slug]`, `/cart`, `/checkout` ✨, `/order/success/[id]`, `/brands`, `/new-arrivals`, `/treasure-hunt` |
 | **Pages (Auth)** | `/login`, `/register` |
-| **Pages (Account)** | `/account` |
+| **Pages (Account)** | `/account`, `/account/wishlist` ✨ |
 | **Pages (Admin)** | `/admin`, `/admin/products`, `/admin/products/new` ✨, `/admin/products/[id]/edit` ✨, `/admin/orders`, `/admin/orders/[id]` ✨, `/admin/categories`, `/admin/categories/new` ✨, `/admin/categories/[id]/edit` ✨, `/admin/analytics`, `/admin/settings` |
-| **API Routes** | `/api/orders`, `/api/payment/khalti/initiate`, `/api/payment/khalti/verify`, `/api/payment/khalti/webhook` ✨, `/api/cart/sync` ✨, `/api/auth/callback` ✨, `/api/auth/signout` ✨ |
+| **API Routes** | `/api/orders`, `/api/payment/khalti/initiate`, `/api/payment/khalti/verify`, `/api/payment/khalti/webhook` ✨, `/api/cart/sync` ✨, `/api/auth/callback` ✨, `/api/auth/signout` ✨, `/api/wishlist` ✨, `/api/wishlist/sync` ✨ |
 | **Layout Components** | `Navbar`, `Footer`, `AnnouncementBar` |
 | **Home Components** | `HeroSection`, `FeaturedDrops`, `NewArrivals`, `SocialStrip`, `TreasureHuntZone`, `WhyChooseUs` |
 | **Store Components** | `CartDrawer`, `ProductCard`, `ProductGallery` 🔧, `ProductGrid`, `ShopFilters`, `AddToCartDetailButton` ✨ |
 | **Admin Components** | `OrderStatusUpdater`, `ProductForm` 🔧, `CategoryForm` ✨ |
 | **UI Primitives** | `Badge`, `Button`, `Input`, `Skeleton` |
-| **State (Zustand)** | `cartStore`, `uiStore` |
+| **State (Zustand)** | `cartStore`, `uiStore`, `wishlistStore` ✨ |
 | **Data Layer** | `lib/supabase/queries/` — products, categories, orders, banners, analytics ✨ |
 | **Supabase Clients** | `client.ts` (browser), `server.ts` (SSR) |
 | **Validations (Zod)** | `auth.ts`, `checkout.ts`, `product.ts` |
