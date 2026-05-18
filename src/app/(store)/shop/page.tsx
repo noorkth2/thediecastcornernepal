@@ -85,6 +85,7 @@ export default async function ShopPage(props: ShopPageProps) {
         {/* Product grid */}
         <div className="flex-1">
           <Suspense
+            key={JSON.stringify(await props.searchParams)}
             fallback={
               <div className="grid grid-cols-2 sm:grid-cols-3 gap-4">
                 {[...Array(12)].map((_, i) => (

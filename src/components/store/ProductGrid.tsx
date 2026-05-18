@@ -1,6 +1,5 @@
 'use client'
 
-import { useState } from 'react'
 import { ProductCard } from './ProductCard'
 import { ProductCardSkeleton } from '@/components/ui/skeleton'
 import type { Product } from '@/lib/types'
@@ -12,12 +11,10 @@ interface ProductGridProps {
 }
 
 export function ProductGrid({
-  initialProducts,
+  initialProducts: products,
   loading = false,
   emptyMessage = 'No products found.',
 }: ProductGridProps) {
-  const [products] = useState<Product[]>(initialProducts)
-
   if (loading) {
     return (
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
