@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { formatPrice } from '@/lib/utils'
 import { Plus, Pencil, Eye, EyeOff } from 'lucide-react'
+import { ProductBulkImport } from '@/components/admin/ProductBulkImport'
 
 export const revalidate = 0
 
@@ -19,13 +20,16 @@ export default async function AdminProductsPage() {
           <h1 className="font-display text-3xl text-white tracking-wide">PRODUCTS</h1>
           <p className="text-text-muted text-sm mt-1">{products?.length ?? 0} total products</p>
         </div>
-        <Link
-          href="/admin/products/new"
-          className="flex items-center gap-2 bg-brand-red hover:bg-brand-red-light text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shadow-lg shadow-brand-red/20"
-          id="admin-add-product-btn"
-        >
-          <Plus className="w-4 h-4" /> Add Product
-        </Link>
+        <div className="flex items-center gap-3">
+          <ProductBulkImport />
+          <Link
+            href="/admin/products/new"
+            className="flex items-center gap-2 bg-brand-red hover:bg-brand-red-light text-white text-sm font-semibold px-4 py-2.5 rounded-xl transition-colors shadow-lg shadow-brand-red/20"
+            id="admin-add-product-btn"
+          >
+            <Plus className="w-4 h-4" /> Add Product
+          </Link>
+        </div>
       </div>
 
       <div className="bg-surface-card rounded-xl border border-surface-border overflow-hidden">
