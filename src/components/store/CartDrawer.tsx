@@ -89,8 +89,8 @@ export function CartDrawer() {
               <p className="text-text-faint text-sm mt-1 mb-6">
                 Add some diecast models to get started!
               </p>
-              <Button variant="primary" size="md" onClick={closeCart} asChild>
-                <Link href="/shop">Browse Shop</Link>
+              <Button variant="primary" size="md" asChild>
+                <Link href="/shop" onClick={closeCart}>Browse Shop</Link>
               </Button>
             </div>
           ) : (
