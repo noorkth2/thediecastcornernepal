@@ -5,6 +5,7 @@ import { usePathname } from 'next/navigation'
 import { useState, useEffect } from 'react'
 import { ShoppingCart, Menu, X, Search, User, ChevronDown } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
+import { useWishlistStore } from '@/store/wishlistStore'
 import { useUIStore } from '@/store/uiStore'
 import { cn } from '@/lib/utils'
 import { UserDropdown } from '@/components/auth/UserDropdown'
@@ -19,6 +20,7 @@ export function ClientNavbar({ user, profile }: ClientNavbarProps) {
   const pathname = usePathname()
   const [scrolled, setScrolled] = useState(false)
   const { totalItems, toggleCart } = useCartStore()
+  const { syncWithSupabase: syncWishlist } = useWishlistStore()
   const { isMobileNavOpen, toggleMobileNav, closeMobileNav } = useUIStore()
   const cartCount = totalItems()
 
@@ -27,6 +29,13 @@ export function ClientNavbar({ user, profile }: ClientNavbarProps) {
     window.addEventListener('scroll', onScroll)
     return () => window.removeEventListener('scroll', onScroll)
   }, [])
+
+  // Sync wishlist when user logs in
+  useEffect(() => {
+    if (user) {
+      syncWishlist(user.id)
+    }
+  }, [user, syncWishlist])
 
   // Close mobile nav on route change
   useEffect(() => {

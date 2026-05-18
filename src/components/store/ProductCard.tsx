@@ -9,6 +9,7 @@ import { formatPrice, getPrimaryImage, discountPercent } from '@/lib/utils'
 import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { Product } from '@/lib/types'
+import { useWishlistStore } from '@/store/wishlistStore'
 
 interface ProductCardProps {
   product: Product
@@ -18,6 +19,9 @@ interface ProductCardProps {
 export function ProductCard({ product, className }: ProductCardProps) {
   const { addItem, openCart } = useCartStore()
   const { addToast } = useUIStore()
+  const isWishlisted = useWishlistStore((state) => state.items.includes(product.id))
+  const toggleWishlist = useWishlistStore((state) => state.toggleWishlist)
+  
   const primaryImage = getPrimaryImage(product.images, product.image_url)
   const discount = discountPercent(product.price, product.compare_price ?? 0)
   const isOutOfStock = product.stock_qty === 0
@@ -68,12 +72,22 @@ export function ProductCard({ product, className }: ProductCardProps) {
           onClick={(e) => {
             e.preventDefault()
             e.stopPropagation()
-            addToast({ message: 'Wishlist feature coming soon!', type: 'info' })
+            
+            toggleWishlist(product.id)
+            
+            addToast({ 
+              message: isWishlisted ? 'Removed from wishlist' : 'Added to wishlist!', 
+              type: isWishlisted ? 'info' : 'success' 
+            })
           }}
           className="absolute top-2 right-2 p-1.5 rounded-full bg-black/20 text-white backdrop-blur-sm opacity-0 group-hover:opacity-100 transition-all hover:bg-brand-red hover:text-white z-20"
-          aria-label="Add to wishlist"
+          aria-label={isWishlisted ? "Remove from wishlist" : "Add to wishlist"}
         >
-          <Heart className="w-4 h-4" />
+          <Heart 
+            className="w-4 h-4" 
+            fill={isWishlisted ? "currentColor" : "none"} 
+            color={isWishlisted ? "#ef4444" : "currentColor"}
+          />
         </button>
 
         {/* Hover overlay */}
