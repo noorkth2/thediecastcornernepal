@@ -225,8 +225,14 @@ export default function CheckoutPage() {
                     <div className="flex items-center justify-between">
                       <span className="font-semibold text-text-primary">{method.label}</span>
                       {method.logo && (
-                        <div className="bg-white px-2 py-1 rounded">
-                          <Image src={method.logo} alt={method.label} width={40} height={20} className="h-5 w-auto object-contain" />
+                        <div className="bg-white px-2 py-1 rounded flex items-center justify-center min-w-[50px] h-[28px]">
+                          <Image 
+                            src={method.logo} 
+                            alt={method.label} 
+                            width={60} 
+                            height={24} 
+                            className={`w-auto object-contain ${method.id === 'khalti' ? 'h-3.5' : 'h-4'}`} 
+                          />
                         </div>
                       )}
                     </div>

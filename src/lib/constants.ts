@@ -95,14 +95,14 @@ export const PAYMENT_METHODS = [
     id: 'khalti',
     label: 'Khalti (Coming Soon)',
     description: 'Pay with Khalti digital wallet',
-    logo: '/logos/khalti.svg',
+    logo: '/logos/khalti.png',
     disabled: true,
   },
   {
     id: 'esewa',
     label: 'eSewa (Coming Soon)',
     description: 'Pay with eSewa digital wallet',
-    logo: '/logos/esewa.svg',
+    logo: '/logos/esewa.png',
     disabled: true,
   },
 ] as const
