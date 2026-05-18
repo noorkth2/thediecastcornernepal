@@ -50,7 +50,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
     <Link
       href={`/product/${product.slug}`}
       className={cn(
-        'group block bg-surface-card rounded-xl overflow-hidden border border-surface-border',
+        'group flex flex-col h-full bg-surface-card rounded-xl overflow-hidden border border-surface-border',
         'hover:border-brand-red/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-red/10',
         'product-card-top-bar relative',
         className
@@ -132,7 +132,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
       </div>
 
       {/* Content */}
-      <div className="p-3.5">
+      <div className="p-3.5 flex flex-col flex-1">
         {/* Brand */}
         {product.brand && (
           <p className="text-[11px] text-text-faint uppercase tracking-widest mb-1 font-medium">
@@ -141,7 +141,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
         )}
 
         {/* Title */}
-        <h3 className="text-sm font-semibold text-text-primary line-clamp-2 leading-snug group-hover:text-brand-red-light transition-colors">
+        <h3 className="text-sm font-semibold text-text-primary line-clamp-2 leading-snug group-hover:text-brand-red-light transition-colors min-h-[2.75rem]">
           {product.title}
         </h3>
 
@@ -152,43 +152,45 @@ export function ProductCard({ product, className }: ProductCardProps) {
           </p>
         )}
 
-        {/* Price row */}
-        <div className="flex items-center justify-between mt-3">
-          <div className="flex items-baseline gap-2">
-            <span className="font-bold text-brand-gold text-base">
-              {formatPrice(product.price)}
-            </span>
-            {product.compare_price && product.compare_price > product.price && (
-              <span className="text-text-faint text-xs line-through">
-                {formatPrice(product.compare_price)}
+        <div className="mt-auto pt-3">
+          {/* Price row */}
+          <div className="flex items-center justify-between mb-3">
+            <div className="flex items-baseline gap-2">
+              <span className="font-bold text-brand-gold text-base">
+                {formatPrice(product.price)}
+              </span>
+              {product.compare_price && product.compare_price > product.price && (
+                <span className="text-text-faint text-xs line-through">
+                  {formatPrice(product.compare_price)}
+                </span>
+              )}
+            </div>
+
+            {/* Stock indicator */}
+            {product.stock_qty > 0 && product.stock_qty <= 5 && (
+              <span className="text-[10px] text-orange-400 font-medium">
+                Only {product.stock_qty} left
               </span>
             )}
           </div>
 
-          {/* Stock indicator */}
-          {product.stock_qty > 0 && product.stock_qty <= 5 && (
-            <span className="text-[10px] text-orange-400 font-medium">
-              Only {product.stock_qty} left
-            </span>
-          )}
+          {/* Add to Cart */}
+          <button
+            onClick={handleAddToCart}
+            disabled={isOutOfStock}
+            className={cn(
+              'w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200',
+              isOutOfStock
+                ? 'bg-surface-elevated text-text-faint cursor-not-allowed'
+                : 'bg-surface-elevated hover:bg-brand-red text-text-muted hover:text-white border border-surface-border hover:border-brand-red group-hover:border-brand-red/40'
+            )}
+            aria-label={`Add ${product.title} to cart`}
+            id={`add-to-cart-${product.id}`}
+          >
+            <ShoppingCart className="w-3.5 h-3.5" />
+            {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
+          </button>
         </div>
-
-        {/* Add to Cart */}
-        <button
-          onClick={handleAddToCart}
-          disabled={isOutOfStock}
-          className={cn(
-            'w-full mt-3 flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200',
-            isOutOfStock
-              ? 'bg-surface-elevated text-text-faint cursor-not-allowed'
-              : 'bg-surface-elevated hover:bg-brand-red text-text-muted hover:text-white border border-surface-border hover:border-brand-red group-hover:border-brand-red/40'
-          )}
-          aria-label={`Add ${product.title} to cart`}
-          id={`add-to-cart-${product.id}`}
-        >
-          <ShoppingCart className="w-3.5 h-3.5" />
-          {isOutOfStock ? 'Out of Stock' : 'Add to Cart'}
-        </button>
       </div>
     </Link>
   )
