@@ -86,22 +86,24 @@ export const ORDER_STATUS_CONFIG = {
 
 export const PAYMENT_METHODS = [
   {
-    id: 'khalti',
-    label: 'Khalti',
-    description: 'Pay with Khalti digital wallet',
-    logo: '/logos/khalti.svg',
-  },
-  {
-    id: 'esewa',
-    label: 'eSewa',
-    description: 'Pay with eSewa digital wallet',
-    logo: '/logos/esewa.svg',
-  },
-  {
     id: 'cod',
     label: 'Cash on Delivery',
     description: 'Pay when your order arrives',
     logo: null,
+  },
+  {
+    id: 'khalti',
+    label: 'Khalti (Coming Soon)',
+    description: 'Pay with Khalti digital wallet',
+    logo: '/logos/khalti.svg',
+    disabled: true,
+  },
+  {
+    id: 'esewa',
+    label: 'eSewa (Coming Soon)',
+    description: 'Pay with eSewa digital wallet',
+    logo: '/logos/esewa.svg',
+    disabled: true,
   },
 ] as const
 

@@ -204,7 +204,9 @@ export default function CheckoutPage() {
               {PAYMENT_METHODS.map((method) => (
                 <label
                   key={method.id}
-                  className={`flex items-start gap-4 p-4 rounded-xl border cursor-pointer transition-colors ${
+                  className={`flex items-start gap-4 p-4 rounded-xl border transition-colors ${
+                    'disabled' in method && method.disabled ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'
+                  } ${
                     form.watch('paymentMethod') === method.id
                       ? 'border-brand-red bg-brand-red/5'
                       : 'border-surface-border bg-surface-elevated hover:bg-surface-border'
@@ -215,7 +217,8 @@ export default function CheckoutPage() {
                       type="radio"
                       value={method.id}
                       {...form.register('paymentMethod')}
-                      className="w-4 h-4 text-brand-red bg-surface-card border-surface-border focus:ring-brand-red focus:ring-offset-surface-card"
+                      disabled={'disabled' in method && method.disabled}
+                      className="w-4 h-4 text-brand-red bg-surface-card border-surface-border focus:ring-brand-red focus:ring-offset-surface-card disabled:opacity-50"
                     />
                   </div>
                   <div className="flex-1">
