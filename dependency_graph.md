@@ -1,5 +1,5 @@
 # Dependency Graph — The Diecast Corner Nepal
-> Last updated: 2026-05-18 | Reflects rich media, banners, and bulk product import additions
+> Last updated: 2026-05-19 | Reflects accounting, analytics dashboard, reporting module, and dynamic settings additions
 
 ## 1. NPM Package Dependencies
 
@@ -24,17 +24,19 @@ graph TD
     RADIX_TOAST["@radix-ui/react-toast"]
     LUCIDE["lucide-react@1.14.0"]
     EMBLA["embla-carousel-react@8.6.0"]
-    EMBLA_AUTO["embla-carousel-autoplay@8.6.0 ✨NEW"]
-    REACT_SOCIAL["react-social-media-embed@2.5.18 ✨NEW"]
+    EMBLA_AUTO["embla-carousel-autoplay@8.6.0"]
+    REACT_SOCIAL["react-social-media-embed@2.5.18"]
     CVA["class-variance-authority@0.7.1"]
     CLSX["clsx@2.1.1"]
     TWMERGE["tailwind-merge@3.6.0"]
+    RECHARTS["recharts@3.8.1 ✨NEW"]
   end
 
-  subgraph Backend ["🗄️ Backend / Data"]
+  subgraph Backend ["🗄️ Backend / Data / Excel"]
     SB_SSR["@supabase/ssr@0.10.3"]
     SB_JS["@supabase/supabase-js@2.105.4"]
     SWR["swr@2.4.1"]
+    XLSX["xlsx@0.18.5 ✨NEW"]
   end
 
   subgraph State ["🔄 State Management"]
@@ -117,8 +119,15 @@ graph TD
   end
 
   subgraph Pages_Admin ["⚙️ Admin Routes"]
-    ADMIN_HOME["admin/page.tsx"]
-    ADMIN_PRODUCTS["admin/products/page.tsx 🔧UPDATED"]
+    ADMIN_HOME["admin/(dashboard)/page.tsx 🔧UPDATED"]
+    ADMIN_ACCOUNTING["admin/accounting/page.tsx ✨NEW"]
+    ADMIN_EXPENSES["admin/accounting/expenses/page.tsx ✨NEW"]
+    ADMIN_EXPENSE_NEW["admin/accounting/expenses/new/page.tsx ✨NEW"]
+    ADMIN_PAYOUTS["admin/accounting/payouts/page.tsx ✨NEW"]
+    ADMIN_JOURNAL["admin/accounting/journal/page.tsx ✨NEW"]
+    ADMIN_REPORTS_LIST["admin/reports/page.tsx ✨NEW"]
+    ADMIN_REPORT_VIEW["admin/reports/[reportType]/page.tsx ✨NEW"]
+    ADMIN_PRODUCTS["admin/products/page.tsx"]
     ADMIN_PROD_NEW["admin/products/new/page.tsx"]
     ADMIN_PROD_EDIT["admin/products/[id]/edit/page.tsx"]
     ADMIN_ORDERS["admin/orders/page.tsx"]
@@ -126,11 +135,10 @@ graph TD
     ADMIN_CATEGORIES["admin/categories/page.tsx"]
     ADMIN_CAT_NEW["admin/categories/new/page.tsx"]
     ADMIN_CAT_EDIT["admin/categories/[id]/edit/page.tsx"]
-    ADMIN_ANALYTICS["admin/analytics/page.tsx"]
-    ADMIN_SETTINGS["admin/settings/page.tsx"]
-    ADMIN_BANNERS["admin/banners/page.tsx ✨NEW"]
-    ADMIN_MEDIA["admin/media/page.tsx ✨NEW"]
-    ADMIN_LAYOUT["admin/layout.tsx"]
+    ADMIN_SETTINGS["admin/settings/page.tsx 🔧UPDATED"]
+    ADMIN_BANNERS["admin/banners/page.tsx"]
+    ADMIN_MEDIA["admin/media/page.tsx"]
+    ADMIN_LAYOUT["admin/layout.tsx 🔧UPDATED"]
   end
 
   subgraph API ["📡 API Routes & Actions"]
@@ -143,7 +151,10 @@ graph TD
     API_AUTH_SIGNOUT["api/auth/signout/route.ts"]
     API_WISHLIST["api/wishlist/route.ts"]
     API_WISHLIST_SYNC["api/wishlist/sync/route.ts"]
-    ACTION_BULK_IMPORT["admin/products/actions.ts ✨NEW"]
+    ACTION_BULK_IMPORT["admin/products/actions.ts"]
+    ACTION_ACCOUNTING["admin/accounting/actions.ts ✨NEW"]
+    ACTION_DASHBOARD["admin/(dashboard)/actions.ts ✨NEW"]
+    ACTION_REPORTS["admin/reports/actions.ts ✨NEW"]
   end
 
   subgraph Components_Layout ["🧱 Layout Components"]
@@ -154,12 +165,12 @@ graph TD
 
   subgraph Components_Home ["🏡 Home Components"]
     HERO["components/home/HeroSection.tsx"]
-    BANNER_CAROUSEL["components/home/BannerCarousel.tsx ✨NEW"]
-    BANNER_SLIDE["components/home/BannerSlide.tsx ✨NEW"]
+    BANNER_CAROUSEL["components/home/BannerCarousel.tsx"]
+    BANNER_SLIDE["components/home/BannerSlide.tsx"]
     FEATURED["components/home/FeaturedDrops.tsx"]
     NEW_ARR_COMP["components/home/NewArrivals.tsx"]
     SOCIAL["components/home/SocialStrip.tsx"]
-    COLL_MEDIA_GALLERY["components/home/CollectorMediaGallery.tsx ✨NEW"]
+    COLL_MEDIA_GALLERY["components/home/CollectorMediaGallery.tsx"]
     TREASURE_COMP["components/home/TreasureHuntZone.tsx"]
     WHY_US["components/home/WhyChooseUs.tsx"]
   end
@@ -168,7 +179,7 @@ graph TD
     CART_DRAWER["components/store/CartDrawer.tsx"]
     PRODUCT_CARD["components/store/ProductCard.tsx"]
     PRODUCT_GALLERY["components/store/ProductGallery.tsx"]
-    PRODUCT_MEDIA["components/store/ProductMediaGallery.tsx ✨NEW"]
+    PRODUCT_MEDIA["components/store/ProductMediaGallery.tsx"]
     PRODUCT_GRID["components/store/ProductGrid.tsx"]
     SHOP_FILTERS["components/store/ShopFilters.tsx"]
     ADD_TO_CART_BTN["components/store/AddToCartDetailButton.tsx"]
@@ -177,11 +188,16 @@ graph TD
   subgraph Components_Admin ["🛠️ Admin Components"]
     ORDER_STATUS["components/admin/OrderStatusUpdater.tsx"]
     PRODUCT_FORM["components/admin/ProductForm.tsx"]
-    PRODUCT_BULK_IMPORT["components/admin/ProductBulkImport.tsx ✨NEW"]
-    PRODUCT_MEDIA_MANAGER["components/admin/ProductMediaManager.tsx ✨NEW"]
-    SOCIAL_GALLERY_MANAGER["components/admin/SocialGalleryManager.tsx ✨NEW"]
-    BANNER_FORM["components/admin/BannerForm.tsx ✨NEW"]
+    PRODUCT_BULK_IMPORT["components/admin/ProductBulkImport.tsx"]
+    PRODUCT_MEDIA_MANAGER["components/admin/ProductMediaManager.tsx"]
+    SOCIAL_GALLERY_MANAGER["components/admin/SocialGalleryManager.tsx"]
+    BANNER_FORM["components/admin/BannerForm.tsx"]
     CATEGORY_FORM["components/admin/CategoryForm.tsx"]
+    DASHBOARD_VIEW["admin/(dashboard)/_components/AnalyticsDashboard.tsx ✨NEW"]
+    EXPORT_BAR["admin/reports/_components/ExportBar.tsx ✨NEW"]
+    REPORT_FILTERS["admin/reports/_components/ReportFilters.tsx ✨NEW"]
+    REPORT_TABLE["admin/reports/_components/ReportTable.tsx ✨NEW"]
+    REPORT_VIEWER["admin/reports/_components/ReportViewer.tsx ✨NEW"]
   end
 
   subgraph Components_UI ["🎨 UI Primitives"]
@@ -189,8 +205,8 @@ graph TD
     BUTTON["components/ui/button.tsx"]
     INPUT["components/ui/input.tsx"]
     SKELETON["components/ui/skeleton.tsx"]
-    VIDEO_EMBED["components/ui/VideoEmbed.tsx ✨NEW"]
-    MEDIA_CARD["components/ui/MediaCard.tsx ✨NEW"]
+    VIDEO_EMBED["components/ui/VideoEmbed.tsx"]
+    MEDIA_CARD["components/ui/MediaCard.tsx"]
   end
 
   subgraph Stores ["📦 Zustand Stores"]
@@ -205,20 +221,26 @@ graph TD
     Q_PRODUCTS["lib/supabase/queries/products.ts"]
     Q_CATEGORIES["lib/supabase/queries/categories.ts"]
     Q_ORDERS["lib/supabase/queries/orders.ts"]
-    Q_BANNERS["lib/supabase/queries/banners.ts ✨NEW"]
-    Q_MEDIA["lib/supabase/queries/media.ts ✨NEW"]
-    Q_ANALYTICS["lib/supabase/queries/analytics.ts"]
+    Q_BANNERS["lib/supabase/queries/banners.ts"]
+    Q_MEDIA["lib/supabase/queries/media.ts"]
+    Q_ANALYTICS["lib/supabase/queries/analytics-advanced.ts 🔧UPDATED"]
+    Q_ACCOUNTING["lib/supabase/queries/accounting.ts ✨NEW"]
+    Q_REPORTS["lib/supabase/queries/reports.ts ✨NEW"]
     TYPES_PRODUCT["lib/types/product.ts"]
-    TYPES_MEDIA["lib/types/media.ts ✨NEW"]
+    TYPES_MEDIA["lib/types/media.ts"]
+    TYPES_ACCOUNTING["lib/types/accounting.ts ✨NEW"]
+    TYPES_ANALYTICS["lib/types/analytics.ts ✨NEW"]
+    TYPES_AUDIT["lib/types/audit.ts ✨NEW"]
     UTILS["lib/utils.ts"]
-    CONSTANTS["lib/constants.ts 🔧UPDATED"]
+    EXPORT_UTIL["lib/utils/export.ts ✨NEW"]
+    CONSTANTS["lib/constants.ts"]
   end
 
   subgraph Static ["📁 Static Assets"]
     PLACEHOLDER["public/placeholder-car.jpg"]
-    CSV_TEMPLATE["public/products_template.csv ✨NEW"]
-    LOGO_KHALTI["public/logos/khalti.png ✨NEW"]
-    LOGO_ESEWA["public/logos/esewa.png ✨NEW"]
+    CSV_TEMPLATE["public/products_template.csv"]
+    LOGO_KHALTI["public/logos/khalti.png"]
+    LOGO_ESEWA["public/logos/esewa.png"]
   end
 
   %% App Shell
@@ -241,22 +263,36 @@ graph TD
   CHECKOUT --> LOGO_KHALTI
   CHECKOUT --> LOGO_ESEWA
 
-  %% Admin Bulk Import
-  ADMIN_PRODUCTS --> PRODUCT_BULK_IMPORT
-  PRODUCT_BULK_IMPORT --> ACTION_BULK_IMPORT
-  PRODUCT_BULK_IMPORT --> CSV_TEMPLATE
-  
-  %% Media & Banner Admin
-  ADMIN_BANNERS --> BANNER_FORM
-  ADMIN_MEDIA --> SOCIAL_GALLERY_MANAGER
-  ADMIN_PROD_EDIT --> PRODUCT_MEDIA_MANAGER
-  PRODUCT_MEDIA_MANAGER --> Q_MEDIA
+  %% Admin Routing
+  ADMIN_LAYOUT --> ADMIN_HOME
+  ADMIN_LAYOUT --> ADMIN_ACCOUNTING
+  ADMIN_LAYOUT --> ADMIN_REPORTS_LIST
+
+  %% Admin Accounting
+  ADMIN_EXPENSES --> Q_ACCOUNTING
+  ADMIN_EXPENSES --> ACTION_ACCOUNTING
+  ADMIN_PAYOUTS --> Q_ACCOUNTING
+  ADMIN_JOURNAL --> Q_ACCOUNTING
+
+  %% Admin Analytics Dashboard
+  ADMIN_HOME --> DASHBOARD_VIEW
+  DASHBOARD_VIEW --> Q_ANALYTICS
+  DASHBOARD_VIEW --> ACTION_DASHBOARD
+
+  %% Admin Reports
+  ADMIN_REPORT_VIEW --> REPORT_VIEWER
+  REPORT_VIEWER --> REPORT_TABLE
+  REPORT_VIEWER --> REPORT_FILTERS
+  REPORT_VIEWER --> EXPORT_BAR
+  EXPORT_BAR --> EXPORT_UTIL
+  EXPORT_UTIL --> XLSX
+  REPORT_VIEWER --> Q_REPORTS
+  REPORT_VIEWER --> ACTION_REPORTS
 
   %% UI primitives used
   PRODUCT_CARD --> BADGE
   PRODUCT_MEDIA --> VIDEO_EMBED
   COLL_MEDIA_GALLERY --> MEDIA_CARD
-  BANNER_CAROUSEL --> EMBLA_AUTO
 
   %% Zustand stores
   NAVBAR --> CART_STORE
@@ -267,6 +303,9 @@ graph TD
   Q_PRODUCTS --> SB_SERVER
   Q_BANNERS --> SB_SERVER
   Q_MEDIA --> SB_SERVER
+  Q_ACCOUNTING --> SB_SERVER
+  Q_ANALYTICS --> SB_SERVER
+  Q_REPORTS --> SB_SERVER
   SB_CLIENT --> SUPABASE_JS[("@supabase/supabase-js")]
   SB_SERVER --> SUPABASE_SSR[("@supabase/ssr")]
 ```
@@ -326,13 +365,18 @@ graph TD
     T_PROFILES["profiles"]
     T_PRODUCTS["products"]
     T_PRODUCT_IMAGES["product_images"]
-    T_PRODUCT_VIDEOS["product_videos ✨NEW"]
+    T_PRODUCT_VIDEOS["product_videos"]
     T_CATEGORIES["categories"]
-    T_BANNERS["banners ✨NEW"]
-    T_SOCIAL_GALLERY["social_gallery ✨NEW"]
+    T_BANNERS["banners"]
+    T_SOCIAL_GALLERY["social_gallery"]
     T_ORDERS["orders"]
     T_CART_ITEMS["cart_items"]
-    T_WISHLIST["wishlist_items ✨NEW"]
+    T_WISHLIST["wishlist_items"]
+    T_EXPENSES["expenses ✨NEW"]
+    T_PAYOUTS["payouts ✨NEW"]
+    T_JOURNAL["journal_entries ✨NEW"]
+    T_AUDIT["audit_logs ✨NEW"]
+    T_SETTINGS["site_settings 🔧UPDATED"]
   end
 
   subgraph RLS ["🔒 RLS Access Rules"]
@@ -358,6 +402,12 @@ graph TD
   T_ORDERS --> ADMIN_ALL
   T_CART_ITEMS --> USER_OWN
   T_WISHLIST --> USER_OWN
+  T_SETTINGS --> PUBLIC_READ
+  T_SETTINGS --> ADMIN_ALL
+  T_EXPENSES --> ADMIN_ALL
+  T_PAYOUTS --> ADMIN_ALL
+  T_JOURNAL --> ADMIN_ALL
+  T_AUDIT --> ADMIN_ALL
 ```
 
 ---
@@ -367,16 +417,16 @@ graph TD
 | Layer | Modules |
 |---|---|
 | **Pages (Store)** | `/`, `/shop`, `/product/[slug]`, `/cart`, `/checkout` 🔧, `/brands`, `/new-arrivals`, `/treasure-hunt` |
-| **Pages (Admin)** | `/admin`, `/admin/products`, `/admin/products/new`, `/admin/products/[id]/edit`, `/admin/orders`, `/admin/banners` ✨, `/admin/media` ✨, `/admin/categories` |
-| **API & Actions** | `api/orders`, `api/payment/khalti/*`, `api/wishlist/*`, `admin/products/actions.ts` ✨ |
-| **Home Components** | `HeroSection`, `BannerCarousel` ✨, `FeaturedDrops`, `CollectorMediaGallery` ✨, `TreasureHuntZone` |
-| **Store Components** | `CartDrawer`, `ProductCard`, `ProductMediaGallery` ✨, `ProductGrid`, `ShopFilters`, `AddToCartDetailButton` |
-| **Admin Components** | `ProductBulkImport` ✨, `ProductMediaManager` ✨, `SocialGalleryManager` ✨, `BannerForm` ✨, `OrderStatusUpdater`, `ProductForm`, `CategoryForm` |
-| **UI Primitives** | `Badge`, `Button`, `Input`, `Skeleton`, `VideoEmbed` ✨, `MediaCard` ✨ |
+| **Pages (Admin)** | `/admin` 🔧, `/admin/accounting` ✨, `/admin/accounting/expenses` ✨, `/admin/accounting/expenses/new` ✨, `/admin/accounting/payouts` ✨, `/admin/accounting/journal` ✨, `/admin/reports` ✨, `/admin/reports/[reportType]` ✨, `/admin/products`, `/admin/orders`, `/admin/banners`, `/admin/media`, `/admin/categories`, `/admin/settings` 🔧 |
+| **API & Actions** | `api/orders`, `api/payment/khalti/*`, `api/wishlist/*`, `admin/products/actions.ts`, `admin/accounting/actions.ts` ✨, `admin/(dashboard)/actions.ts` ✨, `admin/reports/actions.ts` ✨ |
+| **Home Components** | `HeroSection`, `BannerCarousel`, `FeaturedDrops`, `CollectorMediaGallery`, `TreasureHuntZone` |
+| **Store Components** | `CartDrawer`, `ProductCard`, `ProductMediaGallery`, `ProductGrid`, `ShopFilters`, `AddToCartDetailButton` |
+| **Admin Components** | `AnalyticsDashboard` ✨, `ReportViewer` ✨, `ReportTable` ✨, `ReportFilters` ✨, `ExportBar` ✨, `ProductBulkImport`, `ProductMediaManager`, `SocialGalleryManager`, `BannerForm`, `OrderStatusUpdater`, `ProductForm`, `CategoryForm` |
+| **UI Primitives** | `Badge`, `Button`, `Input`, `Skeleton`, `VideoEmbed`, `MediaCard` |
 | **State (Zustand)** | `cartStore`, `uiStore`, `wishlistStore` |
-| **Data Layer** | `lib/supabase/queries/` — products, categories, orders, banners ✨, media ✨ |
-| **Types** | `lib/types/product.ts`, `lib/types/media.ts` ✨, `lib/types/order.ts`, `lib/types/api.ts` |
-| **Shared Utils** | `lib/utils.ts`, `lib/constants.ts` 🔧 |
-| **Static Assets** | `public/placeholder-car.jpg`, `public/products_template.csv` ✨, `public/logos/khalti.png` ✨, `public/logos/esewa.png` ✨ |
+| **Data Layer** | `lib/supabase/queries/` — products, categories, orders, banners, media, accounting ✨, analytics-advanced 🔧, reports ✨ |
+| **Types** | `lib/types/product.ts`, `lib/types/media.ts`, `lib/types/accounting.ts` ✨, `lib/types/analytics.ts` ✨, `lib/types/audit.ts` ✨ |
+| **Shared Utils** | `lib/utils.ts`, `lib/constants.ts`, `lib/utils/export.ts` ✨ |
+| **Static Assets** | `public/placeholder-car.jpg`, `public/products_template.csv`, `public/logos/khalti.png`, `public/logos/esewa.png` |
 
 **Legend:** ✨ New since last graph &nbsp;|&nbsp; 🔧 Modified since last graph
