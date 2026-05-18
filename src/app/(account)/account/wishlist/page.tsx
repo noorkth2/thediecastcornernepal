@@ -49,14 +49,22 @@ export default async function WishlistPage() {
 
   return (
     <div className="space-y-6">
-      <div>
-        <h1 className="font-display text-3xl text-white tracking-wide flex items-center gap-3">
-          <Heart className="w-8 h-8 text-brand-red" />
-          MY WISHLIST
-        </h1>
-        <p className="text-text-muted text-sm mt-1">
-          Items you've saved for later.
-        </p>
+      <div className="flex flex-col sm:flex-row sm:items-end justify-between gap-4">
+        <div>
+          <h1 className="font-display text-3xl text-white tracking-wide flex items-center gap-3">
+            <Heart className="w-8 h-8 text-brand-red" />
+            MY WISHLIST
+          </h1>
+          <p className="text-text-muted text-sm mt-1">
+            Items you've saved for later.
+          </p>
+        </div>
+        <Link 
+          href="/shop"
+          className="inline-flex items-center gap-2 text-sm font-medium text-text-muted hover:text-white bg-surface-elevated px-4 py-2 rounded-lg transition-colors border border-surface-border hover:border-brand-red/50"
+        >
+          ← Back to Shop
+        </Link>
       </div>
 
       {items.length === 0 ? (
