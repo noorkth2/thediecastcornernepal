@@ -3,8 +3,9 @@ import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import {
   LayoutDashboard, Package, ShoppingBag, Tag,
-  Settings, ExternalLink, BarChart3, Layers,
+  Settings, ExternalLink, BarChart3, Layers, Flag, Video
 } from 'lucide-react'
+import { AdminSignOutButton } from '@/components/admin/AdminSignOutButton'
 
 const adminLinks = [
   { href: '/admin', label: 'Dashboard', icon: LayoutDashboard },
@@ -12,6 +13,8 @@ const adminLinks = [
   { href: '/admin/orders', label: 'Orders', icon: ShoppingBag },
   { href: '/admin/categories', label: 'Categories', icon: Tag },
   { href: '/admin/brands', label: 'Brands', icon: Layers },
+  { href: '/admin/banners', label: 'Banners', icon: Flag },
+  { href: '/admin/media', label: 'Media Gallery', icon: Video },
   { href: '/admin/analytics', label: 'Analytics', icon: BarChart3 },
   { href: '/admin/settings', label: 'Settings', icon: Settings },
 ]
@@ -72,6 +75,7 @@ export default async function AdminLayout({ children }: { children: React.ReactN
             <p className="text-xs text-text-faint truncate">{profile?.full_name ?? 'Admin'}</p>
             <p className="text-[11px] text-text-faint truncate">{user.email}</p>
           </div>
+          <AdminSignOutButton />
         </div>
       </aside>
 

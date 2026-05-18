@@ -2,16 +2,20 @@ import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { ProductForm } from '@/components/admin/ProductForm'
 import { getActiveBrands } from '@/lib/supabase/queries/brands'
+import { getProductMedia } from '@/lib/supabase/queries/media'
 import type { Category } from '@/lib/types'
 
 export default async function EditProductPage(props: { params: Promise<{ id: string }> }) {
   const params = await props.params
   const supabase = await createClient()
 
-  const [{ data: product }, { data: categories }, brands] = await Promise.all([
-    supabase.from('products').select('*').eq('id', Number(params.id)).single(),
+  const productId = Number(params.id)
+
+  const [{ data: product }, { data: categories }, brands, { media }] = await Promise.all([
+    supabase.from('products').select('*').eq('id', productId).single(),
     supabase.from('categories').select('id, name, slug').order('name'),
     getActiveBrands(),
+    getProductMedia(productId)
   ])
 
   if (!product) notFound()
@@ -29,6 +33,7 @@ export default async function EditProductPage(props: { params: Promise<{ id: str
         <ProductForm
           categories={(categories as Category[]) ?? []}
           brands={brands}
+          media={media}
           mode="edit"
           productId={product.id}
           defaultValues={{

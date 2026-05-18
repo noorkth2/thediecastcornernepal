@@ -1,7 +1,8 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getProductBySlug, getRelatedProducts } from '@/lib/supabase/queries/products'
-import { ProductGallery } from '@/components/store/ProductGallery'
+import { getProductMedia } from '@/lib/supabase/queries/media'
+import { ProductMediaGallery } from '@/components/store/ProductMediaGallery'
 import { ProductCard } from '@/components/store/ProductCard'
 import { AddToCartDetailButton } from '@/components/store/AddToCartDetailButton'
 import { Badge } from '@/components/ui/badge'
@@ -52,9 +53,10 @@ export default async function ProductPage(props: ProductPageProps) {
   const { product } = await getProductBySlug(params.slug)
   if (!product) notFound()
 
-  const related = product.category_id
-    ? await getRelatedProducts(product.id, product.category_id, 4)
-    : []
+  const [related, { media }] = await Promise.all([
+    product.category_id ? getRelatedProducts(product.id, product.category_id, 4) : Promise.resolve([]),
+    getProductMedia(product.id)
+  ])
 
   const discount = discountPercent(product.price, product.compare_price ?? 0)
   const isOutOfStock = product.stock_qty === 0
@@ -83,7 +85,7 @@ export default async function ProductPage(props: ProductPageProps) {
 
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-10 lg:gap-16">
         {/* Gallery */}
-        <ProductGallery images={product.images ?? []} title={product.title} imageUrlFallback={product.image_url} />
+        <ProductMediaGallery images={product.images ?? []} media={media} title={product.title} imageUrlFallback={product.image_url} />
 
         {/* Product Info */}
         <div>
@@ -126,18 +128,17 @@ export default async function ProductPage(props: ProductPageProps) {
           </div>
 
           {/* Stock */}
-          <p className={`text-sm mb-6 font-medium ${
-            isOutOfStock
+          <p className={`text-sm mb-6 font-medium ${isOutOfStock
               ? 'text-red-400'
               : product.stock_qty <= 5
-              ? 'text-orange-400'
-              : 'text-green-400'
-          }`}>
+                ? 'text-orange-400'
+                : 'text-green-400'
+            }`}>
             {isOutOfStock
               ? '✗ Out of Stock'
               : product.stock_qty <= 5
-              ? `⚠ Only ${product.stock_qty} left in stock`
-              : `✓ In Stock (${product.stock_qty} available)`}
+                ? `⚠ Only ${product.stock_qty} left in stock`
+                : `✓ In Stock (${product.stock_qty} available)`}
           </p>
 
           {/* Specs */}

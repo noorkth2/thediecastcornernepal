@@ -5,24 +5,36 @@ import Link from 'next/link'
 import { ArrowRight, Zap, Star, Trophy } from 'lucide-react'
 import { Button } from '@/components/ui/button'
 
-export function HeroSection() {
+export function HeroSection({ isActive = true }: { isActive?: boolean }) {
   const headlineRef = useRef<HTMLHeadingElement>(null)
 
   useEffect(() => {
     const el = headlineRef.current
     if (!el) return
-    el.style.opacity = '0'
-    el.style.transform = 'translateY(40px)'
-    requestAnimationFrame(() => {
-      el.style.transition = 'opacity 0.8s ease-out, transform 0.8s ease-out'
-      el.style.opacity = '1'
-      el.style.transform = 'translateY(0)'
-    })
-  }, [])
+    
+    if (isActive) {
+      el.style.transition = 'none'
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+      
+      // Force reflow
+      void el.offsetHeight
+
+      requestAnimationFrame(() => {
+        el.style.transition = 'opacity 0.8s ease-out 0.2s, transform 0.8s ease-out 0.2s'
+        el.style.opacity = '1'
+        el.style.transform = 'translateY(0)'
+      })
+    } else {
+      el.style.transition = 'none'
+      el.style.opacity = '0'
+      el.style.transform = 'translateY(40px)'
+    }
+  }, [isActive])
 
   return (
     <section
-      className="relative min-h-[92vh] flex items-center overflow-hidden bg-hero-gradient"
+      className="relative w-full h-full min-h-[92vh] flex items-center overflow-hidden bg-hero-gradient"
       aria-label="Hero section"
     >
       {/* Animated background grid */}

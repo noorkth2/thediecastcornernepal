@@ -10,6 +10,8 @@ import { SCALES } from '@/lib/constants'
 import type { Category } from '@/lib/types'
 import type { Brand } from '@/lib/types/brand'
 import { Upload } from 'lucide-react'
+import type { ProductMedia } from '@/lib/types/media'
+import { ProductMediaManager } from '@/components/admin/ProductMediaManager'
 
 interface ProductFormData {
   title: string
@@ -34,12 +36,13 @@ interface ProductFormData {
 interface ProductFormProps {
   categories: Category[]
   brands: Brand[]
+  media?: ProductMedia[]
   defaultValues?: Partial<ProductFormData>
   productId?: number
   mode: 'create' | 'edit'
 }
 
-export function ProductForm({ categories, brands, defaultValues, productId, mode }: ProductFormProps) {
+export function ProductForm({ categories, brands, media = [], defaultValues, productId, mode }: ProductFormProps) {
   const router = useRouter()
   const [error, setError] = useState<string | null>(null)
   const [isUploading, setIsUploading] = useState(false)
@@ -223,6 +226,12 @@ export function ProductForm({ categories, brands, defaultValues, productId, mode
           {isSubmitting ? 'Saving…' : mode === 'create' ? 'Create Product' : 'Save Changes'}
         </Button>
       </div>
+      
+      {mode === 'edit' && productId && (
+        <div className="pt-10 mt-10 border-t border-surface-border">
+          <ProductMediaManager productId={productId} media={media} />
+        </div>
+      )}
     </form>
   )
 }
