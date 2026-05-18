@@ -138,7 +138,7 @@ export default function CheckoutPage() {
                 <input
                   {...form.register('shippingAddress.name')}
                   className="w-full bg-surface-elevated border border-surface-border rounded-lg px-4 py-2.5 text-white focus:outline-none focus:border-brand-red transition-colors"
-                  placeholder="e.g. Aarav Sharma"
+                  placeholder="e.g. John Doe"
                 />
                 {form.formState.errors.shippingAddress?.name && (
                   <p className="text-brand-red text-xs">{form.formState.errors.shippingAddress.name.message}</p>
