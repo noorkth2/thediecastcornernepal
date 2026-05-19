@@ -2,6 +2,7 @@
 
 import { useState } from 'react'
 import { useRouter } from 'next/navigation'
+import { updateOrderStatus } from '@/app/admin/orders/actions'
 
 const ORDER_STATUSES = ['pending', 'confirmed', 'processing', 'shipped', 'delivered', 'cancelled']
 
@@ -21,16 +22,17 @@ export function OrderStatusUpdater({ orderId, currentStatus, currentPaymentStatu
   const handleSave = async () => {
     setSaving(true)
     setSuccess(false)
-    const { createClient } = await import('@/lib/supabase/client')
-    const supabase = createClient()
-    await supabase
-      .from('orders')
-      .update({ status, payment_status: paymentStatus })
-      .eq('id', orderId)
-    setSaving(false)
-    setSuccess(true)
-    router.refresh()
-    setTimeout(() => setSuccess(false), 2500)
+    try {
+      await updateOrderStatus(orderId, status, paymentStatus)
+      setSuccess(true)
+      router.refresh()
+      setTimeout(() => setSuccess(false), 2500)
+    } catch (err) {
+      console.error('Failed to update order status:', err)
+      alert(err instanceof Error ? err.message : 'Failed to update order')
+    } finally {
+      setSaving(false)
+    }
   }
 
   return (
