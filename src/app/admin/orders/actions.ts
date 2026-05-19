@@ -1,27 +1,19 @@
 'use server'
 
 import { createServerClient } from '@supabase/ssr'
+import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { sendEmail } from '@/lib/resend'
 
-// Helper to create admin client with service role key
-async function createAdminClient() {
-  const cookieStore = await cookies()
-  return createServerClient(
+// Standalone service role admin client that bypasses RLS
+function createAdminClient() {
+  return createSupabaseClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.SUPABASE_SERVICE_ROLE_KEY!,
     {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
-        },
-        setAll(cookiesToSet: { name: string; value: string; options?: Record<string, unknown> }[]) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            )
-          } catch {}
-        },
+      auth: {
+        autoRefreshToken: false,
+        persistSession: false,
       },
     }
   )
@@ -73,7 +65,7 @@ export async function updateOrderStatus(orderId: number, status: string, payment
   }
 
   // 2. Fetch the current order to check its previous status
-  const adminSupabase = await createAdminClient()
+  const adminSupabase = createAdminClient()
   const { data: currentOrder, error: fetchError } = await adminSupabase
     .from('orders')
     .select('*, order_items(*)')
