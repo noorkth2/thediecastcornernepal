@@ -1,9 +1,6 @@
 import { NextResponse } from 'next/server'
 import { createClient } from '@supabase/supabase-js'
-
-// You would typically use the Resend SDK here
-// import { Resend } from 'resend'
-// const resend = new Resend(process.env.RESEND_API_KEY)
+import { sendEmail } from '@/lib/resend'
 
 export async function GET(request: Request) {
   // Verify authorization for cron endpoint (e.g., Vercel Cron secret)
@@ -43,7 +40,7 @@ export async function GET(request: Request) {
 
       // Generate a unique discount code
       const discountCode = `COMEBACK-${session.id.split('-')[0].toUpperCase()}`
-      
+
       // Update session to indicate email was sent (by setting the discount code)
       await supabase
         .from('cart_sessions')
@@ -51,20 +48,25 @@ export async function GET(request: Request) {
         .eq('id', session.id)
 
       // Send email via Resend
-      /* 
-      await resend.emails.send({
-        from: 'The Diecast Corner Nepal <sales@thediecastcornernepal.com>',
+      await sendEmail({
         to: session.email,
         subject: 'You left something behind! 🏎️',
         html: `
-          <h1>Still thinking about it?</h1>
-          <p>We noticed you left some items in your cart. Use code <strong>${discountCode}</strong> for 5% off if you complete your order today.</p>
-          <a href="https://thediecastcornernepal.com/cart?recover=${session.session_token}">Return to Cart</a>
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 20px; color: #333;">
+            <h1 style="color: #e53e3e;">Still thinking about it?</h1>
+            <p>We noticed you left some items in your cart. Use code <strong>${discountCode}</strong> for 5% off if you complete your order today.</p>
+            <p style="margin: 25px 0;">
+              <a href="https://thediecastcornernepal.com/cart?recover=${session.session_token}" 
+                 style="background-color: #e53e3e; color: white; padding: 12px 24px; text-decoration: none; border-radius: 8px; font-weight: bold; display: inline-block;">
+                Return to Cart
+              </a>
+            </p>
+            <hr style="border: 0; border-top: 1px solid #eee; margin: 30px 0;" />
+            <p style="font-size: 12px; color: #777;">If you did not make this request or already completed your purchase, please ignore this email.</p>
+          </div>
         `
       })
-      */
-      
-      console.log(`Mock sent recovery email to ${session.email} with code ${discountCode}`)
+
       emailsSent++
     }
 
