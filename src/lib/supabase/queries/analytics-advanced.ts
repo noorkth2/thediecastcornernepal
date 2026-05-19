@@ -45,7 +45,7 @@ export async function getAnalyticsSummary(range: DateRange): Promise<AnalyticsSu
     supabase.rpc('get_customer_stats', { p_start: startTs, p_end: endTs }),
     // Inventory snapshot (all active products)
     supabase.from('products')
-      .select('id, stock_qty, cost_price, reorder_threshold, is_active')
+      .select('id, title, brand, stock_qty, cost_price, reorder_threshold, is_active')
       .eq('is_active', true),
     // Low stock products
     supabase.from('products')
