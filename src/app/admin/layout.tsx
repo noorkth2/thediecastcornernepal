@@ -4,7 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import {
   LayoutDashboard, Package, ShoppingBag, Tag,
   Settings, ExternalLink, BarChart3, Layers, Flag, Video,
-  FileBarChart2, Calculator, BookOpen,
+  FileBarChart2, Calculator, BookOpen, Zap, Calendar,
 } from 'lucide-react'
 import { AdminSignOutButton } from '@/components/admin/AdminSignOutButton'
 
@@ -17,6 +17,8 @@ const NAV_GROUPS = [
       { href: '/admin/categories', label: 'Categories',   icon: Tag, isSubmenu: true },
       { href: '/admin/brands',     label: 'Brands',       icon: Layers, isSubmenu: true },
       { href: '/admin/orders',     label: 'Orders',       icon: ShoppingBag },
+      { href: '/admin/preorders',  label: 'Preorders',    icon: Calendar },
+      { href: '/admin/drops',      label: 'Product Drops', icon: Zap },
       { href: '/admin/banners',    label: 'Banners',      icon: Flag },
       { href: '/admin/media',      label: 'Media Gallery', icon: Video },
     ],
@@ -25,6 +27,7 @@ const NAV_GROUPS = [
     label: 'Intelligence',
     links: [
       { href: '/admin/reports',   label: 'Reports',       icon: FileBarChart2 },
+      { href: '/admin/audit',     label: 'Audit Trail',   icon: FileBarChart2 },
     ],
   },
   {

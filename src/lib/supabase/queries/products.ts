@@ -38,7 +38,13 @@ export async function getProducts(opts: GetProductsOptions = {}) {
   if (isNewArrival) query = query.eq('is_new_arrival', true)
   if (isTreasureHunt) query = query.eq('is_treasure_hunt', true)
   if (isPremium) query = query.eq('is_premium', true)
-  if (search) query = query.ilike('title', `%${search}%`)
+  if (search) {
+    // Use Postgres full-text search with prefix matching support
+    query = query.textSearch('fts', search, {
+      config: 'english',
+      type: 'websearch'
+    })
+  }
 
   switch (sort) {
     case 'price_asc':

@@ -7,6 +7,7 @@ import { ShoppingCart, Menu, X, Search, User, ChevronDown } from 'lucide-react'
 import { useCartStore } from '@/store/cartStore'
 import { useWishlistStore } from '@/store/wishlistStore'
 import { useUIStore } from '@/store/uiStore'
+import { SearchModal } from '@/components/store/SearchModal'
 import { cn } from '@/lib/utils'
 import { UserDropdown } from '@/components/auth/UserDropdown'
 import { NAV_LINKS } from '@/lib/constants'
@@ -94,13 +95,7 @@ export function ClientNavbar({ user, profile }: ClientNavbarProps) {
           {/* Right actions */}
           <div className="flex items-center gap-2">
             {/* Search */}
-            <Link
-              href="/shop"
-              className="p-2 rounded-lg text-text-muted hover:text-white hover:bg-surface-elevated transition-colors"
-              aria-label="Search products"
-            >
-              <Search className="w-5 h-5" />
-            </Link>
+            <SearchModal />
 
             {/* Auth/Account */}
             {user && profile ? (

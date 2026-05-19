@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
+import { JsonLd, buildOrganizationSchema, buildWebSiteSchema } from '@/components/seo/JsonLd'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -60,6 +61,8 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-surface-base text-text-primary antialiased">
+        <JsonLd data={buildOrganizationSchema()} />
+        <JsonLd data={buildWebSiteSchema()} />
         {children}
       </body>
     </html>

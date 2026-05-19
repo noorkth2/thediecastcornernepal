@@ -16,9 +16,13 @@ export interface CartProduct {
   image: string
   brand: string | null
   stock_qty: number
+  variant_id?: number
+  variant_label?: string
 }
 
 export interface CartEntry {
   product: CartProduct
   quantity: number
+  reservation_id?: string
+  expires_at?: string
 }
