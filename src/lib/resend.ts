@@ -12,6 +12,10 @@ if (!apiKey && process.env.NODE_ENV !== 'production') {
 
 export const resend = apiKey ? new Resend(apiKey) : null
 
+// Smart From address fallback:
+// Uses RESEND_FROM_EMAIL if defined, otherwise falls back to onboarding@resend.dev for instant sandbox testing
+const DEFAULT_FROM = process.env.RESEND_FROM_EMAIL || 'The Diecast Corner Nepal <onboarding@resend.dev>'
+
 interface SendEmailPayload {
   to: string | string[]
   subject: string
@@ -26,7 +30,7 @@ export async function sendEmail({
   to,
   subject,
   html,
-  from = 'The Diecast Corner Nepal <sales@thediecastcornernepal.com>',
+  from = DEFAULT_FROM,
 }: SendEmailPayload) {
   const recipientList = Array.isArray(to) ? to : [to]
 
