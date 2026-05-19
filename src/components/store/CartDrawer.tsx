@@ -8,6 +8,7 @@ import { useCartStore } from '@/store/cartStore'
 import { formatPrice, getPrimaryImage } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
 import { FREE_SHIPPING_THRESHOLD, STANDARD_SHIPPING } from '@/lib/constants'
+import { ReservationTimer } from './ReservationTimer'
 
 export function CartDrawer() {
   const { items, isOpen, closeCart, removeItem, updateQty, totalPrice, totalItems } =
@@ -94,9 +95,9 @@ export function CartDrawer() {
               </Button>
             </div>
           ) : (
-            items.map(({ product, quantity }) => (
+            items.map(({ product, quantity, expires_at, reservation_id }) => (
               <div
-                key={product.id}
+                key={`${product.id}-${product.variant_id || 'base'}`}
                 className="flex gap-3 bg-surface-elevated rounded-xl p-3 border border-surface-border"
               >
                 {/* Product image */}
@@ -129,11 +130,13 @@ export function CartDrawer() {
                   <p className="text-brand-gold font-semibold text-sm mt-1">
                     {formatPrice(product.price)}
                   </p>
+                  
+                  {expires_at && <ReservationTimer expiresAt={expires_at} />}
 
                   {/* Qty controls */}
                   <div className="flex items-center gap-2 mt-2">
                     <button
-                      onClick={() => updateQty(product.id, quantity - 1)}
+                      onClick={() => updateQty(product.id, quantity - 1, product.variant_id)}
                       className="w-6 h-6 rounded bg-surface-border flex items-center justify-center text-text-muted hover:text-white hover:bg-surface-elevated transition-colors"
                       aria-label="Decrease quantity"
                     >
@@ -146,7 +149,8 @@ export function CartDrawer() {
                       onClick={() =>
                         updateQty(
                           product.id,
-                          Math.min(quantity + 1, product.stock_qty)
+                          Math.min(quantity + 1, product.stock_qty),
+                          product.variant_id
                         )
                       }
                       disabled={quantity >= product.stock_qty}
@@ -158,7 +162,7 @@ export function CartDrawer() {
 
                     {/* Remove */}
                     <button
-                      onClick={() => removeItem(product.id)}
+                      onClick={() => removeItem(product.id, product.variant_id)}
                       className="ml-auto p-1 rounded text-text-faint hover:text-red-400 transition-colors"
                       aria-label="Remove item"
                     >

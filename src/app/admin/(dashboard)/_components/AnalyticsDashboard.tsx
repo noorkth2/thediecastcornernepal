@@ -14,6 +14,7 @@ import { InventorySnapshot } from './InventorySnapshot'
 import { PnLWidget } from './PnLWidget'
 import { ForecastChart } from './ForecastChart'
 import { AnalyticsSkeleton } from './AnalyticsSkeleton'
+import { EngagementTab } from './EngagementTab'
 import { RefreshCw, BarChart3 } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -24,6 +25,7 @@ const TABS = [
   { id: 'inventory',   label: 'Inventory' },
   { id: 'finance',     label: 'Finance' },
   { id: 'forecasting', label: 'Forecasting' },
+  { id: 'engagement',  label: 'Engagement' },
 ] as const
 
 type Tab = typeof TABS[number]['id']
@@ -110,6 +112,9 @@ export function AnalyticsDashboard({ initialData }: Props) {
           )}
           {activeTab === 'forecasting' && (
             <ForecastingTab data={data} />
+          )}
+          {activeTab === 'engagement' && (
+            <EngagementTab />
           )}
         </>
       )}

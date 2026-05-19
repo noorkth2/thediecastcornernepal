@@ -9,9 +9,9 @@ interface CartStore {
   isOpen: boolean
 
   // Actions
-  addItem: (product: CartProduct, qty?: number) => void
-  removeItem: (productId: number) => void
-  updateQty: (productId: number, qty: number) => void
+  addItem: (product: CartProduct, qty?: number) => Promise<void>
+  removeItem: (productId: number, variantId?: number) => Promise<void>
+  updateQty: (productId: number, qty: number, variantId?: number) => void
   clearCart: () => void
   toggleCart: () => void
   openCart: () => void
@@ -31,44 +31,87 @@ export const useCartStore = create<CartStore>()(
       items: [],
       isOpen: false,
 
-      addItem: (product, qty = 1) => {
-        set((state) => {
-          const existing = state.items.find(
-            (i) => i.product.id === product.id
-          )
-          if (existing) {
-            return {
-              items: state.items.map((i) =>
-                i.product.id === product.id
-                  ? {
-                      ...i,
-                      quantity: Math.min(i.quantity + qty, product.stock_qty),
-                    }
-                  : i
-              ),
+      addItem: async (product, qty = 1) => {
+        try {
+          const res = await fetch('/api/cart/reserve', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ 
+              productId: product.id, 
+              variantId: product.variant_id || null, 
+              quantity: qty 
+            }),
+          })
+          
+          if (!res.ok) {
+            const error = await res.json()
+            throw new Error(error.error || 'Failed to reserve stock')
+          }
+          
+          const data = await res.json()
+
+          set((state) => {
+            const existing = state.items.find(
+              (i) => i.product.id === product.id && i.product.variant_id === product.variant_id
+            )
+            if (existing) {
+              return {
+                items: state.items.map((i) =>
+                  i.product.id === product.id && i.product.variant_id === product.variant_id
+                    ? {
+                        ...i,
+                        quantity: Math.min(i.quantity + qty, product.stock_qty),
+                        reservation_id: data.reservation_id,
+                        expires_at: data.expires_at,
+                      }
+                    : i
+                ),
+              }
             }
-          }
-          return {
-            items: [
-              ...state.items,
-              { product, quantity: Math.min(qty, product.stock_qty) },
-            ],
-          }
-        })
+            return {
+              items: [
+                ...state.items,
+                { 
+                  product, 
+                  quantity: Math.min(qty, product.stock_qty),
+                  reservation_id: data.reservation_id,
+                  expires_at: data.expires_at,
+                },
+              ],
+            }
+          })
+        } catch (error) {
+          console.error('Reservation failed:', error)
+          throw error
+        }
       },
 
-      removeItem: (productId) =>
-        set((state) => ({
-          items: state.items.filter((i) => i.product.id !== productId),
-        })),
+      removeItem: async (productId, variantId) => {
+        const state = get()
+        const item = state.items.find((i) => i.product.id === productId && i.product.variant_id === variantId)
+        
+        if (item?.reservation_id) {
+          try {
+            await fetch(`/api/cart/reserve?id=${item.reservation_id}`, { method: 'DELETE' })
+          } catch (e) {
+            console.error('Failed to release reservation', e)
+          }
+        }
 
-      updateQty: (productId, qty) =>
+        set((state) => ({
+          items: state.items.filter((i) => !(i.product.id === productId && i.product.variant_id === variantId)),
+        }))
+      },
+
+      updateQty: (productId, qty, variantId) =>
         set((state) => ({
           items:
             qty === 0
-              ? state.items.filter((i) => i.product.id !== productId)
+              ? state.items.filter((i) => !(i.product.id === productId && i.product.variant_id === variantId))
               : state.items.map((i) =>
-                  i.product.id === productId ? { ...i, quantity: qty } : i
+                  i.product.id === productId && i.product.variant_id === variantId 
+                    ? { ...i, quantity: qty } 
+                    : i
                 ),
         })),
 
@@ -95,6 +138,7 @@ export const useCartStore = create<CartStore>()(
         try {
           const payload = items.map((i) => ({
             product_id: i.product.id,
+            variant_id: i.product.variant_id || null,
             quantity: i.quantity,
           }))
 

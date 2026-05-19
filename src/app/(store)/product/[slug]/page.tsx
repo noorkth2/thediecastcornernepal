@@ -2,12 +2,17 @@ import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { getProductBySlug, getRelatedProducts } from '@/lib/supabase/queries/products'
 import { getProductMedia } from '@/lib/supabase/queries/media'
+import { getProductVariants } from '@/lib/supabase/queries/variants'
+import { getProductPreorderConfigs } from '@/lib/supabase/queries/preorders'
+import { getAlsoBought } from '@/lib/supabase/queries/recommendations'
 import { ProductMediaGallery } from '@/components/store/ProductMediaGallery'
 import { ProductCard } from '@/components/store/ProductCard'
-import { AddToCartDetailButton } from '@/components/store/AddToCartDetailButton'
+import { RecommendationRail } from '@/components/store/RecommendationRail'
+import { ProductClientActions } from '@/components/store/ProductClientActions'
 import { Badge } from '@/components/ui/badge'
 import { formatPrice, discountPercent } from '@/lib/utils'
 import { Package, Tag, Layers } from 'lucide-react'
+import { JsonLd, buildProductSchema, buildBreadcrumbSchema } from '@/components/seo/JsonLd'
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>
@@ -53,16 +58,40 @@ export default async function ProductPage(props: ProductPageProps) {
   const { product } = await getProductBySlug(params.slug)
   if (!product) notFound()
 
-  const [related, { media }] = await Promise.all([
+  const [related, { media }, variants, preorderConfigs, alsoBought] = await Promise.all([
     product.category_id ? getRelatedProducts(product.id, product.category_id, 4) : Promise.resolve([]),
-    getProductMedia(product.id)
+    getProductMedia(product.id),
+    getProductVariants(product.id),
+    getProductPreorderConfigs(product.id),
+    getAlsoBought(product.id, 8)
   ])
 
   const discount = discountPercent(product.price, product.compare_price ?? 0)
   const isOutOfStock = product.stock_qty === 0
+  const primaryImageUrl = product.images?.find((i) => i.is_primary)?.image_url ?? product.image_url
+
+  const productSchema = buildProductSchema({
+    title: product.title,
+    description: product.description,
+    brand: product.brand,
+    price: product.price,
+    comparePrice: product.compare_price,
+    stockQty: product.stock_qty,
+    imageUrl: primaryImageUrl,
+    slug: product.slug,
+  })
+
+  const breadcrumbSchema = buildBreadcrumbSchema([
+    { name: 'Home', url: 'https://thediecastcornernepal.com' },
+    { name: 'Shop', url: 'https://thediecastcornernepal.com/shop' },
+    ...(product.category ? [{ name: product.category.name, url: `https://thediecastcornernepal.com/shop?category=${product.category.slug}` }] : []),
+    { name: product.title, url: `https://thediecastcornernepal.com/product/${product.slug}` },
+  ])
 
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
+      <JsonLd data={productSchema} />
+      <JsonLd data={breadcrumbSchema} />
       {/* Breadcrumb */}
       <nav className="text-xs text-text-faint mb-8 flex items-center gap-2" aria-label="Breadcrumb">
         <a href="/" className="hover:text-white transition-colors">Home</a>
@@ -129,10 +158,10 @@ export default async function ProductPage(props: ProductPageProps) {
 
           {/* Stock */}
           <p className={`text-sm mb-6 font-medium ${isOutOfStock
-              ? 'text-red-400'
-              : product.stock_qty <= 5
-                ? 'text-orange-400'
-                : 'text-green-400'
+            ? 'text-red-400'
+            : product.stock_qty <= 5
+              ? 'text-orange-400'
+              : 'text-green-400'
             }`}>
             {isOutOfStock
               ? '✗ Out of Stock'
@@ -172,33 +201,38 @@ export default async function ProductPage(props: ProductPageProps) {
             </div>
           )}
 
-          {/* Add to cart — Client Component */}
-          <AddToCartDetailButton product={product} />
+          {/* Add to cart / Variant selection — Client Component */}
+          <ProductClientActions product={product} variants={variants} preorderConfigs={preorderConfigs} />
 
           {/* Shipping note */}
           <div className="mt-5 p-3.5 bg-surface-elevated rounded-xl border border-surface-border text-xs text-text-muted flex items-start gap-2">
             <span>🚚</span>
             <span>
-              Free shipping on orders over Rs. 2,000. Standard shipping Rs. 150.
+              Free shipping on orders over Rs. 5,000. Standard shipping Rs. 150.
               Delivered within 2–5 business days across Nepal.
             </span>
           </div>
         </div>
       </div>
 
-      {/* Related Products */}
-      {related.length > 0 && (
-        <div className="mt-20">
-          <h2 className="font-display text-3xl text-white tracking-wide mb-6">
-            YOU MIGHT ALSO LIKE
-          </h2>
-          <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
-            {related.map((p) => (
-              <ProductCard key={p.id} product={p} />
-            ))}
-          </div>
-        </div>
-      )}
+      {/* Recommendation Rails */}
+      <div className="mt-20 space-y-16">
+        {alsoBought.length > 0 && (
+          <RecommendationRail
+            products={alsoBought}
+            title="Frequently Bought Together"
+            subtitle="Other collectors bought these items alongside this model."
+          />
+        )}
+
+        {related.length > 0 && (
+          <RecommendationRail
+            products={related}
+            title="You Might Also Like"
+            subtitle="More models from the same category."
+          />
+        )}
+      </div>
     </div>
   )
 }

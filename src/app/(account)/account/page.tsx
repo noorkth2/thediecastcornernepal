@@ -2,6 +2,8 @@ import { redirect } from 'next/navigation'
 import Link from 'next/link'
 import { createClient } from '@/lib/supabase/server'
 import { getOrdersByUser } from '@/lib/supabase/queries/orders'
+import { getPersonalizedRecommendations } from '@/lib/supabase/queries/recommendations'
+import { RecommendationRail } from '@/components/store/RecommendationRail'
 import { formatPrice, formatDate } from '@/lib/utils'
 import { ORDER_STATUS_CONFIG } from '@/lib/constants'
 import { Package, ShoppingBag, User } from 'lucide-react'
@@ -22,6 +24,8 @@ export default async function AccountDashboardPage() {
   const totalSpent = orders
     .filter((o) => o.payment_status === 'paid')
     .reduce((sum, o) => sum + o.total_amount, 0)
+
+  const personalized = await getPersonalizedRecommendations(user.id, 8)
 
   return (
     <div className="space-y-6">
@@ -102,6 +106,17 @@ export default async function AccountDashboardPage() {
           </div>
         )}
       </div>
+
+      {/* Personalized Recommendations */}
+      {personalized.length > 0 && (
+        <div className="pt-8 border-t border-surface-border">
+          <RecommendationRail
+            products={personalized}
+            title="Complete Your Collection"
+            subtitle="Models tailored to your garage contents, brand preference, and collection scale."
+          />
+        </div>
+      )}
     </div>
   )
 }

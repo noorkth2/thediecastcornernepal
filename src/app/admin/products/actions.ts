@@ -3,6 +3,12 @@
 import { createClient } from '@/lib/supabase/server'
 import { revalidatePath } from 'next/cache'
 
+export async function revalidateProduct(slug: string) {
+  revalidatePath(`/product/${slug}`)
+  revalidatePath('/(store)/shop', 'page')
+  revalidatePath('/', 'page')
+}
+
 export async function bulkImportProducts(products: any[]) {
   const supabase = await createClient()
 

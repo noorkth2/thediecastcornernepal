@@ -12,6 +12,8 @@ import type { Brand } from '@/lib/types/brand'
 import { Upload } from 'lucide-react'
 import type { ProductMedia } from '@/lib/types/media'
 import { ProductMediaManager } from '@/components/admin/ProductMediaManager'
+import { VariantManager } from '@/components/admin/VariantManager'
+import { revalidateProduct } from '@/app/admin/products/actions'
 
 interface ProductFormData {
   title: string
@@ -92,6 +94,8 @@ export function ProductForm({ categories, brands, media = [], defaultValues, pro
         )
       }
     }
+
+    await revalidateProduct(slug)
 
     router.push('/admin/products')
     router.refresh()

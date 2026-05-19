@@ -1,5 +1,7 @@
 'use client'
 
+import { useState } from 'react'
+
 import Image from 'next/image'
 import Link from 'next/link'
 import { ShoppingCart, Eye, Star, Heart } from 'lucide-react'
@@ -10,6 +12,7 @@ import { Badge } from '@/components/ui/badge'
 import { cn } from '@/lib/utils'
 import type { Product } from '@/lib/types'
 import { useWishlistStore } from '@/store/wishlistStore'
+import { QuickViewModal } from '@/components/ui/QuickViewModal'
 
 interface ProductCardProps {
   product: Product
@@ -21,6 +24,7 @@ export function ProductCard({ product, className }: ProductCardProps) {
   const { addToast } = useUIStore()
   const isWishlisted = useWishlistStore((state) => state.items.includes(product.id))
   const toggleWishlist = useWishlistStore((state) => state.toggleWishlist)
+  const [isQuickViewOpen, setIsQuickViewOpen] = useState(false)
   
   const primaryImage = getPrimaryImage(product.images, product.image_url)
   const discount = discountPercent(product.price, product.compare_price ?? 0)
@@ -47,25 +51,26 @@ export function ProductCard({ product, className }: ProductCardProps) {
   }
 
   return (
-    <Link
-      href={`/product/${product.slug}`}
-      className={cn(
-        'group flex flex-col h-full bg-surface-card rounded-xl overflow-hidden border border-surface-border',
-        'hover:border-brand-red/40 transition-all duration-300 hover:-translate-y-1 hover:shadow-xl hover:shadow-brand-red/10',
-        'product-card-top-bar relative',
-        className
-      )}
-      aria-label={`View ${product.title}`}
-    >
-      {/* Image container */}
-      <div className="relative w-full h-[180px] bg-[#1a1a1a] flex items-center justify-center overflow-hidden">
-        <Image
-          src={primaryImage}
-          alt={product.images?.[0]?.alt_text ?? product.title}
-          fill
-          className="object-contain p-3 group-hover:scale-105 transition-transform duration-500"
-          sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
-        />
+    <>
+      <Link
+        href={`/product/${product.slug}`}
+        className={cn(
+          'group flex flex-col h-full bg-surface-card rounded-xl overflow-hidden border border-surface-border',
+          'hover:border-brand-red/40 transition-all duration-300 hover:-translate-y-2 hover:shadow-2xl hover:shadow-brand-red/20',
+          'product-card-top-bar relative [perspective:1000px]',
+          className
+        )}
+        aria-label={`View ${product.title}`}
+      >
+        {/* Image container */}
+        <div className="relative w-full h-[180px] bg-[#1a1a1a] flex items-center justify-center overflow-hidden [transform-style:preserve-3d]">
+          <Image
+            src={primaryImage}
+            alt={product.images?.[0]?.alt_text ?? product.title}
+            fill
+            className="object-contain p-3 transition-transform duration-500 group-hover:scale-110 group-hover:[transform:translateZ(20px)]"
+            sizes="(max-width: 640px) 50vw, (max-width: 1024px) 33vw, 25vw"
+          />
 
         {/* Wishlist Button */}
         <button
@@ -91,15 +96,22 @@ export function ProductCard({ product, className }: ProductCardProps) {
         </button>
 
         {/* Hover overlay */}
-        <div className="absolute inset-0 bg-black/0 group-hover:bg-black/30 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100">
-          <span className="flex items-center gap-1.5 text-xs font-semibold text-white bg-black/60 rounded-full px-3 py-1.5 backdrop-blur-sm">
-            <Eye className="w-3.5 h-3.5" />
+        <div 
+          className="absolute inset-0 bg-black/0 group-hover:bg-black/40 transition-colors duration-300 flex items-center justify-center opacity-0 group-hover:opacity-100 z-10"
+          onClick={(e) => {
+            e.preventDefault()
+            e.stopPropagation()
+            setIsQuickViewOpen(true)
+          }}
+        >
+          <span className="flex items-center gap-1.5 text-xs font-semibold text-white bg-brand-red hover:bg-brand-red-light rounded-full px-4 py-2 shadow-lg transition-transform hover:scale-105 cursor-pointer">
+            <Eye className="w-4 h-4" />
             Quick View
           </span>
         </div>
 
         {/* Badges */}
-        <div className="absolute top-2 left-2 flex flex-col gap-1 z-10">
+        <div className="absolute top-2 left-2 flex flex-col gap-1 z-20 pointer-events-none">
           {product.is_treasure_hunt && (
             <span className="badge-th">⭐ TH</span>
           )}
@@ -179,10 +191,10 @@ export function ProductCard({ product, className }: ProductCardProps) {
             onClick={handleAddToCart}
             disabled={isOutOfStock}
             className={cn(
-              'w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition-all duration-200',
+              'w-full flex items-center justify-center gap-1.5 py-2 rounded-lg text-xs font-semibold transition-all duration-300',
               isOutOfStock
                 ? 'bg-surface-elevated text-text-faint cursor-not-allowed'
-                : 'bg-surface-elevated hover:bg-brand-red text-text-muted hover:text-white border border-surface-border hover:border-brand-red group-hover:border-brand-red/40'
+                : 'bg-surface-elevated hover:bg-brand-red text-text-muted hover:text-white border border-surface-border hover:border-brand-red group-hover:border-brand-red/40 group-hover:shadow-[0_0_15px_rgba(192,57,43,0.3)]'
             )}
             aria-label={`Add ${product.title} to cart`}
             id={`add-to-cart-${product.id}`}
@@ -193,5 +205,12 @@ export function ProductCard({ product, className }: ProductCardProps) {
         </div>
       </div>
     </Link>
+
+    <QuickViewModal 
+      product={product}
+      isOpen={isQuickViewOpen}
+      onClose={() => setIsQuickViewOpen(false)}
+    />
+    </>
   )
 }

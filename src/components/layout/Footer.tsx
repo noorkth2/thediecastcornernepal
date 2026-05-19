@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { createClient } from '@/lib/supabase/server'
 import { SOCIAL_LINKS, NAV_LINKS } from '@/lib/constants'
 
 function InstagramIcon({ className }: { className?: string }) {
@@ -25,7 +26,27 @@ function TikTokIcon({ className }: { className?: string }) {
   )
 }
 
-export function Footer() {
+export async function Footer() {
+  const supabase = await createClient()
+  const { data: settings } = await supabase
+    .from('site_settings')
+    .select('key, value')
+    .in('key', ['instagram_url', 'facebook_url', 'tiktok_url'])
+
+  const urls = {
+    instagram: SOCIAL_LINKS.instagram,
+    facebook: SOCIAL_LINKS.facebook,
+    tiktok: SOCIAL_LINKS.tiktok,
+  }
+
+  if (settings) {
+    settings.forEach((row) => {
+      if (row.key === 'instagram_url' && row.value) urls.instagram = row.value
+      if (row.key === 'facebook_url' && row.value) urls.facebook = row.value
+      if (row.key === 'tiktok_url' && row.value) urls.tiktok = row.value
+    })
+  }
+
   return (
     <footer className="bg-surface-card border-t border-surface-border mt-20">
       <div className="h-1 bg-gradient-to-r from-brand-red via-brand-orange to-brand-gold" />
@@ -51,17 +72,17 @@ export function Footer() {
               scale models to collectors across Nepal.
             </p>
             <div className="flex items-center gap-3 mt-5">
-              <a href={SOCIAL_LINKS.instagram} target="_blank" rel="noopener noreferrer"
+              <a href={urls.instagram} target="_blank" rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-surface-elevated text-text-muted hover:text-white hover:bg-surface-border transition-colors"
                 aria-label="Instagram">
                 <InstagramIcon className="w-4 h-4" />
               </a>
-              <a href={SOCIAL_LINKS.facebook} target="_blank" rel="noopener noreferrer"
+              <a href={urls.facebook} target="_blank" rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-surface-elevated text-text-muted hover:text-white hover:bg-surface-border transition-colors"
                 aria-label="Facebook">
                 <FacebookIcon className="w-4 h-4" />
               </a>
-              <a href={SOCIAL_LINKS.tiktok} target="_blank" rel="noopener noreferrer"
+              <a href={urls.tiktok} target="_blank" rel="noopener noreferrer"
                 className="p-2 rounded-lg bg-surface-elevated text-text-muted hover:text-white hover:bg-surface-border transition-colors"
                 aria-label="TikTok">
                 <TikTokIcon className="w-4 h-4" />
