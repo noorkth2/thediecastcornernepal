@@ -1,46 +1,40 @@
 import Link from 'next/link'
-import { Home, Search } from 'lucide-react'
+import { AlertCircle, Home, ShoppingBag } from 'lucide-react'
+import { Button } from '@/components/ui/button'
 
 export default function NotFound() {
   return (
-    <div className="min-h-[80vh] flex items-center justify-center px-4">
-      {/* Grid bg */}
-      <div className="fixed inset-0 opacity-[0.03] pointer-events-none" style={{
-        backgroundImage: 'linear-gradient(rgba(192,57,43,0.5) 1px, transparent 1px), linear-gradient(90deg, rgba(192,57,43,0.5) 1px, transparent 1px)',
-        backgroundSize: '60px 60px',
-      }} />
+    <div className="min-h-[70vh] flex flex-col items-center justify-center px-4 text-center">
+      <div className="relative mb-8">
+        <div className="absolute inset-0 bg-brand-red/20 blur-3xl rounded-full" />
+        <AlertCircle className="w-24 h-24 text-brand-red relative animate-pulse" />
+      </div>
 
-      <div className="relative text-center">
-        <div className="font-display text-[10rem] sm:text-[14rem] text-white/5 leading-none select-none">
-          404
-        </div>
-        <div className="-mt-16 sm:-mt-20 relative z-10">
-          <p className="text-brand-red font-semibold text-sm tracking-widest uppercase mb-2">
-            Page Not Found
-          </p>
-          <h1 className="font-display text-4xl sm:text-5xl text-white tracking-wide mb-3">
-            WRONG TRACK
-          </h1>
-          <p className="text-text-muted text-sm max-w-sm mx-auto mb-8">
-            This page doesn&apos;t exist or has been moved. Head back to the pit lane and find what you&apos;re looking for.
-          </p>
-          <div className="flex flex-wrap gap-3 justify-center">
-            <Link
-              href="/"
-              className="flex items-center gap-2 bg-brand-red hover:bg-brand-red-light text-white font-semibold px-6 py-3 rounded-xl transition-colors"
-              id="not-found-home-btn"
-            >
-              <Home className="w-4 h-4" /> Go Home
-            </Link>
-            <Link
-              href="/shop"
-              className="flex items-center gap-2 bg-surface-elevated hover:bg-surface-border text-text-primary font-semibold px-6 py-3 rounded-xl border border-surface-border transition-colors"
-              id="not-found-shop-btn"
-            >
-              <Search className="w-4 h-4" /> Browse Shop
-            </Link>
-          </div>
-        </div>
+      <h1 className="font-display text-6xl text-white tracking-widest mb-4">404</h1>
+      <h2 className="text-2xl font-display text-text-primary tracking-wide mb-6">MODEL NOT FOUND</h2>
+      
+      <p className="max-w-md text-text-muted mb-10 leading-relaxed">
+        It looks like the scale model you're looking for has sped off the track. The page might have been moved or no longer exists.
+      </p>
+
+      <div className="flex flex-col sm:flex-row gap-4">
+        <Button asChild variant="primary" className="bg-brand-red hover:bg-brand-red-light border-none px-8">
+          <Link href="/">
+            <Home className="w-4 h-4 mr-2" /> Back to Home
+          </Link>
+        </Button>
+        <Button asChild variant="outline" className="px-8">
+          <Link href="/shop">
+            <ShoppingBag className="w-4 h-4 mr-2" /> Continue Shopping
+          </Link>
+        </Button>
+      </div>
+
+      <div className="mt-16 grid grid-cols-2 sm:grid-cols-4 gap-8 opacity-20 grayscale pointer-events-none">
+        <div className="font-display text-4xl text-white">MINIGT</div>
+        <div className="font-display text-4xl text-white">TOMICA</div>
+        <div className="font-display text-4xl text-white">MATCHBOX</div>
+        <div className="font-display text-4xl text-white">MAJORETTE</div>
       </div>
     </div>
   )

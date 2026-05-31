@@ -32,6 +32,7 @@ export async function getProducts(opts: GetProductsOptions = {}) {
 
   if (category) query = query.eq('category.slug', category)
   if (brand) query = query.ilike('brand', brand)
+  if (status) query = query.eq('status', status)
   if (minPrice !== undefined) query = query.gte('price', minPrice)
   if (maxPrice !== undefined) query = query.lte('price', maxPrice)
   if (isFeatured) query = query.eq('is_featured', true)

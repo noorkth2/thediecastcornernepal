@@ -5,15 +5,19 @@ import { getProductMedia } from '@/lib/supabase/queries/media'
 import { getProductVariants } from '@/lib/supabase/queries/variants'
 import { getProductPreorderConfigs } from '@/lib/supabase/queries/preorders'
 import { getAlsoBought } from '@/lib/supabase/queries/recommendations'
+import { getReviewsByProduct } from '@/lib/supabase/queries/reviews'
 import { ProductMediaGallery } from '@/components/store/ProductMediaGallery'
 import { ProductCard } from '@/components/store/ProductCard'
 import { RecommendationRail } from '@/components/store/RecommendationRail'
 import { ProductClientActions } from '@/components/store/ProductClientActions'
+import { ProductReviews } from '@/components/store/ProductReviews'
+import { WaitlistForm } from '@/components/store/WaitlistForm'
 import { Badge } from '@/components/ui/badge'
 import { formatPrice, discountPercent } from '@/lib/utils'
 import { Package, Tag, Layers } from 'lucide-react'
 import { JsonLd, buildProductSchema, buildBreadcrumbSchema } from '@/components/seo/JsonLd'
 import { getNonce } from '@/lib/csp'
+import { createClient } from '@/lib/supabase/server'
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>
@@ -21,17 +25,50 @@ interface ProductPageProps {
 
 export const revalidate = 60
 
+export async function generateMetadata(props: ProductPageProps): Promise<Metadata> {
+  const params = await props.params
+  const { product } = await getProductBySlug(params.slug)
+  
+  if (!product) return { title: 'Product Not Found' }
+
+  const primaryImage = product.images?.find((i) => i.is_primary)?.image_url ?? product.image_url
+  const description = product.description 
+    ? product.description.slice(0, 160) 
+    : `Shop ${product.title} ${product.brand ? `by ${product.brand}` : ''}. Premium diecast scale model collectible available at The Diecast Corner Nepal.`
+
+  return {
+    title: product.title,
+    description,
+    openGraph: {
+      title: product.title,
+      description,
+      images: primaryImage ? [{ url: primaryImage }] : [],
+      type: 'article',
+    },
+    twitter: {
+      card: 'summary_large_image',
+      title: product.title,
+      description,
+      images: primaryImage ? [primaryImage] : [],
+    },
+  }
+}
+
 export default async function ProductPage(props: ProductPageProps) {
   const params = await props.params
   const { product } = await getProductBySlug(params.slug)
   if (!product) notFound()
 
-  const [related, { media }, variants, preorderConfigs, alsoBought] = await Promise.all([
+  const supabase = await createClient()
+  const { data: { user } } = await supabase.auth.getUser()
+
+  const [related, { media }, variants, preorderConfigs, alsoBought, { reviews }] = await Promise.all([
     product.category_id ? getRelatedProducts(product.id, product.category_id, 4) : Promise.resolve([]),
     getProductMedia(product.id),
     getProductVariants(product.id),
     getProductPreorderConfigs(product.id),
-    getAlsoBought(product.id, 8)
+    getAlsoBought(product.id, 8),
+    getReviewsByProduct(product.id)
   ])
 
   const discount = discountPercent(product.price, product.compare_price ?? 0)
@@ -174,6 +211,13 @@ export default async function ProductPage(props: ProductPageProps) {
           {/* Add to cart / Variant selection — Client Component */}
           <ProductClientActions product={product} variants={variants} preorderConfigs={preorderConfigs} />
 
+          {/* Waitlist Form for Out of Stock items */}
+          {isOutOfStock && (
+            <div className="mt-6">
+              <WaitlistForm productId={product.id} productTitle={product.title} />
+            </div>
+          )}
+
           {/* Shipping note */}
           <div className="mt-5 p-3.5 bg-surface-elevated rounded-xl border border-surface-border text-xs text-text-muted flex items-start gap-2">
             <span>🚚</span>
@@ -202,6 +246,15 @@ export default async function ProductPage(props: ProductPageProps) {
             subtitle="More models from the same category."
           />
         )}
+      </div>
+
+      {/* Reviews Section */}
+      <div className="mt-24">
+        <ProductReviews 
+          productId={product.id} 
+          initialReviews={reviews} 
+          userId={user?.id} 
+        />
       </div>
     </div>
   )

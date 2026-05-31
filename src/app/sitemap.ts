@@ -1,7 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { createClient } from '@supabase/supabase-js'
-
-const BASE_URL = 'https://thediecastcornernepal.com'
+import { SITE_URL } from '@/lib/constants'
 
 // Use raw client (no cookies needed — public data only)
 function getSupabase() {
@@ -36,31 +35,43 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const staticRoutes: MetadataRoute.Sitemap = [
     {
-      url: BASE_URL,
+      url: SITE_URL,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 1,
     },
     {
-      url: `${BASE_URL}/shop`,
+      url: `${SITE_URL}/shop`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.9,
     },
     {
-      url: `${BASE_URL}/new-arrivals`,
+      url: `${SITE_URL}/new-arrivals`,
       lastModified: new Date(),
       changeFrequency: 'daily',
       priority: 0.8,
     },
     {
-      url: `${BASE_URL}/brands`,
+      url: `${SITE_URL}/pre-orders`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/drops`,
+      lastModified: new Date(),
+      changeFrequency: 'daily',
+      priority: 0.8,
+    },
+    {
+      url: `${SITE_URL}/brands`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.7,
     },
     {
-      url: `${BASE_URL}/treasure-hunt`,
+      url: `${SITE_URL}/treasure-hunt`,
       lastModified: new Date(),
       changeFrequency: 'weekly',
       priority: 0.7,
@@ -68,21 +79,21 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ]
 
   const productRoutes: MetadataRoute.Sitemap = (products ?? []).map((p) => ({
-    url: `${BASE_URL}/product/${p.slug}`,
+    url: `${SITE_URL}/product/${p.slug}`,
     lastModified: new Date(p.updated_at),
     changeFrequency: 'weekly' as const,
     priority: 0.8,
   }))
 
   const categoryRoutes: MetadataRoute.Sitemap = (categories ?? []).map((c) => ({
-    url: `${BASE_URL}/shop?category=${c.slug}`,
+    url: `${SITE_URL}/shop?category=${c.slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.6,
   }))
 
   const brandRoutes: MetadataRoute.Sitemap = (brands ?? []).map((b) => ({
-    url: `${BASE_URL}/brands/${b.slug}`,
+    url: `${SITE_URL}/brands/${b.slug}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.6,

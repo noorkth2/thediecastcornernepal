@@ -173,5 +173,71 @@ export async function updateOrderStatus(orderId: number, status: string, payment
     }
   }
 
+  // 5. Send Status Update Emails (Shipped / Delivered)
+  if (['shipped', 'delivered'].includes(status) && currentOrder.user_id) {
+    const { data: userData } = await adminSupabase.auth.admin.getUserById(currentOrder.user_id)
+    const buyerEmail = userData?.user?.email
+
+    if (buyerEmail) {
+      const isShipped = status === 'shipped'
+      const subject = isShipped 
+        ? `Order Shipped! ${currentOrder.order_code} 🚚`
+        : `Order Delivered! ${currentOrder.order_code} ✅`
+      
+      const headline = isShipped
+        ? 'Your order is on its way!'
+        : 'Your order has been delivered!'
+      
+      const message = isShipped
+        ? 'Great news! Your package has been handed over to our delivery partner and is currently in transit to your location.'
+        : 'Your package has been successfully delivered. We hope you enjoy your new scale models!'
+
+      await sendEmail({
+        to: buyerEmail,
+        subject,
+        html: `
+          <div style="font-family: sans-serif; max-width: 600px; margin: 0 auto; padding: 30px 20px; background-color: #f7fafc; color: #2d3748;">
+            <div style="background-color: #1a202c; padding: 25px; text-align: center; border-radius: 12px 12px 0 0; border-bottom: 4px solid #e53e3e;">
+              <span style="font-size: 24px; font-weight: 800; color: white; letter-spacing: 2px;">DIECAST CORNER</span>
+              <span style="font-size: 11px; color: #e2e8f0; display: block; letter-spacing: 4px; margin-top: 5px; text-transform: uppercase;">Nepal</span>
+            </div>
+            
+            <div style="background-color: white; padding: 30px; border-radius: 0 0 12px 12px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1); border-left: 1px solid #edf2f7; border-right: 1px solid #edf2f7; border-bottom: 1px solid #edf2f7;">
+              <h2 style="margin-top: 0; color: #1a202c; font-size: 20px;">${headline}</h2>
+              <p style="font-size: 14px; color: #4a5568; line-height: 1.6;">${message}</p>
+              
+              <div style="background-color: #f7fafc; padding: 15px; border-radius: 8px; margin: 20px 0; border: 1px solid #edf2f7; font-size: 13px;">
+                <table style="width: 100%; border-collapse: collapse;">
+                  <tr>
+                    <td style="color: #718096; padding-bottom: 5px; text-align: left;">Order Code:</td>
+                    <td style="font-weight: bold; text-align: right; color: #1a202c; padding-bottom: 5px;">${currentOrder.order_code}</td>
+                  </tr>
+                  <tr>
+                    <td style="color: #718096; text-align: left;">Current Status:</td>
+                    <td style="font-weight: bold; text-align: right; color: ${isShipped ? '#d69e2e' : '#48bb78'}; text-transform: uppercase;">
+                      ${status}
+                    </td>
+                  </tr>
+                </table>
+              </div>
+
+              <h3 style="color: #1a202c; border-bottom: 2px solid #edf2f7; padding-bottom: 8px; margin-top: 30px; font-size: 15px; text-align: left;">Delivery Address</h3>
+              <p style="font-size: 13px; color: #4a5568; line-height: 1.6; margin: 10px 0; text-align: left;">
+                <strong>${currentOrder.shipping_address.name}</strong><br/>
+                ${currentOrder.shipping_address.address}, ${currentOrder.shipping_address.city}
+              </p>
+
+              <hr style="border: 0; border-top: 1px solid #edf2f7; margin: 40px 0 20px 0;" />
+              <div style="text-align: center; font-size: 12px; color: #a0aec0; line-height: 1.5;">
+                <p style="margin: 0;">Diecast Corner Nepal</p>
+                <p style="margin: 5px 0 0 0;">Thank you for shopping with us!</p>
+              </div>
+            </div>
+          </div>
+        `
+      })
+    }
+  }
+
   return { success: true }
 }

@@ -27,6 +27,7 @@ export function ProfileForm({ profile }: ProfileFormProps) {
       phone: profile.phone ?? '',
       address: profile.address ?? '',
       city: profile.city ?? '',
+      landmark: profile.shipping_address?.landmark ?? '',
     },
   })
 
@@ -34,9 +35,25 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     setError(null)
     setSuccess(false)
     const supabase = createClient()
+    
+    const shipping_address = {
+      name: data.full_name,
+      phone: data.phone,
+      address: data.address,
+      city: data.city,
+      landmark: data.landmark,
+    }
+
     const { error } = await supabase
       .from('profiles')
-      .update({ ...data, updated_at: new Date().toISOString() })
+      .update({ 
+        full_name: data.full_name,
+        phone: data.phone,
+        address: data.address,
+        city: data.city,
+        shipping_address,
+        updated_at: new Date().toISOString() 
+      })
       .eq('id', profile.id)
 
     if (error) { setError(error.message); return }
@@ -48,7 +65,8 @@ export function ProfileForm({ profile }: ProfileFormProps) {
     <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
       <Input {...register('full_name')} id="profile-name" label="Full Name" error={errors.full_name?.message} />
       <Input {...register('phone')} id="profile-phone" label="Phone Number" error={errors.phone?.message} />
-      <Input {...register('address')} id="profile-address" label="Address" placeholder="Street, Area" error={errors.address?.message} />
+      <Input {...register('address')} id="profile-address" label="Street Address" placeholder="Street, Area" error={errors.address?.message} />
+      <Input {...register('landmark')} id="profile-landmark" label="Landmark (Optional)" placeholder="Near ABC School" error={errors.landmark?.message} />
       <div>
         <label className="block text-sm font-medium text-text-primary mb-1.5">City</label>
         <select {...register('city')} id="profile-city" className="input-base">

@@ -1,85 +1,67 @@
-// ─── Scales ───────────────────────────────────────────────────────────────────
+/**
+ * DICTIONARIES & ENUMERATIONS
+ * Shared constants across the application to ensure consistency.
+ */
 
-export const SCALES = [
-  '1:64',
-  '1:43',
-  '1:36',
-  '1:32',
-  '1:24',
-  '1:18',
-  '1:12',
+// ─── Site Metadata ────────────────────────────────────────────────────────────
+
+export const SITE_NAME = 'The Diecast Corner Nepal'
+export const SITE_URL = process.env.NEXT_PUBLIC_URL || 'https://thediecastcornernepal.com'
+
+// ─── Categories (Matching DB Slugs) ───────────────────────────────────────────
+
+export const CATEGORIES = [
+  { name: 'MiniGT', slug: 'minigt' },
+  { name: 'Tomica', slug: 'tomica' },
+  { name: 'Matchbox', slug: 'matchbox' },
+  { name: 'Greenlight', slug: 'greenlight' },
+  { name: 'Majorette', slug: 'majorette' },
+  { name: 'INNO64', slug: 'inno64' },
+  { name: 'Tarmac Works', slug: 'tarmac-works' },
+  { name: 'Auto World', slug: 'auto-world' },
+  { name: 'M2 Machines', slug: 'm2-machines' },
+  { name: 'Era Car', slug: 'era-car' },
+  { name: 'Premium 1:18 & 1:24', slug: 'premium' },
+  { name: 'Treasure Hunts', slug: 'treasure-hunts' },
+  { name: 'Limited Edition', slug: 'limited-edition' },
 ] as const
 
-export type Scale = (typeof SCALES)[number]
-
-// ─── Nepal Cities ─────────────────────────────────────────────────────────────
+// ─── Nepal Locations ──────────────────────────────────────────────────────────
 
 export const NEPAL_CITIES = [
   'Kathmandu',
   'Lalitpur',
   'Bhaktapur',
   'Pokhara',
+  'Butwal',
+  'Narayangarh',
   'Chitwan',
   'Biratnagar',
-  'Birgunj',
-  'Butwal',
   'Dharan',
-  'Hetauda',
   'Itahari',
-  'Janakpur',
+  'Birgunj',
   'Nepalgunj',
+  'Bhairahawa',
+  'Hetauda',
   'Dhangadhi',
-  'Bharatpur',
+  'Birtamod',
 ] as const
 
-// ─── Navigation ───────────────────────────────────────────────────────────────
+// ─── Order Statuses ───────────────────────────────────────────────────────────
 
-export const NAV_LINKS = [
-  { label: 'Shop', href: '/shop' },
-  { label: 'Brands', href: '/brands' },
-  { label: 'New Arrivals', href: '/new-arrivals' },
-  { label: 'Treasure Hunt', href: '/treasure-hunt' },
-] as const
+export const ORDER_STATUSES = {
+  pending: { label: 'Pending Review', color: 'bg-yellow-500/10 text-yellow-500' },
+  confirmed: { label: 'Confirmed', color: 'bg-blue-500/10 text-blue-500' },
+  processing: { label: 'Processing', color: 'bg-purple-500/10 text-purple-500' },
+  shipped: { label: 'In Transit', color: 'bg-orange-500/10 text-orange-500' },
+  delivered: { label: 'Delivered', color: 'bg-green-500/10 text-green-500' },
+  cancelled: { label: 'Cancelled', color: 'bg-red-500/10 text-red-500' },
+} as const
 
-// ─── Order Status Config ──────────────────────────────────────────────────────
-
-export const ORDER_STATUS_CONFIG = {
-  pending: {
-    label: 'Pending',
-    color: 'text-yellow-400',
-    bg: 'bg-yellow-400/10',
-    step: 0,
-  },
-  confirmed: {
-    label: 'Confirmed',
-    color: 'text-blue-400',
-    bg: 'bg-blue-400/10',
-    step: 1,
-  },
-  processing: {
-    label: 'Processing',
-    color: 'text-purple-400',
-    bg: 'bg-purple-400/10',
-    step: 2,
-  },
-  shipped: {
-    label: 'Shipped',
-    color: 'text-orange-400',
-    bg: 'bg-orange-400/10',
-    step: 3,
-  },
-  delivered: {
-    label: 'Delivered',
-    color: 'text-green-400',
-    bg: 'bg-green-400/10',
-    step: 4,
-  },
-  cancelled: {
-    label: 'Cancelled',
-    color: 'text-red-400',
-    bg: 'bg-red-400/10',
-    step: -1,
-  },
+export const PAYMENT_STATUSES = {
+  unpaid: { label: 'Unpaid', color: 'bg-red-500/10 text-red-500' },
+  paid: { label: 'Paid', color: 'bg-green-500/10 text-green-500' },
+  refunded: { label: 'Refunded', color: 'bg-gray-500/10 text-gray-500' },
 } as const
 
 // ─── Payment Methods ──────────────────────────────────────────────────────────
@@ -93,17 +75,15 @@ export const PAYMENT_METHODS = [
   },
   {
     id: 'khalti',
-    label: 'Khalti (Coming Soon)',
+    label: 'Khalti',
     description: 'Pay with Khalti digital wallet',
     logo: '/logos/khalti.png',
-    disabled: true,
   },
   {
     id: 'esewa',
-    label: 'eSewa (Coming Soon)',
+    label: 'eSewa',
     description: 'Pay with eSewa digital wallet',
     logo: '/logos/esewa.png',
-    disabled: true,
   },
 ] as const
 
@@ -111,15 +91,3 @@ export const PAYMENT_METHODS = [
 
 export const FREE_SHIPPING_THRESHOLD = 2000
 export const STANDARD_SHIPPING = 150
-
-// ─── Pagination ───────────────────────────────────────────────────────────────
-
-export const PRODUCTS_PER_PAGE = 12
-
-// ─── Social Links ─────────────────────────────────────────────────────────────
-
-export const SOCIAL_LINKS = {
-  instagram: 'https://instagram.com/thediecastcornernepal',
-  tiktok: 'https://tiktok.com/@thediecastcornernepal',
-  facebook: 'https://facebook.com/thediecastcornernepal',
-} as const

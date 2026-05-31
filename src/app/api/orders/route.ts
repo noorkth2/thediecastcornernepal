@@ -114,5 +114,75 @@ export async function POST(req: NextRequest) {
     await supabase.from('cart_items').delete().eq('user_id', user.id)
   }
 
+  // ─── Transactional Emails ──────────────────────────────────────────
+  const adminEmails = ['kayastha.noor1100@gmail.com', 'thediecastcornernepal@gmail.com']
+  const buyerEmail = user?.email
+
+  const itemsHtml = verifiedItems.map(i => `
+    <tr>
+      <td style="padding: 8px; border-bottom: 1px solid #eee;">${i.product_title}</td>
+      <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: center;">${i.quantity}</td>
+      <td style="padding: 8px; border-bottom: 1px solid #eee; text-align: right;">Rs. ${i.unit_price.toLocaleString()}</td>
+    </tr>
+  `).join('')
+
+  const emailHtml = `
+    <div style="font-family: sans-serif; color: #333;">
+      <h2 style="color: #e53e3e;">Order Received: ${orderCode}</h2>
+      <p>Hello${user ? ` ${shippingAddress.name}` : ''},</p>
+      <p>We've received your order and it's currently <strong>${order.status}</strong>.</p>
+      
+      <table style="width: 100%; border-collapse: collapse; margin: 20px 0;">
+        <thead>
+          <tr style="background: #f8f8f8;">
+            <th style="padding: 8px; text-align: left;">Item</th>
+            <th style="padding: 8px; text-align: center;">Qty</th>
+            <th style="padding: 8px; text-align: right;">Price</th>
+          </tr>
+        </thead>
+        <tbody>
+          ${itemsHtml}
+        </tbody>
+        <tfoot>
+          <tr>
+            <td colspan="2" style="padding: 8px; text-align: right; font-weight: bold;">Shipping:</td>
+            <td style="padding: 8px; text-align: right;">Rs. ${shippingCharge.toLocaleString()}</td>
+          </tr>
+          <tr>
+            <td colspan="2" style="padding: 8px; text-align: right; font-weight: bold; font-size: 1.2em;">Total:</td>
+            <td style="padding: 8px; text-align: right; font-weight: bold; font-size: 1.2em; color: #d69e2e;">Rs. ${total.toLocaleString()}</td>
+          </tr>
+        </tfoot>
+      </table>
+
+      <h3>Shipping Address:</h3>
+      <p>
+        ${shippingAddress.name}<br>
+        ${shippingAddress.address}, ${shippingAddress.city}<br>
+        Phone: ${shippingAddress.phone}
+      </p>
+
+      <p style="font-size: 0.9em; color: #666;">
+        Payment Method: ${paymentMethod.toUpperCase()}
+      </p>
+    </div>
+  `
+
+  // Send to Buyer
+  if (buyerEmail) {
+    await sendEmail({
+      to: buyerEmail,
+      subject: `Order Received: ${orderCode} 🏎️`,
+      html: emailHtml
+    })
+  }
+
+  // Send to Admin
+  await sendEmail({
+    to: adminEmails,
+    subject: `New Order Alert: ${orderCode} 🔔`,
+    html: `<h3>New order from ${shippingAddress.name}</h3>` + emailHtml
+  })
+
   return NextResponse.json({ order }, { status: 201 })
 }

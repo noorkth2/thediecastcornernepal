@@ -1,4 +1,4 @@
-import type { Product } from './product'
+import type { Product, ProductStatus } from './product'
 
 export interface SiteSetting {
   key: string
@@ -14,6 +14,7 @@ export interface PaginatedProducts {
 export interface GetProductsOptions {
   category?: string
   brand?: string
+  status?: ProductStatus
   minPrice?: number
   maxPrice?: number
   isFeatured?: boolean

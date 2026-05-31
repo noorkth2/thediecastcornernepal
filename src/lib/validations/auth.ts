@@ -32,6 +32,7 @@ export const profileSchema = z.object({
   phone: z.string().min(10, 'Valid phone required').max(15),
   address: z.string().min(5, 'Address required'),
   city: z.string().min(1, 'City required'),
+  landmark: z.string().optional(),
 })
 
 export type LoginInput = z.infer<typeof loginSchema>

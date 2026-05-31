@@ -19,6 +19,23 @@ export interface ProductImage {
   is_primary: boolean
 }
 
+export type ProductStatus = 'IN_STOCK' | 'OUT_OF_STOCK' | 'PRE_ORDER'
+
+export interface Review {
+  id: string
+  product_id: number
+  user_id: string
+  rating: number
+  comment: string | null
+  created_at: string
+  updated_at: string
+  // Joined data
+  profile?: {
+    full_name: string | null
+    avatar_url: string | null
+  }
+}
+
 export interface Product {
   id: number
   title: string
@@ -42,7 +59,12 @@ export interface Product {
   image_url: string | null
   created_at: string
   updated_at: string
+  status: ProductStatus
+  expected_arrival_date?: string | null
   // Joined
   category?: Category
   images?: ProductImage[]
+  reviews?: Review[]
+  average_rating?: number
+  review_count?: number
 }

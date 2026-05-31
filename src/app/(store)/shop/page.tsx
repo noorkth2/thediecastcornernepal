@@ -8,24 +8,29 @@ import { ProductCardSkeleton } from '@/components/ui/skeleton'
 import { ShopFilters } from '@/components/store/ShopFilters'
 import { PRODUCTS_PER_PAGE } from '@/lib/constants'
 
-export const metadata: Metadata = {
-  title: 'Shop — Browse All Diecast Models',
-  description:
-    'Browse our full collection of MiniGT, Tomica, Matchbox, Greenlight and premium diecast models. Filter by brand, price, and more.',
-}
-
 export const revalidate = 60
 
-interface ShopPageProps {
-  searchParams: Promise<{
-    category?: string
-    brand?: string
-    min?: string
-    max?: string
-    sort?: string
-    page?: string
-    q?: string
-  }>
+export async function generateMetadata(props: ShopPageProps): Promise<Metadata> {
+  const searchParams = await props.searchParams
+  const { category, brand, q } = searchParams
+
+  let title = 'Shop — Browse All Diecast Models'
+  let description = 'Browse our full collection of MiniGT, Tomica, Matchbox, Greenlight and premium diecast models. Filter by brand, price, and more.'
+
+  if (q) {
+    title = `Search results for "${q}"`
+    description = `Viewing products matching your search for "${q}" at The Diecast Corner Nepal.`
+  } else if (category) {
+    // Capitalize slug for title (simple approach)
+    const catName = category.charAt(0).toUpperCase() + category.slice(1)
+    title = `${catName} Models`
+    description = `Explore our collection of ${catName} diecast models. Genuine quality collectibles available in Nepal.`
+  } else if (brand) {
+    title = `${brand} Models`
+    description = `Shop the latest ${brand} scale models at The Diecast Corner Nepal. Fast delivery across Nepal.`
+  }
+
+  return { title, description }
 }
 
 export default async function ShopPage(props: ShopPageProps) {

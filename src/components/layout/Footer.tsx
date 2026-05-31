@@ -110,11 +110,9 @@ export async function Footer() {
             <h3 className="font-semibold text-text-primary text-sm uppercase tracking-widest mb-4">Info</h3>
             <ul className="space-y-2.5">
               {[
-                { label: 'About Us', href: '#' },
-                { label: 'Contact', href: '#' },
-                { label: 'Shipping Policy', href: '#' },
-                { label: 'Return Policy', href: '#' },
-                { label: 'Privacy Policy', href: '#' },
+                { label: 'Shipping & Returns', href: '/shipping-policy' },
+                { label: 'Privacy Policy', href: '/privacy-policy' },
+                { label: 'Contact Support', href: 'https://wa.me/9779800000000' },
               ].map(({ label, href }) => (
                 <li key={label}>
                   <Link href={href} className="text-sm text-text-muted hover:text-white transition-colors">{label}</Link>

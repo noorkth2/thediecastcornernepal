@@ -143,8 +143,40 @@ export default function CheckoutPage() {
         window.location.href = khaltiData.payment_url
         return
       }
+
+      if (data.paymentMethod === 'esewa') {
+        const esewaRes = await fetch('/api/payment/esewa/initiate', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            orderId: order.id,
+            amount: grand,
+            orderCode: order.order_code,
+          }),
+        })
+        const esewaData = await esewaRes.json()
+        if (!esewaRes.ok) throw new Error(esewaData.error || 'eSewa error')
+
+        // eSewa requires a form submission to their endpoint
+        const form = document.createElement('form')
+        form.method = 'POST'
+        form.action = esewaData.url
+
+        Object.entries(esewaData.formData).forEach(([key, value]) => {
+          const input = document.createElement('input')
+          input.type = 'hidden'
+          input.name = key
+          input.value = value as string
+          form.appendChild(input)
+        })
+
+        document.body.appendChild(form)
+        clearCart()
+        form.submit()
+        return
+      }
       
-      // Default / COD / eSewa (unimplemented) goes directly to success
+      // Default / COD goes directly to success
       clearCart()
       router.push(`/order/success/${order.id}`)
       
