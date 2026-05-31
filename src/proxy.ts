@@ -2,8 +2,28 @@ import { createServerClient } from '@supabase/ssr'
 import { NextResponse, type NextRequest } from 'next/server'
 
 export async function proxy(request: NextRequest) {
-  let supabaseResponse = NextResponse.next({ request })
+  // ── Content Security Policy (CSP) & Nonce ─────────────────────────────────
+  const nonce = crypto.randomUUID()
 
+  const cspHeader = [
+    `default-src 'self'`,
+    `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' 'unsafe-eval' https://platform.twitter.com https://connect.facebook.net`,
+    `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
+    `font-src 'self' https://fonts.gstatic.com`,
+    `img-src 'self' data: https:`,
+    `frame-ancestors 'self'`,
+  ].join('; ')
+
+  const requestHeaders = new Headers(request.headers)
+  requestHeaders.set('x-nonce', nonce)
+
+  let supabaseResponse = NextResponse.next({
+    request: {
+      headers: requestHeaders,
+    },
+  })
+
+  // ── Supabase Server Client ────────────────────────────────────────────────
   const supabase = createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
@@ -16,7 +36,11 @@ export async function proxy(request: NextRequest) {
           cookiesToSet.forEach(({ name, value }) =>
             request.cookies.set(name, value)
           )
-          supabaseResponse = NextResponse.next({ request })
+          supabaseResponse = NextResponse.next({
+            request: {
+              headers: requestHeaders,
+            },
+          })
           cookiesToSet.forEach(({ name, value, options }) =>
             supabaseResponse.cookies.set(name, value, options)
           )
@@ -41,22 +65,30 @@ export async function proxy(request: NextRequest) {
       .single()
 
     if (profile?.role === 'admin') {
-      return NextResponse.redirect(new URL('/admin', request.url))
+      const redirectResponse = NextResponse.redirect(new URL('/admin', request.url))
+      redirectResponse.headers.set('Content-Security-Policy', cspHeader)
+      return redirectResponse
     }
-    return NextResponse.redirect(new URL('/', request.url))
+    const redirectResponse = NextResponse.redirect(new URL('/', request.url))
+    redirectResponse.headers.set('Content-Security-Policy', cspHeader)
+    return redirectResponse
   }
 
   // ── Protect /account routes — must be logged in ──────────────────────────
   if ((path.startsWith('/account') || path.startsWith('/checkout')) && !user) {
-    return NextResponse.redirect(
+    const redirectResponse = NextResponse.redirect(
       new URL(`/login?redirect=${encodeURIComponent(path)}`, request.url)
     )
+    redirectResponse.headers.set('Content-Security-Policy', cspHeader)
+    return redirectResponse
   }
 
   // ── Protect /admin routes — must be admin role ────────────────────────────
   if (path.startsWith('/admin')) {
     if (!user) {
-      return NextResponse.redirect(new URL('/login', request.url))
+      const redirectResponse = NextResponse.redirect(new URL('/login', request.url))
+      redirectResponse.headers.set('Content-Security-Policy', cspHeader)
+      return redirectResponse
     }
 
     const { data: profile } = await supabase
@@ -66,10 +98,13 @@ export async function proxy(request: NextRequest) {
       .single()
 
     if (profile?.role !== 'admin') {
-      return NextResponse.redirect(new URL('/', request.url))
+      const redirectResponse = NextResponse.redirect(new URL('/', request.url))
+      redirectResponse.headers.set('Content-Security-Policy', cspHeader)
+      return redirectResponse
     }
   }
 
+  supabaseResponse.headers.set('Content-Security-Policy', cspHeader)
   return supabaseResponse
 }
 
@@ -81,3 +116,4 @@ export const config = {
     '/((?!_next/static|_next/image|favicon.ico|api/auth).*)',
   ],
 }
+

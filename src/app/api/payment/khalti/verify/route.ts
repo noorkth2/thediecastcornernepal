@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 
 export async function POST(req: NextRequest) {
   const { pidx, orderId } = await req.json()
@@ -30,9 +30,29 @@ export async function POST(req: NextRequest) {
     )
   }
 
-  // Update order status in Supabase
-  const supabase = await createClient()
-  await supabase
+  // Security Check: Verify that the purchase_order_id in Khalti matches the order's code
+  const adminSupabase = createAdminClient()
+  const { data: order, error: orderError } = await adminSupabase
+    .from('orders')
+    .select('id, order_code, total_amount')
+    .eq('id', orderId)
+    .single()
+
+  if (orderError || !order) {
+    return NextResponse.json({ error: 'Order not found' }, { status: 404 })
+  }
+
+  if (data.purchase_order_id !== order.order_code) {
+    return NextResponse.json({ error: 'Invalid payment: Order code mismatch' }, { status: 400 })
+  }
+
+  // Also verify amount (Khalti amount is in paisa)
+  if (Math.round(order.total_amount * 100) !== Number(data.total_amount)) {
+     return NextResponse.json({ error: 'Invalid payment: Amount mismatch' }, { status: 400 })
+  }
+
+  // Update order status using admin client to bypass RLS restrictions
+  await adminSupabase
     .from('orders')
     .update({ payment_status: 'paid', status: 'confirmed' })
     .eq('id', orderId)

@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createClient, createAdminClient } from '@/lib/supabase/server'
 import { checkoutSchema } from '@/lib/validations/checkout'
 import { sendEmail } from '@/lib/resend'
 
@@ -21,8 +21,39 @@ export async function POST(req: NextRequest) {
 
   const { shippingAddress, paymentMethod, items, notes } = parsed.data
 
-  // Calculate totals
-  const subtotal = items.reduce((sum, i) => sum + i.unit_price * i.quantity, 0)
+  // Fetch current product data from DB to prevent price tampering
+  const productIds = items.map((i) => i.product_id)
+  const { data: dbProducts, error: productsError } = await supabase
+    .from('products')
+    .select('id, title, price, image_url, brand, is_active')
+    .in('id', productIds)
+
+  if (productsError || !dbProducts) {
+    return NextResponse.json({ error: 'Failed to verify products' }, { status: 500 })
+  }
+
+  // Map items to DB prices and validate
+  let verifiedItems
+  try {
+    verifiedItems = items.map((item) => {
+      const dbProduct = dbProducts.find((p) => p.id === item.product_id)
+      if (!dbProduct || !dbProduct.is_active) {
+        throw new Error(`Product ${item.product_title || item.product_id} is no longer available`)
+      }
+      return {
+        ...item,
+        unit_price: dbProduct.price,
+        product_title: dbProduct.title,
+        product_image: dbProduct.image_url,
+        product_brand: dbProduct.brand,
+      }
+    })
+  } catch (err: any) {
+    return NextResponse.json({ error: err.message }, { status: 400 })
+  }
+
+  // Calculate totals using DB prices
+  const subtotal = verifiedItems.reduce((sum, i) => sum + i.unit_price * i.quantity, 0)
   const shippingCharge = subtotal >= 2000 ? 0 : 150
   const total = subtotal + shippingCharge
 
@@ -51,7 +82,7 @@ export async function POST(req: NextRequest) {
   }
 
   // Insert order items
-  const orderItems = items.map((i) => ({
+  const orderItems = verifiedItems.map((i) => ({
     order_id: order.id,
     product_id: i.product_id,
     product_title: i.product_title,
@@ -70,8 +101,9 @@ export async function POST(req: NextRequest) {
   }
 
   // Decrement stock for each item
-  for (const item of items) {
-    await supabase.rpc('decrement_stock', {
+  const adminSupabase = createAdminClient()
+  for (const item of verifiedItems) {
+    await adminSupabase.rpc('decrement_stock', {
       product_id: item.product_id,
       qty: item.quantity,
     })

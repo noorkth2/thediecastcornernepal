@@ -13,42 +13,10 @@ import { Badge } from '@/components/ui/badge'
 import { formatPrice, discountPercent } from '@/lib/utils'
 import { Package, Tag, Layers } from 'lucide-react'
 import { JsonLd, buildProductSchema, buildBreadcrumbSchema } from '@/components/seo/JsonLd'
+import { getNonce } from '@/lib/csp'
 
 interface ProductPageProps {
   params: Promise<{ slug: string }>
-}
-
-export async function generateMetadata(props: ProductPageProps): Promise<Metadata> {
-  const params = await props.params
-  const { product } = await getProductBySlug(params.slug)
-  if (!product) return { title: 'Product Not Found' }
-
-  const primaryImage = product.images?.find((i) => i.is_primary)
-
-  return {
-    title: `${product.title} | The Diecast Corner Nepal`,
-    description:
-      product.description?.slice(0, 160) ??
-      `Buy ${product.title}${product.brand ? ` by ${product.brand}` : ''}${product.scale ? ` (${product.scale})` : ''} diecast model at The Diecast Corner Nepal.`,
-    openGraph: {
-      title: product.title,
-      description: product.description ?? '',
-      images: primaryImage ? [{ url: primaryImage.image_url }] : [],
-    },
-  }
-}
-
-export async function generateStaticParams() {
-  const { createClient: createRawClient } = await import('@supabase/supabase-js')
-  const supabase = createRawClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!
-  )
-  const { data } = await supabase
-    .from('products')
-    .select('slug')
-    .eq('is_active', true)
-  return data?.map(({ slug }: { slug: string }) => ({ slug })) ?? []
 }
 
 export const revalidate = 60
@@ -88,10 +56,12 @@ export default async function ProductPage(props: ProductPageProps) {
     { name: product.title, url: `https://thediecastcornernepal.com/product/${product.slug}` },
   ])
 
+  const nonce = await getNonce()
+
   return (
     <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-10">
-      <JsonLd data={productSchema} />
-      <JsonLd data={breadcrumbSchema} />
+      <JsonLd data={productSchema} nonce={nonce} />
+      <JsonLd data={breadcrumbSchema} nonce={nonce} />
       {/* Breadcrumb */}
       <nav className="text-xs text-text-faint mb-8 flex items-center gap-2" aria-label="Breadcrumb">
         <a href="/" className="hover:text-white transition-colors">Home</a>

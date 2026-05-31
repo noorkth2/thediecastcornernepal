@@ -1,9 +1,15 @@
 import { NextRequest, NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 
-// Note: In production, verify the request originates from Khalti (e.g. checking IPs or signatures)
 export async function POST(req: NextRequest) {
   try {
+    // 1. Verify Request Origin (Simple Secret check for V2)
+    const authHeader = req.headers.get('Authorization')
+    if (process.env.KHALTI_WEBHOOK_SECRET && authHeader !== `Key ${process.env.KHALTI_WEBHOOK_SECRET}`) {
+      console.warn('Unauthorized Khalti Webhook attempt')
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
+    }
+
     const body = await req.json()
     const { pidx, status, amount, transaction_id, purchase_order_id } = body
 
@@ -12,14 +18,14 @@ export async function POST(req: NextRequest) {
     }
 
     if (status === 'Completed') {
-      const supabase = await createClient()
+      const adminSupabase = createAdminClient()
       
       // The purchase_order_id is usually mapped to the internal order ID or code
       // We assume purchase_order_id = internal order.id or order.order_code based on implementation
       // Here, falling back to an update on the ID if numeric, else fallback logic
       const isNumericId = !isNaN(Number(purchase_order_id))
 
-      const query = supabase
+      const query = adminSupabase
         .from('orders')
         .update({ payment_status: 'paid', status: 'confirmed' })
         

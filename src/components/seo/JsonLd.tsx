@@ -2,10 +2,11 @@
  * JsonLd — Injects structured data (JSON-LD) into the document head.
  * Zero client JS — renders as a static <script> tag in the RSC render.
  */
-export function JsonLd({ data }: { data: Record<string, unknown> }) {
+export function JsonLd({ data, nonce }: { data: Record<string, unknown>; nonce?: string }) {
   return (
     <script
       type="application/ld+json"
+      nonce={nonce}
       dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }}
     />
   )

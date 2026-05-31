@@ -2,6 +2,7 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { JsonLd, buildOrganizationSchema, buildWebSiteSchema } from '@/components/seo/JsonLd'
+import { getNonce } from '@/lib/csp'
 
 const inter = Inter({ subsets: ['latin'], variable: '--font-inter' })
 
@@ -41,11 +42,13 @@ export const metadata: Metadata = {
   robots: { index: true, follow: true },
 }
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: {
   children: React.ReactNode
 }) {
+  const nonce = await getNonce()
+
   return (
     <html lang="en" className={inter.variable}>
       <head>
@@ -61,8 +64,8 @@ export default function RootLayout({
         />
       </head>
       <body className="bg-surface-base text-text-primary antialiased">
-        <JsonLd data={buildOrganizationSchema()} />
-        <JsonLd data={buildWebSiteSchema()} />
+        <JsonLd data={buildOrganizationSchema()} nonce={nonce} />
+        <JsonLd data={buildWebSiteSchema()} nonce={nonce} />
         {children}
       </body>
     </html>
