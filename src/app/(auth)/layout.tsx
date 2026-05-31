@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 
 export const metadata: Metadata = {
   title: 'Account — The Diecast Corner Nepal',
@@ -28,7 +29,7 @@ export default function AuthLayout({
       <div className="relative z-10 w-full max-w-md">
         {/* Logo */}
         <div className="text-center mb-8">
-          <a href="/" className="inline-flex items-center gap-2 group">
+          <Link href="/" className="inline-flex items-center gap-2 group">
             <div className="w-10 h-10 rounded-lg bg-brand-red flex items-center justify-center font-display text-white text-xl">
               DC
             </div>
@@ -40,7 +41,7 @@ export default function AuthLayout({
                 Nepal
               </span>
             </div>
-          </a>
+          </Link>
         </div>
 
         {children}

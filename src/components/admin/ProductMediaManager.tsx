@@ -10,7 +10,7 @@ import { VideoEmbed, detectMediaType, detectAspectRatio } from '@/components/ui/
 import { Upload } from 'lucide-react'
 import type { ProductMedia } from '@/lib/types/media'
 
-interface MediaFormData extends Omit<ProductMedia, 'id' | 'created_at' | 'product_id'> {}
+type MediaFormData = Omit<ProductMedia, 'id' | 'created_at' | 'product_id'>
 
 interface ProductMediaManagerProps {
   productId: number

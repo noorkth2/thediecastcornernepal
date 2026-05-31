@@ -15,7 +15,7 @@ export function AnnouncementBar({ text, isActive = true }: AnnouncementBarProps)
   const [visible, setVisible] = useState(false)
 
   useEffect(() => {
-    setVisible(true)
+    setVisible((v) => (v ? v : true))
   }, [])
 
   if (!isActive || !visible) return null

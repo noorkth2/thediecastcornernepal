@@ -10,7 +10,7 @@ import { VideoEmbed, detectMediaType, detectAspectRatio } from '@/components/ui/
 import { Upload } from 'lucide-react'
 import type { SocialGalleryItem } from '@/lib/types/media'
 
-interface SocialFormData extends Omit<SocialGalleryItem, 'id' | 'created_at'> { }
+type SocialFormData = Omit<SocialGalleryItem, 'id' | 'created_at'>
 
 interface SocialGalleryManagerProps {
   items: SocialGalleryItem[]

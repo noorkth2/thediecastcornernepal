@@ -18,7 +18,8 @@ export default async function ReportTypePage({ params, searchParams }: Props) {
 
   // Default: last 30 days
   const today = new Date()
-  const start = sp.start ?? new Date(Date.now() - 30 * 86400_000).toISOString().split('T')[0]
+  const thirtyDaysAgo = new Date(today.getTime() - 30 * 86400_000)
+  const start = sp.start ?? thirtyDaysAgo.toISOString().split('T')[0]
   const end   = sp.end   ?? today.toISOString().split('T')[0]
   const page  = Math.max(1, parseInt(sp.page ?? '1'))
 

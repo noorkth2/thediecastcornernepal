@@ -57,8 +57,11 @@ export function ProductsClient({ initialProducts }: ProductsClientProps) {
 
   // Reset to page 1 whenever filters change
   useEffect(() => {
-    setCurrentPage(1)
-  }, [search, brandFilter, stockFilter])
+    if (currentPage !== 1) {
+      const timer = setTimeout(() => setCurrentPage(1), 0)
+      return () => clearTimeout(timer)
+    }
+  }, [search, brandFilter, stockFilter, currentPage])
 
   // Get unique brands dynamically from products list
   const uniqueBrands = useMemo(() => {

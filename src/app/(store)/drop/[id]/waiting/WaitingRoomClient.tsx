@@ -15,12 +15,11 @@ export function WaitingRoomClient({ drop, product }: WaitingRoomClientProps) {
   const primaryImage = getPrimaryImage(product.images, product.image_url)
 
   // Mock queue position details that dynamically tick down slightly
-  const [queuePosition, setQueuePosition] = useState<number>(0)
+  const [queuePosition, setQueuePosition] = useState<number>(() => 
+    Math.floor(Math.random() * (180 - 45 + 1) + 45)
+  )
 
   useEffect(() => {
-    // Generate random starting position between 45 and 180
-    setQueuePosition(Math.floor(Math.random() * (180 - 45 + 1) + 45))
-
     const interval = setInterval(() => {
       setQueuePosition((prev) => {
         if (prev <= 1) return 1

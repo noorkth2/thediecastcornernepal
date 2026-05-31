@@ -37,7 +37,7 @@ export default async function WishlistPage() {
     .order('created_at', { ascending: false })
 
   const items = wishlistItems?.map((item) => {
-    const p = item.products as any
+    const p = item.products as unknown as (Product & { product_images: any[] })
     return {
       wishlist_id: item.id,
       product: {
@@ -56,7 +56,7 @@ export default async function WishlistPage() {
             MY WISHLIST
           </h1>
           <p className="text-text-muted text-sm mt-1">
-            Items you've saved for later.
+            Items you&apos;ve saved for later.
           </p>
         </div>
         <Link 

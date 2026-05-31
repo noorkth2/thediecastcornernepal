@@ -57,7 +57,6 @@ export function DropDetailClient({ drop, product, user }: DropDetailClientProps)
   // Anti-bot checkout button timer
   useEffect(() => {
     if (antiBotTime <= 0) {
-      setIsVerifying(false)
       return
     }
 

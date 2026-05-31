@@ -30,7 +30,7 @@ export function SearchModal() {
   // Debounced search fetching
   useEffect(() => {
     if (!query.trim()) {
-      setResults([])
+      setResults((prev) => (prev.length > 0 ? [] : prev))
       return
     }
 
@@ -57,8 +57,8 @@ export function SearchModal() {
     if (isOpen) {
       setTimeout(() => inputRef.current?.focus(), 100)
     } else {
-      setQuery('')
-      setResults([])
+      setQuery((q) => (q !== '' ? '' : q))
+      setResults((r) => (r.length > 0 ? [] : r))
     }
   }, [isOpen])
 
@@ -109,7 +109,7 @@ export function SearchModal() {
             <div className="flex-1 overflow-y-auto p-4 space-y-2">
               {query && !isLoading && results.length === 0 && (
                 <p className="text-center text-text-muted py-8 text-sm">
-                  No products found matching "{query}"
+                  No products found matching &quot;{query}&quot;
                 </p>
               )}
 

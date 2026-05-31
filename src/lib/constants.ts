@@ -26,6 +26,21 @@ export const CATEGORIES = [
   { name: 'Limited Edition', slug: 'limited-edition' },
 ] as const
 
+// ─── Navigation ───────────────────────────────────────────────────────────────
+
+export const NAV_LINKS = [
+  { label: 'Shop All', href: '/shop' },
+  { label: 'New Arrivals', href: '/new-arrivals' },
+  { label: 'Pre-Orders', href: '/pre-orders' },
+  { label: 'Treasure Hunt', href: '/treasure-hunt' },
+] as const
+
+export const SOCIAL_LINKS = {
+  instagram: 'https://instagram.com/thediecastcornernepal',
+  facebook: 'https://facebook.com/thediecastcornernepal',
+  tiktok: 'https://tiktok.com/@thediecastcornernepal',
+}
+
 // ─── Nepal Locations ──────────────────────────────────────────────────────────
 
 export const NEPAL_CITIES = [
@@ -58,6 +73,9 @@ export const ORDER_STATUSES = {
   cancelled: { label: 'Cancelled', color: 'bg-red-500/10 text-red-500' },
 } as const
 
+// Legacy alias for older components
+export const ORDER_STATUS_CONFIG = ORDER_STATUSES
+
 export const PAYMENT_STATUSES = {
   unpaid: { label: 'Unpaid', color: 'bg-red-500/10 text-red-500' },
   paid: { label: 'Paid', color: 'bg-green-500/10 text-green-500' },
@@ -87,7 +105,9 @@ export const PAYMENT_METHODS = [
   },
 ] as const
 
-// ─── Free Shipping ────────────────────────────────────────────────────────────
+// ─── Configuration ────────────────────────────────────────────────────────────
 
 export const FREE_SHIPPING_THRESHOLD = 2000
 export const STANDARD_SHIPPING = 150
+export const PRODUCTS_PER_PAGE = 24
+export const SCALES = ['1:64', '1:43', '1:24', '1:18', '1:12', 'Other'] as const

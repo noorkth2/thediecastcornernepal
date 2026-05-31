@@ -14,7 +14,7 @@ export default function NotFound() {
       <h2 className="text-2xl font-display text-text-primary tracking-wide mb-6">MODEL NOT FOUND</h2>
       
       <p className="max-w-md text-text-muted mb-10 leading-relaxed">
-        It looks like the scale model you're looking for has sped off the track. The page might have been moved or no longer exists.
+        It looks like the scale model you&apos;re looking for has sped off the track. The page might have been moved or no longer exists.
       </p>
 
       <div className="flex flex-col sm:flex-row gap-4">

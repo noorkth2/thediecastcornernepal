@@ -10,7 +10,7 @@ import { Upload } from 'lucide-react'
 import type { FeaturedBanner } from '@/lib/types/media'
 import { BannerSlide } from '@/components/home/BannerSlide'
 
-interface BannerFormData extends Omit<FeaturedBanner, 'id' | 'created_at'> {}
+type BannerFormData = Omit<FeaturedBanner, 'id' | 'created_at'>
 
 interface BannerFormProps {
   defaultValues?: Partial<BannerFormData>

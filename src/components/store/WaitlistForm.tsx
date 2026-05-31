@@ -2,7 +2,6 @@
 
 import { useState } from 'react'
 import { Button } from '@/components/ui/button'
-import { Input } from '@/components/ui/input'
 import { Bell, CheckCircle2 } from 'lucide-react'
 import { joinWaitlistAction } from '@/app/(store)/product/actions'
 
@@ -25,8 +24,8 @@ export function WaitlistForm({ productId, productTitle }: WaitlistFormProps) {
     try {
       await joinWaitlistAction(productId, email)
       setIsJoined(true)
-    } catch (err: any) {
-      setError(err.message || 'Failed to join waitlist')
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to join waitlist')
     } finally {
       setIsSubmitting(false)
     }
@@ -37,7 +36,7 @@ export function WaitlistForm({ productId, productTitle }: WaitlistFormProps) {
       <div className="bg-green-500/10 border border-green-500/20 rounded-xl p-4 flex items-center gap-3">
         <CheckCircle2 className="w-5 h-5 text-green-400 flex-shrink-0" />
         <p className="text-sm text-green-400 font-medium">
-          You're on the list! We'll notify you when {productTitle} is back.
+          You&apos;re on the list! We&apos;ll notify you when {productTitle} is back.
         </p>
       </div>
     )
@@ -50,7 +49,7 @@ export function WaitlistForm({ productId, productTitle }: WaitlistFormProps) {
         <h3 className="text-sm font-bold text-white uppercase tracking-wider">Back in Stock Notification</h3>
       </div>
       <p className="text-xs text-text-muted mb-4 leading-relaxed">
-        This model is currently out of stock. Leave your email and we'll let you know as soon as it returns!
+        This model is currently out of stock. Leave your email and we&apos;ll let you know as soon as it returns!
       </p>
       
       <form onSubmit={handleSubmit} className="flex gap-2">

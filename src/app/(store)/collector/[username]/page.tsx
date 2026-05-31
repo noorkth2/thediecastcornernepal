@@ -31,7 +31,7 @@ export default async function CollectorProfilePage(props: CollectorProfilePagePr
           PROFILE NOT FOUND
         </h1>
         <p className="text-text-muted text-sm mt-2">
-          This collector's profile is either private or does not exist.
+          This collector&apos;s profile is either private or does not exist.
         </p>
       </div>
     )
@@ -107,7 +107,7 @@ export default async function CollectorProfilePage(props: CollectorProfilePagePr
 
           {profile.bio && (
             <p className="text-text-primary text-sm mt-4 bg-surface-elevated/40 border border-surface-border p-3 rounded-xl italic">
-              "{profile.bio}"
+              &quot;{profile.bio}&quot;
             </p>
           )}
 
@@ -213,7 +213,7 @@ export default async function CollectorProfilePage(props: CollectorProfilePagePr
 
                   {item.notes && (
                     <p className="text-[10px] text-text-faint mt-2 italic line-clamp-2">
-                      "{item.notes}"
+                      &quot;{item.notes}&quot;
                     </p>
                   )}
                 </div>

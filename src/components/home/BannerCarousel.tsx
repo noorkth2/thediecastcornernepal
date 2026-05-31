@@ -30,7 +30,6 @@ export function BannerCarousel({ banners }: BannerCarouselProps) {
 
   useEffect(() => {
     if (!emblaApi) return
-    onSelect()
     emblaApi.on('select', onSelect)
     emblaApi.on('reInit', onSelect)
   }, [emblaApi, onSelect])

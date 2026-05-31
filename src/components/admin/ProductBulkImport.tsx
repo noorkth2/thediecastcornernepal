@@ -23,7 +23,7 @@ function parseCSV(csvText: string) {
     let val = ''
     let j = 0
 
-    for (let char of currentline) {
+    for (const char of currentline) {
       if (char === '"') {
         inQuotes = !inQuotes
       } else if (char === ',' && !inQuotes) {

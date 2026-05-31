@@ -6,6 +6,8 @@ import { useUIStore } from '@/store/uiStore'
 import type { Product } from '@/lib/types'
 import type { ProductVariant } from '@/lib/types/variant'
 
+import { WaitlistForm } from './WaitlistForm'
+
 interface AddToCartDetailButtonProps {
   product: Product
   selectedVariant?: ProductVariant | null
@@ -50,14 +52,6 @@ export function AddToCartDetailButton({ product, selectedVariant }: AddToCartDet
         isPreOrder 
           ? 'bg-brand-gold hover:bg-brand-gold-light text-black shadow-brand-gold/20' 
           : 'bg-brand-red hover:bg-brand-red-light text-white shadow-brand-red/20'
-      }`}
-      id="add-to-cart-detail"
-    >
-      {isPreOrder ? '📦 Pre-order Now' : '🛒 Add to Cart'} — {formatPrice(activePrice)}
-    </button>
-  )
-}
- text-white shadow-brand-red/20'
       }`}
       id="add-to-cart-detail"
     >

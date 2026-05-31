@@ -21,7 +21,12 @@ import Link from 'next/link'
 import * as Dialog from '@radix-ui/react-dialog'
 
 interface GarageClientProps {
-  profile: any
+  profile: {
+    id: string
+    username: string | null
+    bio: string | null
+    is_public: boolean
+  }
   initialItems: any[]
   orders: any[]
   availableProducts: any[]
@@ -531,7 +536,7 @@ export function GarageClient({
 
                   {item.notes && (
                     <p className="text-[10px] text-text-faint mt-2 italic line-clamp-2">
-                      "{item.notes}"
+                      &quot;{item.notes}&quot;
                     </p>
                   )}
 

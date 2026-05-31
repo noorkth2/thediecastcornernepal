@@ -25,7 +25,7 @@ export default function Error({
 
       <h1 className="font-display text-4xl text-white tracking-widest mb-4 uppercase">System Malfunction</h1>
       <h2 className="text-lg text-text-muted mb-8 max-w-lg mx-auto leading-relaxed">
-        Our engines have stalled unexpectedly. Our team has been notified and we're working to get the site back on track.
+        Our engines have stalled unexpectedly. Our team has been notified and we&apos;re working to get the site back on track.
       </h2>
       
       {process.env.NODE_ENV !== 'production' && (

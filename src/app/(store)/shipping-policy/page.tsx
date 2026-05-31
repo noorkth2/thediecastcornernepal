@@ -54,7 +54,7 @@ export default function ShippingReturnPage() {
           <div className="space-y-4">
             <h3 className="text-lg font-bold text-text-primary">1. Condition of Returns</h3>
             <p>
-              To be eligible for a return, your item must be in the same condition that you received it, <strong>unopened</strong>, and in its original packaging. Returns for "change of mind" are generally not accepted for collectible items.
+              To be eligible for a return, your item must be in the same condition that you received it, <strong>unopened</strong>, and in its original packaging. Returns for &quot;change of mind&quot; are generally not accepted for collectible items.
             </p>
 
             <h3 className="text-lg font-bold text-text-primary">2. Damaged or Wrong Items</h3>

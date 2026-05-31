@@ -1,4 +1,5 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
 import { notFound } from 'next/navigation'
 import { getProductBySlug, getRelatedProducts } from '@/lib/supabase/queries/products'
 import { getProductMedia } from '@/lib/supabase/queries/media'
@@ -101,18 +102,18 @@ export default async function ProductPage(props: ProductPageProps) {
       <JsonLd data={breadcrumbSchema} nonce={nonce} />
       {/* Breadcrumb */}
       <nav className="text-xs text-text-faint mb-8 flex items-center gap-2" aria-label="Breadcrumb">
-        <a href="/" className="hover:text-white transition-colors">Home</a>
+        <Link href="/" className="hover:text-white transition-colors">Home</Link>
         <span>/</span>
-        <a href="/shop" className="hover:text-white transition-colors">Shop</a>
+        <Link href="/shop" className="hover:text-white transition-colors">Shop</Link>
         {product.category && (
           <>
             <span>/</span>
-            <a
+            <Link
               href={`/shop?category=${product.category.slug}`}
               className="hover:text-white transition-colors"
             >
               {product.category.name}
-            </a>
+            </Link>
           </>
         )}
         <span>/</span>

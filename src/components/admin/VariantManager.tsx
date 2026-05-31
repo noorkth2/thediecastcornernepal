@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import { Plus, Trash2, Save } from 'lucide-react'
 import { createClient } from '@/lib/supabase/client'
 import { Input } from '@/components/ui/input'
@@ -18,11 +18,7 @@ export function VariantManager({ productId, productSkuBase }: VariantManagerProp
   const [isLoading, setIsLoading] = useState(true)
   const { addToast } = useUIStore()
 
-  useEffect(() => {
-    loadVariants()
-  }, [productId])
-
-  const loadVariants = async () => {
+  const loadVariants = useCallback(async () => {
     setIsLoading(true)
     const supabase = createClient()
     const { data } = await supabase
@@ -33,7 +29,11 @@ export function VariantManager({ productId, productSkuBase }: VariantManagerProp
     
     if (data) setVariants(data as ProductVariant[])
     setIsLoading(false)
-  }
+  }, [productId])
+
+  useEffect(() => {
+    loadVariants()
+  }, [loadVariants])
 
   const handleAddVariant = () => {
     const newVariant: Partial<ProductVariant> = {
