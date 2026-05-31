@@ -10,6 +10,18 @@ import { PRODUCTS_PER_PAGE } from '@/lib/constants'
 
 export const revalidate = 60
 
+interface ShopPageProps {
+  searchParams: Promise<{
+    category?: string
+    brand?: string
+    min?: string
+    max?: string
+    sort?: string
+    q?: string
+    page?: string
+  }>
+}
+
 export async function generateMetadata(props: ShopPageProps): Promise<Metadata> {
   const searchParams = await props.searchParams
   const { category, brand, q } = searchParams

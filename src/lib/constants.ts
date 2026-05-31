@@ -65,12 +65,12 @@ export const NEPAL_CITIES = [
 // ─── Order Statuses ───────────────────────────────────────────────────────────
 
 export const ORDER_STATUSES = {
-  pending: { label: 'Pending Review', color: 'bg-yellow-500/10 text-yellow-500' },
-  confirmed: { label: 'Confirmed', color: 'bg-blue-500/10 text-blue-500' },
-  processing: { label: 'Processing', color: 'bg-purple-500/10 text-purple-500' },
-  shipped: { label: 'In Transit', color: 'bg-orange-500/10 text-orange-500' },
-  delivered: { label: 'Delivered', color: 'bg-green-500/10 text-green-500' },
-  cancelled: { label: 'Cancelled', color: 'bg-red-500/10 text-red-500' },
+  pending: { label: 'Pending Review', color: 'text-yellow-500', bg: 'bg-yellow-500/10', step: 1 },
+  confirmed: { label: 'Confirmed', color: 'text-blue-500', bg: 'bg-blue-500/10', step: 2 },
+  processing: { label: 'Processing', color: 'text-purple-500', bg: 'bg-purple-500/10', step: 3 },
+  shipped: { label: 'In Transit', color: 'text-orange-500', bg: 'bg-orange-500/10', step: 4 },
+  delivered: { label: 'Delivered', color: 'text-green-500', bg: 'bg-green-500/10', step: 5 },
+  cancelled: { label: 'Cancelled', color: 'text-red-500', bg: 'bg-red-500/10', step: 0 },
 } as const
 
 // Legacy alias for older components
