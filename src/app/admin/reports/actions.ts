@@ -8,12 +8,11 @@ import {
   getPaymentGatewayReport, getAuditLogReport, getDeadInventoryReport,
   getTaxSummaryReport,
 } from '@/lib/supabase/queries/reports'
+import { verifyAdmin } from '@/lib/supabase/auth-utils'
 
 export async function fetchReportAction(type: ReportType, filters: ReportFilters): Promise<unknown[]> {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
-
+  await verifyAdmin()
+  
   const { startDate, endDate } = filters
   switch (type) {
     case 'sales-daily':          return getDailySalesReport(filters)

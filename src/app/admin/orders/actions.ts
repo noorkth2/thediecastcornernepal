@@ -4,6 +4,7 @@ import { createServerClient } from '@supabase/ssr'
 import { createClient as createSupabaseClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 import { sendEmail } from '@/lib/resend'
+import { verifyAdmin } from '@/lib/supabase/auth-utils'
 
 // Standalone service role admin client that bypasses RLS
 function createAdminClient() {
@@ -19,50 +20,8 @@ function createAdminClient() {
   )
 }
 
-// Helper to create normal client
-async function createClient() {
-  const cookieStore = await cookies()
-  return createServerClient(
-    process.env.NEXT_PUBLIC_SUPABASE_URL!,
-    process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
-    {
-      cookies: {
-        getAll() {
-          return cookieStore.getAll()
-        },
-        setAll(cookiesToSet: { name: string; value: string; options?: Record<string, unknown> }[]) {
-          try {
-            cookiesToSet.forEach(({ name, value, options }) =>
-              cookieStore.set(name, value, options)
-            )
-          } catch {}
-        },
-      },
-    }
-  )
-}
-
 export async function updateOrderStatus(orderId: number, status: string, paymentStatus: string) {
-  const supabase = await createClient()
-
-  // 1. Verify user is logged in and is an Admin
-  const {
-    data: { user: adminUser },
-  } = await supabase.auth.getUser()
-
-  if (!adminUser) {
-    throw new Error('Unauthorized')
-  }
-
-  const { data: profile } = await supabase
-    .from('profiles')
-    .select('role')
-    .eq('id', adminUser.id)
-    .single()
-
-  if (profile?.role !== 'admin') {
-    throw new Error('Forbidden')
-  }
+  await verifyAdmin()
 
   // 2. Fetch the current order to check its previous status
   const adminSupabase = createAdminClient()

@@ -4,6 +4,7 @@ import { createClient } from '@/lib/supabase/server'
 import { getAnalyticsSummary, buildDateRange } from '@/lib/supabase/queries/analytics-advanced'
 import type { AnalyticsSummary, DateRange } from '@/lib/types/analytics'
 import { revalidatePath } from 'next/cache'
+import { verifyAdmin } from '@/lib/supabase/auth-utils'
 
 // ─── Main analytics summary action ────────────────────────────────────
 // Called by client component when date range changes
@@ -12,9 +13,7 @@ export async function getAnalyticsSummaryAction(
   customStart?: string,
   customEnd?: string
 ): Promise<AnalyticsSummary> {
-  const supabase = await createClient()
-  const { data: { user } } = await supabase.auth.getUser()
-  if (!user) throw new Error('Unauthorized')
+  await verifyAdmin()
 
   const range = buildDateRange(preset, customStart, customEnd)
   return getAnalyticsSummary(range)
@@ -29,15 +28,9 @@ export async function logAdminAction(
   newData?: Record<string, unknown>
 ): Promise<void> {
   try {
-    const supabase = await createClient()
-    const { data: { user } } = await supabase.auth.getUser()
-    if (!user) return
+    const { user, profile } = await verifyAdmin()
 
-    const { data: profile } = await supabase
-      .from('profiles')
-      .select('role')
-      .eq('id', user.id)
-      .single()
+    const supabase = await createClient()
 
     await supabase.from('activity_logs').insert({
       actor_id: user.id,
@@ -55,5 +48,6 @@ export async function logAdminAction(
 
 // ─── Refresh analytics cache ──────────────────────────────────────────
 export async function refreshAnalyticsAction(): Promise<void> {
+  await verifyAdmin()
   revalidatePath('/admin/analytics')
 }

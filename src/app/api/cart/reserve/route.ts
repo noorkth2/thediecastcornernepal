@@ -1,10 +1,9 @@
 import { NextResponse } from 'next/server'
-import { createClient } from '@/lib/supabase/server'
+import { createAdminClient } from '@/lib/supabase/server'
 import { cookies } from 'next/headers'
 
 export async function POST(request: Request) {
   try {
-    const supabase = await createClient()
     const { productId, variantId, quantity } = await request.json()
 
     if (!productId || !quantity) {
@@ -23,8 +22,9 @@ export async function POST(request: Request) {
       })
     }
 
-    // Call the atomic reserve function
-    const { data, error } = await supabase.rpc('reserve_stock', {
+    // Call the atomic reserve function using the admin client because public execute is revoked
+    const adminSupabase = createAdminClient()
+    const { data, error } = await adminSupabase.rpc('reserve_stock', {
       p_product_id: productId,
       p_variant_id: variantId || null,
       p_session: sessionId,
@@ -56,7 +56,6 @@ export async function POST(request: Request) {
 
 export async function DELETE(request: Request) {
   try {
-    const supabase = await createClient()
     const { searchParams } = new URL(request.url)
     const reservationId = searchParams.get('id')
 
@@ -69,7 +68,9 @@ export async function DELETE(request: Request) {
       return NextResponse.json({ error: 'No active session' }, { status: 401 })
     }
 
-    const { data, error } = await supabase.rpc('release_stock', {
+    // Call the release stock function using the admin client
+    const adminSupabase = createAdminClient()
+    const { data, error } = await adminSupabase.rpc('release_stock', {
       p_reservation_id: reservationId,
       p_session: sessionId
     })
@@ -85,3 +86,4 @@ export async function DELETE(request: Request) {
     return NextResponse.json({ error: 'Internal server error' }, { status: 500 })
   }
 }
+
