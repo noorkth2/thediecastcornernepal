@@ -6,6 +6,7 @@ export async function getProducts(opts: GetProductsOptions = {}) {
   const {
     category,
     brand,
+    status,
     minPrice,
     maxPrice,
     isFeatured,
@@ -23,7 +24,7 @@ export async function getProducts(opts: GetProductsOptions = {}) {
     .select(
       `
       *,
-      category:categories!inner(id, name, slug),
+      category:categories${category ? '!inner' : ''}(id, name, slug),
       images:product_images(*)
     `,
       { count: 'exact' }

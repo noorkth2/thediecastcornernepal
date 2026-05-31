@@ -119,8 +119,11 @@ export default async function ShopPage(props: ShopPageProps) {
             <div className="flex justify-center gap-2 mt-10">
               {[...Array(totalPages)].map((_, i) => {
                 const p = i + 1
+                const cleanParams = Object.fromEntries(
+                  Object.entries(searchParams).filter(([_, v]) => v != null)
+                )
                 const params = new URLSearchParams({
-                  ...searchParams,
+                  ...cleanParams,
                   page: String(p),
                 })
                 return (
