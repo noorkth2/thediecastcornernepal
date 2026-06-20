@@ -7,6 +7,7 @@ export async function proxy(request: NextRequest) {
 
   const cspHeader = [
     `default-src 'self'`,
+    `connect-src 'self' https://*.supabase.co wss://*.supabase.co`,
     `script-src 'self' 'nonce-${nonce}' 'strict-dynamic' 'unsafe-inline' 'unsafe-eval' https://platform.twitter.com https://connect.facebook.net`,
     `style-src 'self' 'unsafe-inline' https://fonts.googleapis.com`,
     `font-src 'self' https://fonts.gstatic.com`,
