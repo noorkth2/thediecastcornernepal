@@ -27,10 +27,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .from('categories')
     .select('slug')
 
-  // Fetch all brand slugs/names
+  // Fetch all active brand names
   const { data: brands } = await supabase
     .from('brands')
-    .select('slug')
+    .select('name')
     .eq('is_active', true)
 
   const staticRoutes: MetadataRoute.Sitemap = [
@@ -93,7 +93,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   const brandRoutes: MetadataRoute.Sitemap = (brands ?? []).map((b) => ({
-    url: `${SITE_URL}/brands/${b.slug}`,
+    url: `${SITE_URL}/shop?brand=${encodeURIComponent(b.name)}`,
     lastModified: new Date(),
     changeFrequency: 'weekly' as const,
     priority: 0.6,

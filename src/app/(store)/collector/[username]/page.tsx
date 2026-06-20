@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { createClient } from '@/lib/supabase/server'
 import { computeBadges, type CollectorStats } from '@/lib/badges/compute'
@@ -10,6 +11,43 @@ interface CollectorProfilePageProps {
 }
 
 export const revalidate = 60 // Cache for 60 seconds
+
+export async function generateMetadata(props: CollectorProfilePageProps): Promise<Metadata> {
+  const params = await props.params
+  const supabase = await createClient()
+
+  const { data: profile } = await supabase
+    .from('profiles')
+    .select('full_name, bio, avatar_url, is_public')
+    .eq('username', params.username.toLowerCase().trim())
+    .eq('is_public', true)
+    .single()
+
+  if (!profile) return { title: 'Collector Not Found' }
+
+  const title = `${profile.full_name || params.username}'s Garage | Collector Profile`
+  const description = profile.bio 
+    ? profile.bio.slice(0, 160)
+    : `Check out ${profile.full_name || params.username}'s diecast car collection at The Diecast Corner Nepal. View rare collectibles and earned achievements.`
+
+  return {
+    title,
+    description,
+    openGraph: {
+      title,
+      description,
+      images: profile.avatar_url ? [{ url: profile.avatar_url }] : [],
+      type: 'profile',
+      username: params.username,
+    },
+    twitter: {
+      card: 'summary',
+      title,
+      description,
+      images: profile.avatar_url ? [profile.avatar_url] : [],
+    },
+  }
+}
 
 export default async function CollectorProfilePage(props: CollectorProfilePageProps) {
   const params = await props.params

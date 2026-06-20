@@ -1,4 +1,6 @@
 import type { Metadata } from 'next'
+import { Analytics } from '@vercel/analytics/react'
+import { SpeedInsights } from '@vercel/speed-insights/next'
 import { Inter } from 'next/font/google'
 import './globals.css'
 import { JsonLd, buildOrganizationSchema, buildWebSiteSchema } from '@/components/seo/JsonLd'
@@ -67,6 +69,8 @@ export default async function RootLayout({
         <JsonLd data={buildOrganizationSchema()} nonce={nonce} />
         <JsonLd data={buildWebSiteSchema()} nonce={nonce} />
         {children}
+        <Analytics />
+        <SpeedInsights />
       </body>
     </html>
   )

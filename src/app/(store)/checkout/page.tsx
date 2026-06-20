@@ -7,6 +7,7 @@ import Image from 'next/image'
 import { useForm } from 'react-hook-form'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { ArrowLeft, Loader2, ShieldCheck, MapPin, Package, CreditCard } from 'lucide-react'
+import { track } from '@vercel/analytics'
 import { checkoutSchema, type CheckoutInput } from '@/lib/validations/checkout'
 import { useCartStore } from '@/store/cartStore'
 import { useUIStore } from '@/store/uiStore'
@@ -110,6 +111,13 @@ export default function CheckoutPage() {
     try {
       setIsSubmitting(true)
       
+      // Track Checkout Submission
+      track('checkout_submitted', {
+        payment_method: data.paymentMethod,
+        item_count: count,
+        total_amount: grand
+      })
+
       // Create Order
       const res = await fetch('/api/orders', {
         method: 'POST',

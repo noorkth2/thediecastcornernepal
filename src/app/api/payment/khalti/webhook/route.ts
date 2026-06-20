@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
+import { sendOrderPaidEmail } from '@/lib/email/order-emails'
 
 export async function POST(req: NextRequest) {
   try {
@@ -20,24 +21,56 @@ export async function POST(req: NextRequest) {
     if (status === 'Completed') {
       const adminSupabase = createAdminClient()
       
-      // The purchase_order_id is usually mapped to the internal order ID or code
-      // We assume purchase_order_id = internal order.id or order.order_code based on implementation
-      // Here, falling back to an update on the ID if numeric, else fallback logic
-      const isNumericId = !isNaN(Number(purchase_order_id))
-
-      const query = adminSupabase
+      // Fetch order with items to confirm stock and send email
+      const { data: order, error: orderFetchError } = await adminSupabase
         .from('orders')
-        .update({ payment_status: 'paid', status: 'confirmed' })
-        
-      if (isNumericId) {
-        query.eq('id', Number(purchase_order_id))
-      } else {
-        query.eq('order_code', purchase_order_id)
+        .select('*, order_items(*), profiles(email)')
+        .eq(purchase_order_id.toString().includes('DCN-') ? 'order_code' : 'id', purchase_order_id)
+        .single()
+
+      if (orderFetchError || !order) {
+        throw new Error('Order not found for webhook')
       }
 
-      const { error } = await query
+      if (order.payment_status === 'paid') {
+        return NextResponse.json({ success: true, message: 'Already paid' })
+      }
 
-      if (error) throw error
+      // Update order status
+      const { error: updateError } = await adminSupabase
+        .from('orders')
+        .update({ payment_status: 'paid', status: 'confirmed' })
+        .eq('id', order.id)
+
+      if (updateError) throw updateError
+
+      // Atomic stock confirmation
+      await adminSupabase.rpc('confirm_reservation_sale', {
+        p_order_id: order.id
+      })
+
+      // Send Confirmation Email
+      try {
+        const customerEmail = (order.profiles as any)?.email || ''
+        
+        await sendOrderPaidEmail({
+          orderCode: order.order_code,
+          customerName: (order.shipping_address as any).name,
+          customerEmail: customerEmail,
+          items: order.order_items.map((i: any) => ({
+            title: i.product_title,
+            quantity: i.quantity,
+            price: i.unit_price
+          })),
+          subtotal: order.total_amount - order.shipping_charge,
+          shippingCharge: order.shipping_charge,
+          total: order.total_amount,
+          paymentMethod: 'khalti',
+          shippingAddress: order.shipping_address as any
+        })
+      } catch (emailErr) {
+        console.error('Webhook Email Error:', emailErr)
+      }
     }
 
     return NextResponse.json({ success: true })

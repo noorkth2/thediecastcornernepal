@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
+import { sendOrderPaidEmail } from '@/lib/email/order-emails'
 
 export async function POST(req: NextRequest) {
   const { pidx, orderId } = await req.json()
@@ -34,12 +35,16 @@ export async function POST(req: NextRequest) {
   const adminSupabase = createAdminClient()
   const { data: order, error: orderError } = await adminSupabase
     .from('orders')
-    .select('id, order_code, total_amount')
+    .select('*, order_items(*), profiles(email)')
     .eq('id', orderId)
     .single()
 
   if (orderError || !order) {
     return NextResponse.json({ error: 'Order not found' }, { status: 404 })
+  }
+
+  if (order.payment_status === 'paid') {
+    return NextResponse.json({ success: true, message: 'Payment already verified' })
   }
 
   if (data.purchase_order_id !== order.order_code) {
@@ -51,11 +56,39 @@ export async function POST(req: NextRequest) {
      return NextResponse.json({ error: 'Invalid payment: Amount mismatch' }, { status: 400 })
   }
 
-  // Update order status using admin client to bypass RLS restrictions
+  // Update order status and confirm stock reservation
   await adminSupabase
     .from('orders')
     .update({ payment_status: 'paid', status: 'confirmed' })
     .eq('id', orderId)
+
+  // Atomic stock confirmation
+  await adminSupabase.rpc('confirm_reservation_sale', {
+    p_order_id: orderId
+  })
+
+  // Send Confirmation Email
+  try {
+    const customerEmail = (order.profiles as any)?.email || ''
+    
+    await sendOrderPaidEmail({
+      orderCode: order.order_code,
+      customerName: (order.shipping_address as any).name,
+      customerEmail: customerEmail,
+      items: order.order_items.map((i: any) => ({
+        title: i.product_title,
+        quantity: i.quantity,
+        price: i.unit_price
+      })),
+      subtotal: order.total_amount - order.shipping_charge,
+      shippingCharge: order.shipping_charge,
+      total: order.total_amount,
+      paymentMethod: 'khalti',
+      shippingAddress: order.shipping_address as any
+    })
+  } catch (emailErr) {
+    console.error('Failed to send payment confirmation email:', emailErr)
+  }
 
   return NextResponse.json({ success: true, data })
 }

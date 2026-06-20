@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server'
 import { createAdminClient } from '@/lib/supabase/server'
+import { sendOrderPaidEmail } from '@/lib/email/order-emails'
 import crypto from 'crypto'
 
 /**
@@ -45,7 +46,7 @@ export async function GET(req: NextRequest) {
     const adminSupabase = createAdminClient()
     const { data: order, error: orderError } = await adminSupabase
       .from('orders')
-      .select('id, order_code, total_amount')
+      .select('*, order_items(*), profiles(email)')
       .eq('id', orderId)
       .single()
 
@@ -58,13 +59,40 @@ export async function GET(req: NextRequest) {
        return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/order/failure?orderId=${orderId}&error=Amount+Mismatch`)
     }
 
-    // 4. Update Order Status
+    // 4. Update Order Status and confirm stock
     await adminSupabase
       .from('orders')
       .update({ payment_status: 'paid', status: 'confirmed' })
       .eq('id', orderId)
 
-    // 5. Success Redirect
+    await adminSupabase.rpc('confirm_reservation_sale', {
+      p_order_id: Number(orderId)
+    })
+
+    // 5. Send Confirmation Email
+    try {
+      const customerEmail = (order.profiles as any)?.email || ''
+      
+      await sendOrderPaidEmail({
+        orderCode: order.order_code,
+        customerName: (order.shipping_address as any).name,
+        customerEmail: customerEmail,
+        items: order.order_items.map((i: any) => ({
+          title: i.product_title,
+          quantity: i.quantity,
+          price: i.unit_price
+        })),
+        subtotal: order.total_amount - order.shipping_charge,
+        shippingCharge: order.shipping_charge,
+        total: order.total_amount,
+        paymentMethod: 'esewa',
+        shippingAddress: order.shipping_address as any
+      })
+    } catch (emailErr) {
+      console.error('Failed to send payment confirmation email:', emailErr)
+    }
+
+    // 6. Success Redirect
     return NextResponse.redirect(`${process.env.NEXT_PUBLIC_URL}/order/success/${orderId}`)
 
   } catch (err: any) {

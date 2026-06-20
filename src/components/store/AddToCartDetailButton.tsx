@@ -1,5 +1,6 @@
 'use client'
 
+import { track } from '@vercel/analytics'
 import { formatPrice, getPrimaryImage } from '@/lib/utils'
 import { useCartStore } from '@/store/cartStore'
 import { useUIStore } from '@/store/uiStore'
@@ -35,6 +36,16 @@ export function AddToCartDetailButton({ product, selectedVariant }: AddToCartDet
       variant_id: selectedVariant?.id,
       variant_label: selectedVariant?.label,
     })
+
+    // Track Event
+    track('add_to_cart', {
+      product_id: product.id,
+      product_title: product.title,
+      price: activePrice,
+      brand: product.brand || 'unknown',
+      is_preorder: isPreOrder
+    })
+
     addToast({ message: isPreOrder ? 'Added to pre-orders!' : 'Added to cart!', type: 'success' })
     openCart()
   }
