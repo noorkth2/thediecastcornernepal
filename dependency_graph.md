@@ -101,6 +101,7 @@ graph TD
     GLOBALS["src/app/globals.css 🔧UPDATED"]
     SITEMAP["src/app/sitemap.ts 🔧UPDATED"]
     ROBOTS["src/app/robots.ts ✨NEW"]
+    PROXY["src/proxy.ts 🔧UPDATED"]
   end
 
   subgraph Pages_Store ["🛒 Store Routes (store)"]
@@ -318,7 +319,8 @@ graph TD
   LAYOUT --> ANNOUNCEMENT
   LAYOUT --> CART_DRAWER
   LAYOUT --> SEO_JSONLD
-  LAYOUT --> CSP
+  LAYOUT --> PROXY
+  PROXY --> CSP
 
   %% Home page integration
   HOME --> BANNER_CAROUSEL
