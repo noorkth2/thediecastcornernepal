@@ -33,6 +33,8 @@ interface ProductFormData {
   is_limited: boolean
   is_premium: boolean
   image_url: string
+  status: 'IN_STOCK' | 'OUT_OF_STOCK' | 'PRE_ORDER'
+  expected_arrival_date: string
 }
 
 interface ProductFormProps {
@@ -58,6 +60,8 @@ export function ProductForm({ categories, brands, media = [], defaultValues, pro
       is_premium: false,
       is_featured: false,
       stock_qty: 1,
+      status: 'IN_STOCK',
+      expected_arrival_date: '',
       ...defaultValues,
     },
   })
@@ -67,7 +71,15 @@ export function ProductForm({ categories, brands, media = [], defaultValues, pro
     const supabase = createClient()
     const slug = data.slug || data.title.toLowerCase().replace(/[^a-z0-9]+/g, '-').replace(/(^-|-$)/g, '')
 
-    const payload = { ...data, slug, price: Number(data.price), stock_qty: Number(data.stock_qty), compare_price: data.compare_price ? Number(data.compare_price) : null, category_id: data.category_id ? Number(data.category_id) : null }
+    const payload = {
+      ...data,
+      slug,
+      price: Number(data.price),
+      stock_qty: Number(data.stock_qty),
+      compare_price: data.compare_price ? Number(data.compare_price) : null,
+      category_id: data.category_id ? Number(data.category_id) : null,
+      expected_arrival_date: data.expected_arrival_date || null,
+    }
 
     if (mode === 'create') {
       const { data: created, error } = await supabase.from('products').insert(payload).select('id').single()
@@ -172,6 +184,26 @@ export function ProductForm({ categories, brands, media = [], defaultValues, pro
         <Input {...register('price', { required: 'Price required' })} id="price" type="number" min={0} step={0.01} label="Price (Rs.) *" error={errors.price?.message} />
         <Input {...register('compare_price')} id="compare_price" type="number" min={0} step={0.01} label="Compare Price (Rs.)" />
         <Input {...register('stock_qty')} id="stock_qty" type="number" min={0} label="Stock Qty *" />
+      </div>
+
+      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+        <div>
+          <label className="block text-sm font-medium text-text-primary mb-1.5">Product Status</label>
+          <select {...register('status')} id="status" className="input-base">
+            <option value="IN_STOCK">✅ In Stock</option>
+            <option value="OUT_OF_STOCK">❌ Out of Stock</option>
+            <option value="PRE_ORDER">🕐 Pre-Order</option>
+          </select>
+        </div>
+        <div>
+          <label className="block text-sm font-medium text-text-primary mb-1.5">Expected Arrival Date</label>
+          <Input
+            {...register('expected_arrival_date')}
+            id="expected_arrival_date"
+            type="date"
+            placeholder="For PRE_ORDER items"
+          />
+        </div>
       </div>
 
       <div>

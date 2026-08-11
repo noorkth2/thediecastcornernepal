@@ -54,6 +54,8 @@ export default async function EditProductPage(props: { params: Promise<{ id: str
             is_limited: product.is_limited,
             is_premium: product.is_premium,
             image_url: product.image_url ?? '',
+            status: product.status ?? 'IN_STOCK',
+            expected_arrival_date: product.expected_arrival_date ?? '',
           }}
         />
       </div>
